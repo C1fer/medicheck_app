@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/login.dart';
+import 'package:medicheck/screens/login/login.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});

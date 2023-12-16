@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/login.dart';
-import 'splash_screen.dart';
-import 'onboarding.dart';
+import 'package:medicheck/screens/login/login.dart';
+import 'screens/start/splash_screen.dart';
+import 'screens/start/onboarding.dart';
 
 void main() => runApp(MyApp());
 

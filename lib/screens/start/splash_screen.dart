@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicheck/onboarding.dart';
+import 'package:medicheck/screens/start/onboarding.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
