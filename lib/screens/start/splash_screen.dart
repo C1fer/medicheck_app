@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'onboarding.dart';
 import 'package:medicheck/widgets/vertical_logo.dart';
+import 'package:medicheck/styles/app_colors.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -13,7 +14,7 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 5), ()  {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacementNamed(context, Onboarding.id);
     });
   }
@@ -21,9 +22,15 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF199A8E),
+      backgroundColor: AppColors.jadeGreen,
       body: SafeArea(
-        child: Center(child: VerticalLogo(color: Colors.white)),
+        child: Center(
+            child: VerticalLogo(
+          color: Colors.white,
+          fontSize: 50.11,
+              width:129.54,
+              height:129.52,
+        )),
       ),
     );
   }

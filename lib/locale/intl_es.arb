@@ -3,5 +3,20 @@
 
   "appName" : "MediCheck",
 
-  "helloWorld": "Hola mundo!"
+  "helloWorld": "Hola mundo!",
+
+  "onboarding_1": "Consulta la cobertura de cualquier medicamento",
+  "onboarding_2": "Encuentra centros cercanos afiliados",
+  "onboarding_3": "Revisa tu historial de búsqueda",
+  "skip_onboarding": "Saltar",
+
+  "welcome_msg": "¡Bienvenido!",
+  "welcome_copy": "Inicia sesión para disfrutar de todas nuestras funcionalidades",
+
+  "login": "Iniciar Sesión",
+  "signup": "Registrar",
+
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "forgot_pw": "Olvidé mi Contraseña"
 }

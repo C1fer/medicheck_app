@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/screens/welcome/login.dart';
+import 'package:medicheck/screens/welcome/welcome.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../styles/app_styles.dart';
+import '../../styles/app_colors.dart';
+import 'package:medicheck/widgets/step_counter.dart';
+import '../../widgets/vertical_logo.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -10,76 +15,92 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  int step = 1;
-  static const List<String> headlines = [
-    "Consulta la cobertura de cualquier medicamento.",
-    "Encuentra centros cercanos afiliados",
-    "Revisa tu historial de búsqueda"
-  ];
+  int _step = 1;
+  final int _maxSteps = 3;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                child: Text('Saltar'),
-                onTap: () {
-                  Navigator.pushNamed(context, Login.id);
-                },
-              )
-            ],
-          ),
-          Container(
-            width: 315,
-            height: 441,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/img/onboarding_${step}.png"),
-                fit: BoxFit.fill,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(35),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  child: Text(
+                    AppLocalizations.of(context).skip_onboarding,
+                    style: AppStyles.mainTextStyle,
+                  ),
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, Welcome.id);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              width: 315,
+              height: 441,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/onboarding_${_step}.jpg"),
+                  fit: BoxFit.cover,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(35),
+                ),
               ),
             ),
-          ),
-          Text(headlines[step-1],
-              style: TextStyle(
-                color: Color(0xFF101522),
-                fontSize: 22,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w700,
-              )),
-          SizedBox(height: 20,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(step.toString()),
-              FloatingActionButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                backgroundColor: Colors.white,
-                child: Icon(Icons.arrow_right),
-                onPressed: () {
-                  if (step < 3) {
-                    setState(() {
-                      step++;
-                    });
-                  }
-                  else{
-                    Navigator.pushNamed(context, Login.id);
-                  }
-                },
-              ),
-            ],
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(AppLocalizations.of(context).onboarding_2,
+                  style: AppStyles.headingTextStyle),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    for (int i = 1; i < _maxSteps + 1; i++)
+                      StepCounter(i, _step),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                  ],
+                ),
+                FloatingActionButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0)),
+                  backgroundColor: AppColors.jadeGreen,
+                  child: const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (_step < _maxSteps) {
+                      setState(() {
+                        _step++;
+                      });
+                    } else {
+                      Navigator.pushNamed(context, Welcome.id);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ));
+    ),
+    );
   }
 }

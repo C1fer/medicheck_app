@@ -6,22 +6,26 @@ import 'package:medicheck/screens/welcome/sign_up.dart';
 import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
 import 'screens/home.dart';
-import 'lang.dart';
+import 'styles/app_styles.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final ThemeData theme = ThemeData.light();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: 'Inter'),
+      theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+          fontFamily: 'Inter',
+          outlinedButtonTheme:
+              OutlinedButtonThemeData(style: AppStyles.outlinedButtonStyle),
+          filledButtonTheme:
+              FilledButtonThemeData(style: AppStyles.primaryButtonStyle),
+      ),
       debugShowCheckedModeBanner: false,
       title: 'MediCheck',
-      initialRoute: LangTest.id,
+      initialRoute: Welcome.id,
       routes: {
-        LangTest.id: (context) => LangTest(),
         Splash.id: (context) => Splash(),
         Onboarding.id: (context) => Onboarding(),
         Welcome.id: (context) => Welcome(),
