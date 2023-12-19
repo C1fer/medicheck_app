@@ -1,0 +1,5 @@
+arb-dir: lib/locale
+template-arb-file: intl_es.arb
+output-localization-file: app_localizations.dart
+use-escaping: true # Enable use of escaping syntax
+nullable-getter: false #Avoid null checking

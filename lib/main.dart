@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/screens/welcome/login.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:medicheck/screens/welcome/sign_up.dart';
 import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
 import 'screens/home.dart';
+import 'lang.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,8 +19,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'Inter'),
       debugShowCheckedModeBanner: false,
       title: 'MediCheck',
-      initialRoute: Splash.id,
+      initialRoute: LangTest.id,
       routes: {
+        LangTest.id: (context) => LangTest(),
         Splash.id: (context) => Splash(),
         Onboarding.id: (context) => Onboarding(),
         Welcome.id: (context) => Welcome(),
@@ -26,6 +29,9 @@ class MyApp extends StatelessWidget {
         SignUp.id: (context) => SignUp(),
         Home.id: (context) => Home(),
       },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale("es"),
     );
   }
 }
