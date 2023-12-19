@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/screens/login/login.dart';
+import 'package:medicheck/screens/welcome/login.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -12,7 +12,7 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int step = 1;
   static const List<String> headlines = [
-    "Consulta la cobertura de cualquier medicamento",
+    "Consulta la cobertura de cualquier medicamento.",
     "Encuentra centros cercanos afiliados",
     "Revisa tu historial de búsqueda"
   ];

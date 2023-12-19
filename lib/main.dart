@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/screens/login/login.dart';
+import 'package:medicheck/screens/welcome/login.dart';
+import 'package:medicheck/screens/welcome/welcome.dart';
+import 'package:medicheck/screens/welcome/sign_up.dart';
 import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
+import 'screens/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,12 +17,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'Inter'),
       debugShowCheckedModeBanner: false,
       title: 'MediCheck',
-      home: Splash(),
-      initialRoute: Onboarding.id,
+      initialRoute: Splash.id,
       routes: {
         Splash.id: (context) => Splash(),
         Onboarding.id: (context) => Onboarding(),
+        Welcome.id: (context) => Welcome(),
         Login.id: (context) => Login(),
+        SignUp.id: (context) => SignUp(),
+        Home.id: (context) => Home(),
       },
     );
   }

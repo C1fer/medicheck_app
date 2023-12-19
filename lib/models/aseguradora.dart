@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final aseguradora = aseguradoraFromJson(jsonString);
-
 import 'dart:convert';
 
 Aseguradora aseguradoraFromJson(String str) => Aseguradora.fromJson(json.decode(str));
@@ -11,10 +7,10 @@ String aseguradoraToJson(Aseguradora data) => json.encode(data.toJson());
 class Aseguradora {
   int idAseguradora;
   String nombre;
-  dynamic direccion;
-  dynamic telefono;
-  dynamic correo;
-  dynamic sitioWeb;
+  String? direccion;
+  String? telefono;
+  String? correo;
+  String? sitioWeb;
   DateTime fechaRegistro;
   List<dynamic> establecimientoAseguradoras;
   List<dynamic> planes;
