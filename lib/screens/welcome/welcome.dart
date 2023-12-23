@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/app_styles.dart';
-import '../../widgets/vertical_logo.dart';
+import '../../widgets/logo/full_logo.dart';
 import 'login.dart';
 import 'sign_up.dart';
 
@@ -24,7 +24,7 @@ class _WelcomeState extends State<Welcome> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            VerticalLogo(
+            FullLogo(
                 color: AppColors.jadeGreen,
                 fontSize: 25.68,
                 width: 66.37,
@@ -46,7 +46,7 @@ class _WelcomeState extends State<Welcome> {
               onPressed: () {
                 Navigator.pushNamed(context, Login.id);
               },
-              child: Text(AppLocalizations.of(context).login),
+              child: Text(AppLocalizations.of(context).login_capitalized),
             ),
             SizedBox(height: 16.0,),
             OutlinedButton(

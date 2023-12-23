@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'onboarding.dart';
-import 'package:medicheck/widgets/vertical_logo.dart';
+import 'package:medicheck/widgets/logo/full_logo.dart';
 import 'package:medicheck/styles/app_colors.dart';
 
 class Splash extends StatefulWidget {
@@ -25,7 +25,7 @@ class _SplashState extends State<Splash> {
       backgroundColor: AppColors.jadeGreen,
       body: SafeArea(
         child: Center(
-            child: VerticalLogo(
+            child: FullLogo(
           color: Colors.white,
           fontSize: 50.11,
               width:129.54,

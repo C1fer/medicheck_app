@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'app_logo.dart';
 
-class VerticalLogo extends StatelessWidget {
+class FullLogo extends StatelessWidget {
   final Color color;
   final double fontSize;
   final double width;
   final double height;
 
-  const VerticalLogo({super.key, required this.color, required this.fontSize, required this.width, required this.height});
+  const FullLogo({super.key, required this.color, required this.fontSize, required this.width, required this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class VerticalLogo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset('assets/logo/logo.svg', color: color),
+        AppLogo(color: color, width: width, height: height),
         const SizedBox(height: 4.0,),
         Text(
           "MediCheck",

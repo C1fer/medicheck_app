@@ -2,6 +2,13 @@
 class Assets {
   Assets._();
 
+  static const String iconsArrowLeft = 'assets/icons/arrow-left.svg';
+  static const String iconsEyeSlash = 'assets/icons/eye-slash.svg';
+  static const String iconsLock = 'assets/icons/lock.svg';
+  static const String iconsSms = 'assets/icons/sms.svg';
+  static const String imagesOnboarding1 = 'assets/images/onboarding_1.jpg';
+  static const String imagesOnboarding2 = 'assets/images/onboarding_2.jpg';
+  static const String imagesOnboarding3 = 'assets/images/onboarding_3.jpg';
   static const String interInterBlack = 'assets/fonts/Inter/Inter-Black.ttf';
   static const String interInterBold = 'assets/fonts/Inter/Inter-Bold.ttf';
   static const String interInterExtraBold = 'assets/fonts/Inter/Inter-ExtraBold.ttf';
