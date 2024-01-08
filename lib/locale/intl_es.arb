@@ -33,5 +33,13 @@
 
   "new_pw_heading": "¿Olvidaste tu contraseña?",
   "new_pw_mail_input_instructions": "Introduce el correo electrónico asociado a tu cuenta. Enviaremos un código para restablecer tu contraseña.",
-  "send_reset_pw_code": "Enviar código"
+  "send_reset_pw_code": "Enviar código",
+
+
+  "main_menu_heading": "Revisa tu información de cobertura",
+  "search_box_placeholder": "Buscar",
+  "coverage": "Cobertura",
+  "medical_centers": "Centros",
+  "favourites": "Favoritos",
+  "recents": "Recientes"
 }

@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       title: 'MediCheck',
-      initialRoute: Splash.id,
+      initialRoute: Welcome.id,
       routes: {
         Splash.id: (context) => Splash(),
         Onboarding.id: (context) => Onboarding(),

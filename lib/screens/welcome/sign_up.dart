@@ -8,6 +8,7 @@ import '../../widgets/logo/full_logo.dart';
 import '../../utils/validators.dart';
 import '../../styles/app_colors.dart';
 import '../../widgets/custom_appbar.dart';
+import '../../widgets/custom_pwd_field.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -20,6 +21,10 @@ class SignUp extends StatefulWidget {
 class _LoginState extends State<SignUp> {
   @override
   final _formKey = GlobalKey<FormState>();
+
+  final _ssnController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,26 +43,28 @@ class _LoginState extends State<SignUp> {
                   SizedBox(height: 30),
                   FullLogo(width: 66.37, height: 66.36, color: AppColors.jadeGreen,fontSize: 25.68,),
                   SizedBox(height: 30),
-                  // CustomInputField(
-                  //   prefixIcon: Icons.person,
-                  //   hintText: AppLocalizations.of(context).ssn,
-                  //   validator: (val) {
-                  //     if (!Validators.isValidEmail(val ?? '')) return 'E';
-                  //   },
-                  // ),
-                  // SizedBox(height: 16.0),
-                  // CustomInputField(
-                  //   prefixIcon: Icons.email_outlined,
-                  //   hintText: AppLocalizations.of(context).emailFieldLabel,
-                  //   validator: (val) {
-                  //     if (!Validators.isValidEmail(val ?? '')) return 'E';
-                  //   },
-                  // ),
-                  // SizedBox(height: 16.0),
-                  // CustomInputField(
-                  //   prefixIcon: Icons.lock,
-                  //   hintText: AppLocalizations.of(context).passwordFieldLabel,
-                  // ),
+                  CustomInputField(
+                    controller: _ssnController,
+                    prefixIcon: Icons.person,
+                    hintText: AppLocalizations.of(context).ssn,
+                    validator: (val) {
+                      if (!Validators.isValidEmail(val ?? '')) return 'E';
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  CustomInputField(
+                    controller: _emailController,
+                    prefixIcon: Icons.email_outlined,
+                    hintText: AppLocalizations.of(context).emailFieldLabel,
+                    validator: (val) {
+                      if (!Validators.isValidEmail(val ?? '')) return 'E';
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  CustomPasswordField(
+                    controller: _passwordController,
+                    hintText: AppLocalizations.of(context).passwordFieldLabel,
+                  ),
                   SizedBox(height: 8),
                   Align(
                     alignment: Alignment.centerRight,
