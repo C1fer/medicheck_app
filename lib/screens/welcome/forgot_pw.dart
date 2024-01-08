@@ -19,6 +19,7 @@ class ForgotPW extends StatefulWidget {
 class _ForgotPWState extends State<ForgotPW> {
   @override
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +39,7 @@ class _ForgotPWState extends State<ForgotPW> {
                 Text(AppLocalizations.of(context).new_pw_mail_input_instructions, style: AppStyles.mainTextStyle,),
                 SizedBox(height: 30),
                 CustomInputField(
+                  controller: _emailController,
                   prefixIcon: Icons.email_outlined,
                   hintText: AppLocalizations.of(context).emailFieldLabel,
                   validator: (val) {

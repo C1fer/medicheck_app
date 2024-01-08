@@ -3,42 +3,30 @@ import 'package:flutter/services.dart';
 import '../styles/app_decorations.dart';
 
 
-class CustomInputField extends StatefulWidget {
+class CustomInputField extends StatelessWidget {
   const CustomInputField({
     Key? key,
+    required this.controller,
     required this.hintText,
-    this.prefixIcon,
+    required this.prefixIcon,
     this.inputFormatters,
     this.validator,
   }) : super(key: key);
 
+  final TextEditingController controller;
   final String hintText;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final IconData? prefixIcon;
 
   @override
-  State<CustomInputField> createState() => _CustomInputFieldState();
-}
-
-class _CustomInputFieldState extends State<CustomInputField> {
-  final TextEditingController _textController = TextEditingController();
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: _textController,
-      onChanged: (val){},
-      inputFormatters: widget.inputFormatters,
-      validator: widget.validator,
+      controller: controller,
+      inputFormatters: inputFormatters,
+      validator: validator,
       decoration: AppDecorations.formTextFieldDecoration
-          .copyWith(hintText: widget.hintText, prefixIcon: Icon(widget.prefixIcon)),
+          .copyWith(hintText:hintText, prefixIcon: Icon(prefixIcon)),
     );
   }
 }
