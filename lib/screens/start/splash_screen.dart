@@ -19,12 +19,9 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    //delete();
     _redirectUser();
   }
-  void delete() async{
-    await JWTService.deleteJWT();
-  }
+
   void _redirectUser() async {
     // Redirect to home screen if JWT is available
     String? accessToken = await JWTService.readJWT();
