@@ -8,7 +8,6 @@ class CustomInputField extends StatefulWidget {
     Key? key,
     required this.hintText,
     this.prefixIcon,
-    this.suffixIcon,
     this.inputFormatters,
     this.validator,
   }) : super(key: key);
@@ -17,7 +16,6 @@ class CustomInputField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final IconData? prefixIcon;
-  final IconData? suffixIcon;
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();

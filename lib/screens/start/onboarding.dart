@@ -17,7 +17,6 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int _step = 1;
   final int _maxSteps = 3;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +58,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text(AppLocalizations.of(context).onboarding_2,
+                child: Text(AppLocalizations.of(context).onboarding_1,
                     style: AppStyles.headingTextStyle),
               ),
               const SizedBox(

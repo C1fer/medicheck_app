@@ -22,7 +22,7 @@ class _WelcomeState extends State<Welcome> {
         padding: const EdgeInsets.all(64.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             FullLogo(
                 color: AppColors.jadeGreen,

@@ -3,5 +3,35 @@
 
   "appName" : "MediCheck",
 
-  "helloWorld": "Hello World!"
+  "onboarding_1": "Check the coverage of any medication",
+  "onboarding_2": "Find nearby affiliated facilities",
+  "onboarding_3": "Review your search history",
+  "skip_onboarding": "Skip",
+
+  "@_GENERAL":{},
+  "login_capitalized": "Login",
+  "login_lowercase": "Login",
+  "signup": "Register",
+  "emailFieldLabel": "email",
+  "passwordFieldLabel": "Password",
+
+
+  "@_WELCOME":{},
+  "welcome_msg": "welcome!",
+  "welcome_copy": "Sign in to enjoy all our features",
+
+  "@_LOGIN":{},
+  "not_registered": "Not registered?",
+  "create_account_low": "Create account",
+  "create_account_cap": "Create Account",
+  "register": "Register",
+
+  "existing_account": "Do you have an account?",
+  "forgot_pw": "I forgot my password.",
+  "new_pw": "Reset Password",
+  "ssn": "Social Security Number",
+
+  "new_pw_heading": "Forgot your password?",
+  "new_pw_mail_input_instructions": "Enter the email associated with your account. We will send a code to reset your password.",
+  "send_reset_pw_code": "Send code."
 }
