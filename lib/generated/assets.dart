@@ -18,6 +18,7 @@ class Assets {
   static const String interInterRegular = 'assets/fonts/Inter/Inter-Regular.ttf';
   static const String interInterSemiBold = 'assets/fonts/Inter/Inter-SemiBold.ttf';
   static const String interInterThin = 'assets/fonts/Inter/Inter-Thin.ttf';
+  static const String logoAppLogo = 'assets/logo/full_logo.png';
   static const String logoAppName = 'assets/logo/app_name.svg';
   static const String logoLogo = 'assets/logo/logo.svg';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';

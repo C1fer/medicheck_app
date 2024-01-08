@@ -10,7 +10,7 @@ import '../../widgets/logo/full_logo.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../utils/validators.dart';
 import '../../utils/api/api_service.dart';
-import '../../utils/jwt.dart';
+import '../../utils/jwt_service.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

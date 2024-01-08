@@ -41,6 +41,9 @@ dependencies:
   http: ^1.1.2
   shared_preferences: ^2.2.2
   flutter_secure_storage: ^9.0.0
+  flutter_native_splash: ^2.3.9
+
+
 
 dev_dependencies:
   flutter_test:
@@ -108,3 +111,5 @@ flutter:
         - asset: assets/fonts/Inter/Inter-Black.ttf
           weight: 900
 
+flutter_native_splash:
+  color: "#199A8E"

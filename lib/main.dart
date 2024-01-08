@@ -8,8 +8,12 @@ import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
 import 'screens/home.dart';
 import 'styles/app_styles.dart';
+import 'utils/local_storage_service.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

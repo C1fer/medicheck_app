@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../styles/app_styles.dart';
 import '../../styles/app_colors.dart';
 import 'package:medicheck/widgets/step_counter.dart';
-import '../../widgets/logo/full_logo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -17,6 +17,13 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   int _step = 1;
   final int _maxSteps = 3;
+
+  void _completeOnboarding()async {
+    final localStorage = await SharedPreferences.getInstance();
+    await localStorage.setBool('onboarding_completed', true);
+    Navigator.pushReplacementNamed(context, Welcome.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +42,7 @@ class _OnboardingState extends State<Onboarding> {
                       style: AppStyles.mainTextStyle,
                     ),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, Welcome.id);
+                      _completeOnboarding();
                     },
                   ),
                 ],
@@ -90,7 +97,7 @@ class _OnboardingState extends State<Onboarding> {
                           _step++;
                         });
                       } else {
-                        Navigator.pushNamed(context, Welcome.id);
+                        _completeOnboarding();
                       }
                     },
                   ),
