@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../screens/welcome/forgot_pw.dart';
 import '../../screens/welcome/sign_up.dart';
-import '../../screens/home.dart';
+import '../home/home.dart';
 import '../../styles/app_styles.dart';
 import '../../styles/app_colors.dart';
-import '../../widgets/custom_form_field.dart';
-import '../../widgets/custom_pwd_field.dart';
+import '../../widgets/inputs/custom_form_field.dart';
+import '../../widgets/inputs/custom_pwd_field.dart';
 import '../../widgets/logo/full_logo.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../utils/validators.dart';
@@ -114,7 +114,7 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(AppLocalizations.of(context).not_registered,
-                          style: AppStyles.subTextStyle),
+                          style: AppStyles.subMediumTextStyle),
                       const SizedBox(
                         width: 5.0,
                       ),

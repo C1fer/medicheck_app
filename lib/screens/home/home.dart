@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/screens/home/establishments/establishments_list.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/styles/app_colors.dart';
 import 'package:medicheck/utils/api/api_service.dart';
-import '../models/usuario.dart';
-import '../utils/jwt_service.dart';
-import '../widgets/menu_action_card.dart';
+import 'package:medicheck/widgets/cards/coverage_card.dart';
+import '../../models/usuario.dart';
+import '../../utils/jwt_service.dart';
+import '../../widgets/cards/menu_action_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Home extends StatefulWidget {
@@ -17,18 +20,32 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Usuario? currentUser;
+  List<Cobertura> recentSearches = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _fetchData();
+    _fetchCoverages();
   }
 
   void _fetchData() async {
-    var _userInfo = await JWTService.decodeJWT();
-    currentUser = await ApiService.getUserById(_userInfo!['IdUsuario']);
-    print(currentUser);
+    //JWT fetch
+    //var _userInfo = await JWTService.decodeJWT();
+    // API Fetch
+    // await ApiService.getUserById(_userInfo!['IdUsuario'])
+    //     .then((value) => setState(() => currentUser = value));
+  }
+
+  void _fetchCoverages() async{
+    try{
+      List<Cobertura> coverages = await ApiService.getCoverages();
+      setState(() => recentSearches = coverages);
+      print(recentSearches);
+    }
+    catch(except){
+      print(except);
+    }
   }
 
   @override
@@ -66,7 +83,11 @@ class _HomeState extends State<Home> {
                   const SizedBox(
                     width: 12.0,
                   ),
-                  Text(AppLocalizations.of(context).search_box_placeholder, style: const TextStyle(color: AppColors.deepLightGray, fontSize: 12),)
+                  Text(
+                    AppLocalizations.of(context).search_box_placeholder,
+                    style: const TextStyle(
+                        color: AppColors.deepLightGray, fontSize: 12),
+                  )
                 ]),
               ),
             ),
@@ -87,7 +108,7 @@ class _HomeState extends State<Home> {
                 MenuActionCard(
                     title: AppLocalizations.of(context).medical_centers,
                     iconPath: 'assets/icons/hospital.svg',
-                    route: ''),
+                    route: EstablishmentsList.id),
                 const SizedBox(
                   width: 22.0,
                 ),
@@ -97,10 +118,37 @@ class _HomeState extends State<Home> {
                     route: '')
               ],
             ),
-            Text(
-              AppLocalizations.of(context).recents,
-              style: AppStyles.sectionTextStyle,
+            const SizedBox(
+              height: 24.0,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  AppLocalizations.of(context).recent_coverages,
+                  style: AppStyles.sectionTextStyle,
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Text(
+                    AppLocalizations.of(context).view_all,
+                    style: AppStyles.actionTextStyle,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 15.0,
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemBuilder: (context, index) => CoverageCard(coverage: recentSearches[index]),
+                separatorBuilder: (context, index) => const SizedBox(height: 16.0),
+                itemCount: recentSearches.length,
+                scrollDirection: Axis.horizontal,
+              ),
+            )
           ],
         ),
       ),

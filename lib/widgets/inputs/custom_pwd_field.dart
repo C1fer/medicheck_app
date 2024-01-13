@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../styles/app_decorations.dart';
-import '../styles/app_colors.dart';
+import '../../styles/app_decorations.dart';
+import '../../styles/app_colors.dart';
 
 class CustomPasswordField extends StatefulWidget {
   const CustomPasswordField({

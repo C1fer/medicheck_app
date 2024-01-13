@@ -34,7 +34,7 @@ class JWTService{
   static Future<Map<String, dynamic>?> decodeJWT() async {
     try {
       String? token = await storage.read(key: 'jwt');
-      final Map<String, dynamic?> decodedToken = Jwt.parseJwt(token?? '');
+      final Map<String, dynamic> decodedToken = Jwt.parseJwt(token?? '');
       return decodedToken;
 
     } catch (except) {

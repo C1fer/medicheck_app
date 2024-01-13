@@ -3,12 +3,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/screens/welcome/forgot_pw.dart';
 import 'package:medicheck/screens/welcome/login.dart';
 import 'package:medicheck/styles/app_styles.dart';
-import '../../widgets/custom_form_field.dart';
+import '../../widgets/inputs/custom_form_field.dart';
 import '../../widgets/logo/full_logo.dart';
 import '../../utils/validators.dart';
 import '../../styles/app_colors.dart';
 import '../../widgets/custom_appbar.dart';
-import '../../widgets/custom_pwd_field.dart';
+import '../../widgets/inputs/custom_pwd_field.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -85,7 +85,7 @@ class _LoginState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(AppLocalizations.of(context).existing_account,
-                          style: AppStyles.subTextStyle),
+                          style: AppStyles.subMediumTextStyle),
                       SizedBox(width: 5.0,),
                       GestureDetector(
                         child: Text(

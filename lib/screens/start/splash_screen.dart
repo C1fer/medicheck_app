@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/screens/home.dart';
+import 'package:medicheck/screens/home/home.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'onboarding.dart';
 import 'package:medicheck/widgets/logo/full_logo.dart';
@@ -19,6 +19,7 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
+    //JWTService.deleteJWT();
     _redirectUser();
   }
 

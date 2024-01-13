@@ -19,14 +19,32 @@ class AppStyles {
       color: AppColors.lightGray,
   );
 
-  static const subTextStyle = TextStyle(
+  static const subMediumTextStyle = TextStyle(
       fontSize: 16.0,
       color: AppColors.darkGray,
+  );
+
+  static const subSmallTextStyle = TextStyle(
+    fontSize: 12.0,
+    color: AppColors.darkGray,
   );
 
   static const actionTextStyle = TextStyle(
     fontSize: 15.0,
     color: AppColors.jadeGreen,
+  );
+
+  static const coverageCardTextStyle = TextStyle(
+    color: AppColors.darkerGray,
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+  );
+
+
+static const featureCardTextStyle = TextStyle(
+    color: AppColors.jadeGreen,
+    fontSize: 12,
+    fontWeight: FontWeight.w500
   );
 
   static const primaryButtonStyle = ButtonStyle(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../styles/app_styles.dart';
-import '../styles/app_colors.dart';
+import '../../styles/app_styles.dart';
+import '../../styles/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
 
 class MenuActionCard extends StatelessWidget {
@@ -48,7 +48,7 @@ class MenuActionCard extends StatelessWidget {
               )),
           Padding(
             padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
-            child: Text(title, style: AppStyles.subTextStyle),
+            child: Text(title, style: AppStyles.subMediumTextStyle),
           ),
         ],
       ),

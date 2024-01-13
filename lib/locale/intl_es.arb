@@ -41,5 +41,6 @@
   "coverage": "Cobertura",
   "medical_centers": "Centros",
   "favourites": "Favoritos",
-  "recents": "Recientes"
+  "recent_coverages": "Consultas recientes",
+  "view_all": "Ver todo"
 }

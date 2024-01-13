@@ -2,13 +2,30 @@
 class Assets {
   Assets._();
 
+  static const String apiApiConstants = 'lib/utils/api/api_constants.dart';
+  static const String apiApiService = 'lib/utils/api/api_service.dart';
+  static const String cardsCoverageCard = 'lib/widgets/cards/coverage_card.dart';
+  static const String cardsEstablishmentCard = 'lib/widgets/cards/establishment_card.dart';
+  static const String cardsFeatureCard = 'lib/widgets/cards/feature_card.dart';
+  static const String cardsMenuActionCard = 'lib/widgets/cards/menu_action_card.dart';
+  static const String coverageCoverageDetails = 'lib/screens/home/coverage/coverage_details.dart';
+  static const String coverageCoverageSearch = 'lib/screens/home/coverage/coverage_search.dart';
+  static const String establishmentsEstablishmentsList = 'lib/screens/home/establishments/establishments_list.dart';
+  static const String generatedAssets = 'lib/generated/assets.dart';
+  static const String homeHome = 'lib/screens/home/home.dart';
   static const String iconsArrowLeft = 'assets/icons/arrow-left.svg';
   static const String iconsEyeSlash = 'assets/icons/eye-slash.svg';
+  static const String iconsHeart = 'assets/icons/heart.svg';
+  static const String iconsHospital = 'assets/icons/hospital.svg';
   static const String iconsLock = 'assets/icons/lock.svg';
+  static const String iconsPharmacy = 'assets/icons/pharmacy.svg';
+  static const String iconsSearch = 'assets/icons/search.svg';
   static const String iconsSms = 'assets/icons/sms.svg';
   static const String imagesOnboarding1 = 'assets/images/onboarding_1.jpg';
   static const String imagesOnboarding2 = 'assets/images/onboarding_2.jpg';
   static const String imagesOnboarding3 = 'assets/images/onboarding_3.jpg';
+  static const String inputsCustomFormField = 'lib/widgets/inputs/custom_form_field.dart';
+  static const String inputsCustomPwdField = 'lib/widgets/inputs/custom_pwd_field.dart';
   static const String interInterBlack = 'assets/fonts/Inter/Inter-Black.ttf';
   static const String interInterBold = 'assets/fonts/Inter/Inter-Bold.ttf';
   static const String interInterExtraBold = 'assets/fonts/Inter/Inter-ExtraBold.ttf';
@@ -18,9 +35,35 @@ class Assets {
   static const String interInterRegular = 'assets/fonts/Inter/Inter-Regular.ttf';
   static const String interInterSemiBold = 'assets/fonts/Inter/Inter-SemiBold.ttf';
   static const String interInterThin = 'assets/fonts/Inter/Inter-Thin.ttf';
-  static const String logoAppLogo = 'assets/logo/full_logo.png';
+  static const String libMain = 'lib/main.dart';
+  static const String localeIntlEn = 'lib/locale/intl_en.arb';
+  static const String localeIntlEs = 'lib/locale/intl_es.arb';
+  static const String logoAppLogo = 'lib/widgets/logo/app_logo.dart';
   static const String logoAppName = 'assets/logo/app_name.svg';
+  static const String logoFullLogo = 'assets/logo/full_logo.png';
   static const String logoLogo = 'assets/logo/logo.svg';
+  static const String modelsAseguradora = 'lib/models/aseguradora.dart';
+  static const String modelsCobertura = 'lib/models/cobertura.dart';
+  static const String modelsEstablecimiento = 'lib/models/establecimiento.dart';
+  static const String modelsPlan = 'lib/models/plan.dart';
+  static const String modelsProducto = 'lib/models/producto.dart';
+  static const String modelsUsuario = 'lib/models/usuario.dart';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';
+  static const String startOnboarding = 'lib/screens/start/onboarding.dart';
+  static const String startSplashScreen = 'lib/screens/start/splash_screen.dart';
+  static const String stylesAppColors = 'lib/styles/app_colors.dart';
+  static const String stylesAppDecorations = 'lib/styles/app_decorations.dart';
+  static const String stylesAppStyles = 'lib/styles/app_styles.dart';
+  static const String utilsJwtService = 'lib/utils/jwt_service.dart';
+  static const String utilsLocalStorageService = 'lib/utils/local_storage_service.dart';
+  static const String utilsValidators = 'lib/utils/validators.dart';
+  static const String welcomeForgotPw = 'lib/screens/welcome/forgot_pw.dart';
+  static const String welcomeLogin = 'lib/screens/welcome/login.dart';
+  static const String welcomeSignUp = 'lib/screens/welcome/sign_up.dart';
+  static const String welcomeWelcome = 'lib/screens/welcome/welcome.dart';
+  static const String widgetsCustomAppbar = 'lib/widgets/custom_appbar.dart';
+  static const String widgetsHeadingBack = 'lib/widgets/heading_back.dart';
+  static const String widgetsLogoFullLogo = 'lib/widgets/logo/full_logo.dart';
+  static const String widgetsStepCounter = 'lib/widgets/step_counter.dart';
 
 }

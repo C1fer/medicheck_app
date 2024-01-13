@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/screens/home/coverage/coverage_details.dart';
+import 'package:medicheck/screens/home/establishments/establishments_list.dart';
 import 'package:medicheck/screens/welcome/forgot_pw.dart';
 import 'package:medicheck/screens/welcome/login.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:medicheck/screens/welcome/sign_up.dart';
 import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
-import 'screens/home.dart';
+import 'screens/home/home.dart';
 import 'styles/app_styles.dart';
-import 'utils/local_storage_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,26 +24,28 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           fontFamily: 'Inter',
           outlinedButtonTheme:
-              OutlinedButtonThemeData(style: AppStyles.outlinedButtonStyle),
+              const OutlinedButtonThemeData(style: AppStyles.outlinedButtonStyle),
           filledButtonTheme:
-              FilledButtonThemeData(style: AppStyles.primaryButtonStyle),
-        textButtonTheme: TextButtonThemeData(style: AppStyles.TextButtonStyle),
+              const FilledButtonThemeData(style: AppStyles.primaryButtonStyle),
+        textButtonTheme: const TextButtonThemeData(style: AppStyles.TextButtonStyle),
       ),
       debugShowCheckedModeBanner: false,
       title: 'MediCheck',
-      initialRoute: Welcome.id,
+      initialRoute: Splash.id,
       routes: {
-        Splash.id: (context) => Splash(),
-        Onboarding.id: (context) => Onboarding(),
-        Welcome.id: (context) => Welcome(),
-        Login.id: (context) => Login(),
-        SignUp.id: (context) => SignUp(),
-        ForgotPW.id: (context) => ForgotPW(),
-        Home.id: (context) => Home(),
+        Splash.id: (context) => const Splash(),
+        Onboarding.id: (context) => const Onboarding(),
+        Welcome.id: (context) => const Welcome(),
+        Login.id: (context) => const Login(),
+        SignUp.id: (context) => const SignUp(),
+        ForgotPW.id: (context) => const ForgotPW(),
+        Home.id: (context) => const Home(),
+        EstablishmentsList.id: (context) => const EstablishmentsList(),
+        //CoverageDetailView.id: (context) => const CoverageDetailView(),
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: Locale("es"),
+      locale: const Locale("es"),
     );
   }
 }

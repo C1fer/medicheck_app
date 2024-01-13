@@ -38,7 +38,7 @@ class _WelcomeState extends State<Welcome> {
             SizedBox(height: 10.0,),
             Text(
               AppLocalizations.of(context).welcome_copy,
-              style: AppStyles.subTextStyle,
+              style: AppStyles.subMediumTextStyle,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 35.0,),
