@@ -11,7 +11,7 @@ class EstablishmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -20,10 +20,14 @@ class EstablishmentCard extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SvgPicture.asset(''),
+          Container(
+              width: 72,
+              height: 72,
+              child: SvgPicture.asset('assets/icons/hospital-colored.svg')),
+          SizedBox(width: 72.0,),
           Column(
             children: [
               Text(
@@ -35,9 +39,9 @@ class EstablishmentCard extends StatelessWidget {
               ),
               Text(establecimiento.categoria ?? '',
                   style: AppStyles.subSmallTextStyle),
-                const SizedBox(
-                  width: 4,
-                ),
+              const SizedBox(
+                width: 4,
+              ),
               Row(
                 children: [
                   const Icon(
@@ -50,7 +54,8 @@ class EstablishmentCard extends StatelessWidget {
                   ),
                   Text(
                     establecimiento.telefono ?? '',
-                    style: AppStyles.subSmallTextStyle.copyWith(color: AppColors.jadeGreen),
+                    style: AppStyles.subSmallTextStyle
+                        .copyWith(color: AppColors.jadeGreen),
                   )
                 ],
               ),

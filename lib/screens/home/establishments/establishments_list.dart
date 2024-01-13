@@ -3,6 +3,7 @@ import '../../../widgets/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../models/establecimiento.dart';
 import '../../../widgets/cards/establishment_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EstablishmentsList extends StatefulWidget {
   const EstablishmentsList({super.key});
@@ -37,7 +38,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
     _getEstablishments();
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Centros afiliados',
+        title: AppLocalizations.of(context).affiliated_centers,
       ),
       body: SafeArea(
         child: Padding(
