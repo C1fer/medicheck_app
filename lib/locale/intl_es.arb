@@ -45,5 +45,9 @@
   "recent_coverages": "Consultas recientes",
   "view_all": "Ver todo",
 
-  "affiliated_centers": "Centros afiliados"
+  "affiliated_centers": "Centros afiliados",
+  "coverage_details": "Detalles de cobertura",
+  "coverage_percentage": "de cobertura",
+  "description": "Descripción",
+  "near_centers": "Centros cercanos"
 }

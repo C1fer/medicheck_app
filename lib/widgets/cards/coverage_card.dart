@@ -31,11 +31,12 @@ class CoverageCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 50,
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              width: 54,
               height: 54,
-              child: SvgPicture.asset('assets/icons/medical-clipboard.svg', color: AppColors.lightGray, fit: BoxFit.fitHeight,),
+              child: SvgPicture.asset('assets/icons/medical-history.svg', fit: BoxFit.fitHeight,),
             ),
-            const SizedBox(height: 18.0),
+            const SizedBox(height: 16.0),
             Text(
               coverage.idProductoNavigation.nombre,
               style: AppStyles.coverageCardHeadingTextStyle,

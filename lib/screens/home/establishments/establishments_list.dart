@@ -35,7 +35,6 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
 
   @override
   Widget build(BuildContext context) {
-    _getEstablishments();
     return Scaffold(
       appBar: CustomAppBar(
         title: AppLocalizations.of(context).affiliated_centers,

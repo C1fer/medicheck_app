@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         ForgotPW.id: (context) => const ForgotPW(),
         Home.id: (context) => const Home(),
         EstablishmentsList.id: (context) => const EstablishmentsList(),
-        //CoverageDetailView.id: (context) => const CoverageDetailView(),
+        CoverageDetailView.id: (context) => const CoverageDetailView(),
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
