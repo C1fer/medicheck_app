@@ -43,6 +43,40 @@ class ApiService {
     return null;
   }
 
+  static Future<Map<String, dynamic>?> UserSignup(String docNumber, String docType, String pwd) async {
+    // Define API Endpoint
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndpoint);
+
+    //Map body arguments
+    Map<String, String> signUpCredentials = {
+      'noDocumento': docNumber,
+      'tipoDocumento': docType,
+      'clave': pwd
+    };
+
+    try {
+      var response = await http.post(
+        url,
+        body: json.encode(signUpCredentials),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Handle successful login
+        Map<String, dynamic> responseData = json.decode(response.body);
+        return responseData;
+      }
+      else {
+        // Handle unsuccessful login (e.g., wrong credentials, server error)
+        print('Login failed. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    } catch (e) {
+      print('Request error: $e');
+    }
+    return null;
+  }
+
   static Future<Usuario?> getUserById(String id) async {
     var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$id');
 
@@ -69,9 +103,8 @@ class ApiService {
     try{
       var response = await http.get(url, headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $accessToken'});
       if (response.statusCode ==200){
-        print(response.body);
         final List<dynamic > responseData = json.decode(response.body);
-        return responseData.map((data) => Establecimiento.fromJson(data)).toList();;
+        return responseData.map((data) => Establecimiento.fromJson(data)).toList();
       }
     }
     catch(except){
@@ -86,8 +119,7 @@ class ApiService {
 
     try{
       var response = await http.get(url, headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $accessToken'});
-      if (response.statusCode ==200){
-        print(response.body);
+      if (response.statusCode == 200){
         final List<dynamic > responseData = json.decode(response.body);
         return responseData.map((data) => Cobertura.fromJson(data)).toList();
       }

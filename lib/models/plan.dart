@@ -8,7 +8,7 @@ class Plan {
   int idPlan;
   String descripcion;
   int idAseguradora;
-  DateTime fechaRegistro;
+  String fechaRegistro;
   List<dynamic> cobeturas;
   dynamic idAseguradoraNavigation;
   List<dynamic> usuarioPlans;
@@ -24,22 +24,22 @@ class Plan {
   });
 
   factory Plan.fromJson(Map<String, dynamic> json) => Plan(
-    idPlan: json["idPlan"],
-    descripcion: json["descripcion"],
-    idAseguradora: json["idAseguradora"],
-    fechaRegistro: DateTime.parse(json["fechaRegistro"]),
-    cobeturas: List<dynamic>.from(json["cobeturas"].map((x) => x)),
-    idAseguradoraNavigation: json["idAseguradoraNavigation"],
-    usuarioPlans: List<dynamic>.from(json["usuarioPlans"].map((x) => x)),
+    idPlan: json["IdPlan"],
+    descripcion: json["Descripcion"],
+    idAseguradora: json["IdAseguradora"],
+    fechaRegistro: json["FechaRegistro"],
+    cobeturas: json["Coberturas"] != null ? List<dynamic>.from(json["Coberturas"].map((x) => x)) : [],
+    idAseguradoraNavigation: json["IdAseguradoraNavigation"],
+    usuarioPlans: json["UsuarioPlans"] != null ? List<dynamic>.from(json["UsuarioPlans"].map((x) => x)) : [],
   );
 
   Map<String, dynamic> toJson() => {
-    "idPlan": idPlan,
-    "descripcion": descripcion,
-    "idAseguradora": idAseguradora,
-    "fechaRegistro": fechaRegistro.toIso8601String(),
-    "cobeturas": List<dynamic>.from(cobeturas.map((x) => x)),
-    "idAseguradoraNavigation": idAseguradoraNavigation,
-    "usuarioPlans": List<dynamic>.from(usuarioPlans.map((x) => x)),
+    "IdPlan": idPlan,
+    "Descripcion": descripcion,
+    "IdAseguradora": idAseguradora,
+    "FechaRegistro": fechaRegistro,
+    "Cobeturas": List<dynamic>.from(cobeturas.map((x) => x)),
+    "IdAseguradoraNavigation": idAseguradoraNavigation,
+    "UsuarioPlans": List<dynamic>.from(usuarioPlans.map((x) => x)),
   };
 }

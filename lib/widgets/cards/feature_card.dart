@@ -10,11 +10,11 @@ class FeatureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
       decoration: ShapeDecoration(
         color: AppColors.lightJade,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(2),
+          borderRadius: BorderRadius.circular(2.23),
         ),
       ),
       child: Text(

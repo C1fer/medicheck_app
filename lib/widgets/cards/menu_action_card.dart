@@ -30,7 +30,7 @@ class MenuActionCard extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                shadows: [
+                shadows: const [
                   BoxShadow(
                     color: Color(0x19000000),
                     blurRadius: 70,

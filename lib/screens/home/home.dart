@@ -8,6 +8,7 @@ import 'package:medicheck/widgets/cards/coverage_card.dart';
 import '../../models/usuario.dart';
 import '../../utils/jwt_service.dart';
 import '../../widgets/cards/menu_action_card.dart';
+import '../../widgets/coverages_list_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Home extends StatefulWidget {
@@ -37,13 +38,11 @@ class _HomeState extends State<Home> {
     //     .then((value) => setState(() => currentUser = value));
   }
 
-  void _fetchCoverages() async{
-    try{
+  void _fetchCoverages() async {
+    try {
       List<Cobertura> coverages = await ApiService.getCoverages();
       setState(() => recentSearches = coverages);
-      print(recentSearches);
-    }
-    catch(except){
+    } catch (except) {
       print(except);
     }
   }
@@ -138,20 +137,22 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 15.0,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: CoveragesListView(coverages: recentSearches),
             ),
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) => CoverageCard(coverage: recentSearches[index]),
-                separatorBuilder: (context, index) => const SizedBox(height: 16.0),
-                itemCount: recentSearches.length,
-                scrollDirection: Axis.horizontal,
-              ),
-            )
+            Text(
+              AppLocalizations.of(context).new_coverages,
+              style: AppStyles.sectionTextStyle,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+              child: CoveragesListView(coverages: recentSearches),
+            ),
           ],
         ),
       ),
     ));
   }
 }
+

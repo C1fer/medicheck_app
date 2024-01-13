@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
+import 'package:medicheck/styles/app_colors.dart';
 import '../../models/cobertura.dart';
 import '../../styles/app_styles.dart';
 import '../../widgets/cards/feature_card.dart';
@@ -12,37 +14,46 @@ class CoverageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, CoverageDetailView.id, arguments: coverage),
+      onTap: () => Navigator.pushNamed(context, CoverageDetailView.id,
+          arguments: coverage),
       child: Container(
-        padding: const EdgeInsets.all(10.0),
+        height: 173,
+        width: 118,
+        padding: const EdgeInsets.all(12.0),
         decoration: ShapeDecoration(
-          color: Colors.yellow,
+          color: Colors.white,
           shape: RoundedRectangleBorder(
             side: const BorderSide(width: 1, color: Color(0xFFE8F3F1)),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 72,
-              height: 72,
+              width: 50,
+              height: 54,
+              child: SvgPicture.asset('assets/icons/medical-clipboard.svg', color: AppColors.lightGray, fit: BoxFit.fitHeight,),
             ),
+            const SizedBox(height: 18.0),
             Text(
               coverage.idProductoNavigation.nombre,
-              style: AppStyles.coverageCardTextStyle,
+              style: AppStyles.coverageCardHeadingTextStyle,
             ),
-            const SizedBox(height: 4.0,),
+            const SizedBox(
+              height: 4.0,
+            ),
             Text(
               coverage.idProductoNavigation.categoria,
-              style: AppStyles.subSmallTextStyle.copyWith(fontSize: 9.0),
+              style: AppStyles.coverageCardCategoryTextStyle,
             ),
-            const SizedBox(height: 10.0,),
-            FeatureCard(msg: '${coverage.porcentaje} %')
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
+              child: FeatureCard(msg: '${coverage.porcentaje} %'),
+            )
           ],
         ),
       ),
     );
   }
 }
-

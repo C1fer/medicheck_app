@@ -21,15 +21,15 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
     _getEstablishments();
   }
 
-  void  _getEstablishments() async {
-    try{
-      var _response = await ApiService.getEstablishments();
-      setState(() => establishments = _response);
-    }
-    catch(ex){
+  void _getEstablishments() async {
+    try {
+      var response = await ApiService.getEstablishments();
+      if (mounted) {
+        setState(() => establishments = response);
+      }
+    } catch (ex) {
       print(ex);
     }
-
   }
 
   @override
@@ -43,7 +43,8 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView.separated(
-              itemBuilder: (context, index)  => EstablishmentCard(establecimiento: establishments![index]),
+              itemBuilder: (context, index) =>
+                  EstablishmentCard(establecimiento: establishments![index]),
               separatorBuilder: (context, index) => const SizedBox(height: 10),
               itemCount: establishments!.length),
         ),

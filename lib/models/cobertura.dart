@@ -11,9 +11,9 @@ class Cobertura {
   int idCobertura;
   int idProducto;
   int idPlan;
-  bool cubre;
-  int porcentaje;
-  DateTime fechaVencimiento;
+  bool? cubre;
+  int? porcentaje;
+  DateTime? fechaVencimiento;
   DateTime fechaRegistro;
   Plan idPlanNavigation;
   Producto idProductoNavigation;
@@ -48,7 +48,7 @@ class Cobertura {
     "IdPlan": idPlan,
     "Cubre": cubre,
     "Porcentaje": porcentaje,
-    "FechaVencimiento": fechaVencimiento.toIso8601String(),
+    "FechaVencimiento": fechaVencimiento!.toIso8601String(),
     "FechaRegistro": fechaRegistro.toIso8601String(),
     "IdPlanNavigation": idPlanNavigation.toJson(),
     "IdProductoNavigation": idProductoNavigation.toJson(),

@@ -18,7 +18,9 @@ class Assets {
   static const String iconsHeart = 'assets/icons/heart.svg';
   static const String iconsHospital = 'assets/icons/hospital.svg';
   static const String iconsLock = 'assets/icons/lock.svg';
+  static const String iconsMedicalClipboard = 'assets/icons/medical-clipboard.svg';
   static const String iconsPharmacy = 'assets/icons/pharmacy.svg';
+  static const String iconsPillCase = 'assets/icons/pill-case.svg';
   static const String iconsSearch = 'assets/icons/search.svg';
   static const String iconsSms = 'assets/icons/sms.svg';
   static const String imagesOnboarding1 = 'assets/images/onboarding_1.jpg';
@@ -61,6 +63,7 @@ class Assets {
   static const String welcomeLogin = 'lib/screens/welcome/login.dart';
   static const String welcomeSignUp = 'lib/screens/welcome/sign_up.dart';
   static const String welcomeWelcome = 'lib/screens/welcome/welcome.dart';
+  static const String widgetsCoveragesListView = 'lib/widgets/coverages_list_view.dart';
   static const String widgetsCustomAppbar = 'lib/widgets/custom_appbar.dart';
   static const String widgetsHeadingBack = 'lib/widgets/heading_back.dart';
   static const String widgetsLogoFullLogo = 'lib/widgets/logo/full_logo.dart';

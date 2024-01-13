@@ -34,12 +34,17 @@ class AppStyles {
     color: AppColors.jadeGreen,
   );
 
-  static const coverageCardTextStyle = TextStyle(
+  static const coverageCardHeadingTextStyle = TextStyle(
     color: AppColors.darkerGray,
     fontSize: 12,
     fontWeight: FontWeight.w600,
   );
 
+  static const coverageCardCategoryTextStyle = TextStyle(
+    color: AppColors.deepLightGray,
+    fontSize: 9,
+    fontWeight: FontWeight.w500,
+  );
 
 static const featureCardTextStyle = TextStyle(
     color: AppColors.jadeGreen,

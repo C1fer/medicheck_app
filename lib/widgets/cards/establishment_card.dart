@@ -11,11 +11,11 @@ class EstablishmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 1, color: Color(0xFFE8F3F1)),
+          side: const BorderSide(width: 1, color: Color(0xFFE8F3F1)),
           borderRadius: BorderRadius.circular(12),
         ),
       ),
@@ -27,29 +27,29 @@ class EstablishmentCard extends StatelessWidget {
           Column(
             children: [
               Text(
-                establecimiento.nombre,
+                establecimiento.nombre ?? '',
                 style: AppStyles.sectionTextStyle,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
-              Text(establecimiento.categoria,
+              Text(establecimiento.categoria ?? '',
                   style: AppStyles.subSmallTextStyle),
-                SizedBox(
+                const SizedBox(
                   width: 4,
                 ),
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.phone,
                     size: 14.0,
                     color: AppColors.jadeGreen,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 4,
                   ),
                   Text(
-                    establecimiento.telefono,
+                    establecimiento.telefono ?? '',
                     style: AppStyles.subSmallTextStyle.copyWith(color: AppColors.jadeGreen),
                   )
                 ],

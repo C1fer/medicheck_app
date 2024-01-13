@@ -6,11 +6,11 @@ String establecimientoToJson(Establecimiento data) => json.encode(data.toJson())
 
 class Establecimiento {
   int idEstablecimiento;
-  String nombre;
-  String categoria;
-  String direccion;
-  String telefono;
-  String correo;
+  String? nombre;
+  String? categoria;
+  String? direccion;
+  String? telefono;
+  String? correo;
   DateTime fechaRegistro;
   List<dynamic> establecimientoAseguradoras;
   List<dynamic> reporteIncidentes;

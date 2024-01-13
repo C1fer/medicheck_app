@@ -16,7 +16,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [Text(widget.coverageData.idProductoNavigation.nombre)],
+      children: [Text(widget.coverageData.idProductoNavigation.nombre ?? '')],
     );
   }
 }

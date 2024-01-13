@@ -11,7 +11,7 @@ class Producto {
   bool habilitado;
   String tipo;
   String categoria;
-  DateTime fechaRegistro;
+  String fechaRegistro;
   List<dynamic> cobeturas;
   List<dynamic> productosGuardados;
   List<dynamic> reporteIncidentes;
@@ -30,28 +30,28 @@ class Producto {
   });
 
   factory Producto.fromJson(Map<String, dynamic> json) => Producto(
-    idProducto: json["idProducto"],
-    nombre: json["nombre"],
-    descripcion: json["descripcion"],
-    habilitado: json["habilitado"],
-    tipo: json["tipo"],
-    categoria: json["categoria"],
-    fechaRegistro: DateTime.parse(json["fechaRegistro"]),
-    cobeturas: List<dynamic>.from(json["cobeturas"].map((x) => x)),
-    productosGuardados: List<dynamic>.from(json["productosGuardados"].map((x) => x)),
-    reporteIncidentes: List<dynamic>.from(json["reporteIncidentes"].map((x) => x)),
+    idProducto: json["IdProducto"],
+    nombre: json["Nombre"],
+    descripcion: json["Descripcion"],
+    habilitado: json["Habilitado"],
+    tipo: json["Tipo"],
+    categoria: json["Categoria"],
+    fechaRegistro: json["FechaRegistro"],
+    cobeturas: json["Coberturas"] != null ? List<dynamic>.from(json["Coberturas"].map((x) => x)) : [],
+    productosGuardados: json["ProductosGuardados"] != null ? List<dynamic>.from(json["ProductosGuardados"].map((x) => x)) : [],
+    reporteIncidentes: json["ReporteIncidentes"] != null ? List<dynamic>.from(json["ReporteIncidentes"].map((x) => x)) : [],
   );
 
   Map<String, dynamic> toJson() => {
-    "idProducto": idProducto,
-    "nombre": nombre,
-    "descripcion": descripcion,
-    "habilitado": habilitado,
-    "tipo": tipo,
-    "categoria": categoria,
-    "fechaRegistro": fechaRegistro.toIso8601String(),
-    "cobeturas": List<dynamic>.from(cobeturas.map((x) => x)),
-    "productosGuardados": List<dynamic>.from(productosGuardados.map((x) => x)),
-    "reporteIncidentes": List<dynamic>.from(reporteIncidentes.map((x) => x)),
+    "IdProducto": idProducto,
+    "Nombre": nombre,
+    "Descripcion": descripcion,
+    "Habilitado": habilitado,
+    "Tipo": tipo,
+    "Categoria": categoria,
+    "FechaRegistro": fechaRegistro,
+    "Cobeturas": List<dynamic>.from(cobeturas.map((x) => x)),
+    "ProductosGuardados": List<dynamic>.from(productosGuardados.map((x) => x)),
+    "ReporteIncidentes": List<dynamic>.from(reporteIncidentes.map((x) => x)),
   };
 }
