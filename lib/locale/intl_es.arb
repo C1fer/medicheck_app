@@ -49,5 +49,16 @@
   "coverage_details": "Detalles de cobertura",
   "coverage_percentage": "de cobertura",
   "description": "Descripción",
-  "near_centers": "Centros cercanos"
+  "near_centers": "Centros cercanos",
+  "search_screen_title": "Buscar productos",
+  "search_product": "Busca un producto",
+  "saved_products": "Productos guardados",
+  "incidents": "Incidentes",
+  "profile_info_heading": "Mi perfil",
+  "log_out": "Cerrar sesión",
+  "settings": "Configuración",
+  "change_lang": "Cambiar idioma",
+  "spanish": "Español",
+  "english": "Inglés"
+
 }

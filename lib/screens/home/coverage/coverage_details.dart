@@ -28,7 +28,6 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
-
             children: [
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 12),

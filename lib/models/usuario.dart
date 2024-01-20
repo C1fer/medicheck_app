@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 Usuario usuarioFromJson(String str) => Usuario.fromJson(json.decode(str));
 
@@ -6,17 +7,20 @@ String usuarioToJson(Usuario data) => json.encode(data.toJson());
 
 class Usuario {
   int idUsuario;
-  String rol;
-  String nombre;
-  String apellidos;
-  String correo;
-  String telefono;
-  String habilitado;
+  String? rol;
+  String? nombre;
+  String? apellidos;
+  String? correo;
+  String? telefono;
+  bool habilitado;
   DateTime fechaNacimiento;
   DateTime fechaRegistro;
-  String clave;
-  String noDocumento;
-  String tipoDocumento;
+  String? clave;
+  String? noDocumento;
+  String? tipoDocumento;
+  List<dynamic> productosGuardados;
+  List<dynamic> usuarioPlans;
+
 
   Usuario({
     required this.idUsuario,
@@ -31,35 +35,41 @@ class Usuario {
     required this.clave,
     required this.noDocumento,
     required this.tipoDocumento,
+    required this.productosGuardados,
+    required this.usuarioPlans
   });
 
   factory Usuario.fromJson(Map<String, dynamic> json) => Usuario(
-    idUsuario: json["id_usuario"],
+    idUsuario: json["idUsuario"],
     rol: json["rol"],
     nombre: json["nombre"],
     apellidos: json["apellidos"],
     correo: json["correo"],
     telefono: json["telefono"],
     habilitado: json["habilitado"],
-    fechaNacimiento: DateTime.parse(json["fecha_nacimiento"]),
-    fechaRegistro: DateTime.parse(json["fecha_registro"]),
+    fechaNacimiento: DateTime.parse(json["fechaNacimiento"]),
+    fechaRegistro: DateTime.parse(json["fechaRegistro"]),
     clave: json["clave"],
-    noDocumento: json["no_documento"],
-    tipoDocumento: json["tipo_documento"],
+    noDocumento: json["noDocumento"],
+    tipoDocumento: json["tipoDocumento"],
+    productosGuardados: List<dynamic>.from(json["productosGuardados"].map((x) => x)),
+    usuarioPlans: List<dynamic>.from(json["usuarioPlans"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
-    "id_usuario": idUsuario,
+    "idUsuario": idUsuario,
     "rol": rol,
     "nombre": nombre,
     "apellidos": apellidos,
     "correo": correo,
     "telefono": telefono,
     "habilitado": habilitado,
-    "fecha_nacimiento": fechaNacimiento.toIso8601String(),
-    "fecha_registro": fechaRegistro.toIso8601String(),
+    "fechaNacimiento": fechaNacimiento.toIso8601String(),
+    "fechaRegistro": fechaRegistro.toIso8601String(),
     "clave": clave,
-    "no_documento": noDocumento,
-    "tipo_documento": tipoDocumento,
+    "noDocumento": noDocumento,
+    "tipoDocumento": tipoDocumento,
+    "productosGuardados": List<dynamic>.from(productosGuardados.map((x) => x)),
+    "usuarioPlans": List<dynamic>.from(usuarioPlans.map((x) => x)),
   };
 }

@@ -4,21 +4,21 @@
   "appName" : "MediCheck",
 
   "onboarding_1": "Check the coverage of any medication",
-  "onboarding_2": "Find nearby affiliated facilities",
+  "onboarding_2": "Find nearby affiliated centers",
   "onboarding_3": "Review your search history",
   "skip_onboarding": "Skip",
 
   "@_GENERAL":{},
-  "login_capitalized": "Login",
-  "login_lowercase": "Login",
-  "signup": "Register",
-  "emailFieldLabel": "email",
+  "login_capitalized": "Log In",
+  "login_lowercase": "Log in",
+  "signup": "Sign Up",
+  "emailFieldLabel": "Email",
   "passwordFieldLabel": "Password",
 
 
   "@_WELCOME":{},
-  "welcome_msg": "welcome!",
-  "welcome_copy": "Sign in to enjoy all our features",
+  "welcome_msg": "Welcome!",
+  "welcome_copy": "Log in to enjoy all our features",
 
   "@_LOGIN":{},
   "not_registered": "Not registered?",
@@ -26,12 +26,39 @@
   "create_account_cap": "Create Account",
   "register": "Register",
 
-  "existing_account": "Do you have an account?",
-  "forgot_pw": "I forgot my password.",
+  "existing_account": "Already have an account?",
+  "forgot_pw": "Forgot Password",
   "new_pw": "Reset Password",
   "ssn": "Social Security Number",
 
   "new_pw_heading": "Forgot your password?",
   "new_pw_mail_input_instructions": "Enter the email associated with your account. We will send a code to reset your password.",
-  "send_reset_pw_code": "Send code."
+  "send_reset_pw_code": "Send code",
+
+
+  "main_menu_heading": "Review your coverage information",
+  "search_box_placeholder": "Search",
+  "coverage": "Coverage",
+  "medical_centers": "Centers",
+  "favourites": "Favorites",
+  "new_coverages": "New Products",
+  "recent_coverages": "Recent Queries",
+  "view_all": "View all",
+
+  "affiliated_centers": "Affiliated Centers",
+  "coverage_details": "Coverage Details",
+  "coverage_percentage": "coverage",
+  "description": "Description",
+  "near_centers": "Nearby Centers",
+  "search_screen_title": "Search for products",
+  "search_product": "Search for a product",
+  "saved_products": "Saved Products",
+  "incidents": "Incidents",
+  "profile_info_heading": "My Profile",
+  "log_out": "Log out",
+  "settings": "Settings",
+  "change_lang": "Change Language",
+  "spanish": "Spanish",
+  "english": "English"
+
 }
