@@ -37,17 +37,15 @@ class _HomeState extends State<Home> {
   }
 
   void _fetchData() async {
+    await ApiService.getCoverages()
+        .then((value) => setState(() => planCoverages = value));
+
     //JWT fetch
     var userInfo = await JWTService.decodeJWT();
 
     // API Fetch
     await ApiService.getUserById(userInfo!['IdUsuario'])
         .then((value) => setState(() => currentUser = value));
-
-    print(currentUser);
-
-    await ApiService.getCoverages()
-        .then((value) => setState(() => planCoverages = value));
 
     // await CachedCoveragesService.get()
     //     .then((value) => setState(() => recentSearches = value));
@@ -152,18 +150,18 @@ class _HomeState extends State<Home> {
                   AppLocalizations.of(context).recent_coverages,
                   style: AppStyles.sectionTextStyle,
                 ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Text(
-                    AppLocalizations.of(context).view_all,
-                    style: AppStyles.actionTextStyle,
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () {},
+                //   child: Text(
+                //     AppLocalizations.of(context).view_all,
+                //     style: AppStyles.actionTextStyle,
+                //   ),
+                // ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: CoveragesListView(coverages: recentSearches),
+              child: CoveragesListView(coverages: planCoverages),
             ),
             Text(
               AppLocalizations.of(context).new_coverages,
