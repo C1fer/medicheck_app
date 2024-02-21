@@ -9,7 +9,7 @@ import 'package:medicheck/screens/welcome/forgot_pw.dart';
 import 'package:medicheck/screens/welcome/login.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:medicheck/screens/welcome/sign_up.dart';
-import 'models/locale.dart';
+import 'models/localeNotifier.dart';
 import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
 import 'screens/home/home.dart';

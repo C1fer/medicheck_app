@@ -8,7 +8,7 @@ class Producto {
   int idProducto;
   String nombre;
   String descripcion;
-  bool habilitado;
+  bool? habilitado;
   String tipo;
   String categoria;
   String fechaRegistro;

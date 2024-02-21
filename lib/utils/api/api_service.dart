@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/establecimiento.dart';
 import 'dart:convert';
+import '../../models/producto.dart';
 import '../../models/usuario.dart';
 import 'api_constants.dart';
 import '../jwt_service.dart';
@@ -42,15 +43,18 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>?> UserSignup(
-      String docNumber, String docType, String pwd) async {
+      String docNumber, String docType, String pwd, String email, String phoneNo) async {
     // Define API Endpoint
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndpoint);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.signUpEndpoint);
 
     //Map body arguments
     Map<String, String> signUpCredentials = {
       'noDocumento': docNumber,
       'tipoDocumento': docType,
-      'clave': pwd
+      'clave': pwd,
+      'rol': 'AFILIADO',
+      'correo': email,
+      'telefono': phoneNo
     };
 
     try {
@@ -66,7 +70,7 @@ class ApiService {
         return responseData;
       } else {
         // Handle unsuccessful login (e.g., wrong credentials, server error)
-        print('Login failed. Status code: ${response.statusCode}');
+        print('Signup failed. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
       }
     } catch (e) {
@@ -90,7 +94,7 @@ class ApiService {
         return Usuario.fromJson(responseData);
       }
     } catch (except) {
-      print(except);
+      print('Error retrieving user: $except');
     }
     return null;
   }
@@ -112,13 +116,32 @@ class ApiService {
             .toList();
       }
     } catch (except) {
-      print(except);
+      print('Error retrieving establishments: $except');
     }
     return <Establecimiento>[];
   }
 
-  static Future<List<Cobertura>> getCoverages() async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.coveragesEndpoint);
+  static Future<List<Producto>> getSavedProductsbyUserID(int userID) async {
+    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.savedProductsUserEndpoint}/$userID');
+    String? accessToken = await JWTService.readJWT();
+
+    try {
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      });
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        return responseData.map((data) => Producto.fromJson(data)).toList();
+      }
+    } catch (except) {
+      print('Error retrieving coverages: $except');
+    }
+    return <Producto>[];
+  }
+
+  static Future<List<Cobertura>> getCoveragesbyUserID(String userID) async {
+    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesUserEndpoint}/$userID');
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -131,7 +154,26 @@ class ApiService {
         return responseData.map((data) => Cobertura.fromJson(data)).toList();
       }
     } catch (except) {
-      print(except);
+      print('Error retrieving coverages: $except');
+    }
+    return <Cobertura>[];
+  }
+
+  static Future<List<Cobertura>> getCoveragesbyPlanProduct(int planID, int productID) async {
+    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesEndpoint}/plan/$planID/producto/$productID');
+    String? accessToken = await JWTService.readJWT();
+
+    try {
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      });
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        return responseData.map((data) => Cobertura.fromJson(data)).toList();
+      }
+    } catch (except) {
+      print('Error retrieving coverages: $except');
     }
     return <Cobertura>[];
   }

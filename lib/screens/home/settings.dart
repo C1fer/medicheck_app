@@ -6,7 +6,7 @@ import '../../../utils/jwt_service.dart';
 import '../../../models/usuario.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../models/usuario.dart';
-import '../../../models/locale.dart';
+import '../../../models/localeNotifier.dart';
 import '../welcome/welcome.dart';
 import 'package:provider/provider.dart';
 
@@ -24,16 +24,15 @@ class _SettingsPageState extends State<SettingsPage> {
     Navigator.pushNamed(context, Welcome.id);
   }
 
-  void changeLocale() {}
-
   @override
   Widget build(BuildContext context) {
-    final currentUser = ModalRoute.of(context)!.settings.arguments as Usuario;
+    Usuario? currentUser = ModalRoute.of(context)!.settings.arguments as Usuario;
     var selectedLocale = Localizations.localeOf(context).toString();
+    final localization = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: AppLocalizations.of(context).profile_info_heading,
+        title: localization.profile_info_heading,
       ),
       body: SafeArea(
         child: Padding(
@@ -43,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 GestureDetector(
                   onTap: () => userLogOut(),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     width: double.infinity,
                     decoration: ShapeDecoration(
                       color: Colors.white,
@@ -54,17 +53,17 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     child: Text(
-                      AppLocalizations.of(context).log_out,
+                      localization.log_out,
                       style: AppStyles.headingTextStyle.copyWith(
                           fontWeight: FontWeight.w600, fontSize: 15.0, color: Colors.red),
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   width: double.infinity,
                   decoration: ShapeDecoration(
                     color: Colors.white,
@@ -78,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        AppLocalizations.of(context).change_lang,
+                        localization.change_lang,
                         style: AppStyles.headingTextStyle.copyWith(
                             fontWeight: FontWeight.w600, fontSize: 15.0),
                       ),
@@ -88,12 +87,12 @@ class _SettingsPageState extends State<SettingsPage> {
                           value: selectedLocale,
                           items: [
                             DropdownMenuItem(
-                              child: Text(AppLocalizations.of(context).english),
                               value: "en",
+                              child: Text('🇺🇸 ${localization.english}'),
                             ),
                             DropdownMenuItem(
-                              child: Text(AppLocalizations.of(context).spanish),
                               value: "es",
+                              child: Text('🇪🇸 ${localization.spanish}'),
                             ),
                           ],
                           onChanged: (String? value) {

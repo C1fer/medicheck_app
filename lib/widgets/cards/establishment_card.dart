@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../models/establecimiento.dart';
 import '../../styles/app_styles.dart';
 import '../../styles/app_colors.dart';
+import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
+
 
 class EstablishmentCard extends StatelessWidget {
   const EstablishmentCard({super.key, required this.establecimiento});
@@ -23,12 +25,13 @@ class EstablishmentCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
               width: 72,
               height: 72,
               child: SvgPicture.asset('assets/icons/hospital-colored.svg')),
-          SizedBox(width: 72.0,),
+          const SizedBox(width: 72.0,),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 establecimiento.nombre ?? '',
@@ -37,7 +40,7 @@ class EstablishmentCard extends StatelessWidget {
               const SizedBox(
                 width: 4,
               ),
-              Text(establecimiento.categoria ?? '',
+              Text(toBeginningOfSentenceCase(establecimiento.categoria!.replaceAll('_', ' ')) ?? '',
                   style: AppStyles.subSmallTextStyle),
               const SizedBox(
                 width: 4,

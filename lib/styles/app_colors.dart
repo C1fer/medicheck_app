@@ -11,4 +11,5 @@ class AppColors {
   static const Color offWhite = Color(0xFFF9FAFB);
   static const Color deeperGray = Color(0xFFE5E7EB);
   static const Color lightRed = Color(0xFFFF5C5C);
+  static const Color heartPink = Color(0xFFFC6969);
 }

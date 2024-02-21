@@ -15,7 +15,7 @@ class Cobertura {
   int? porcentaje;
   DateTime? fechaVencimiento;
   DateTime fechaRegistro;
-  Plan idPlanNavigation;
+  Plan? idPlanNavigation;
   Producto idProductoNavigation;
 
   Cobertura({
@@ -38,7 +38,7 @@ class Cobertura {
     porcentaje: json["Porcentaje"],
     fechaVencimiento: DateTime.parse(json["FechaVencimiento"]),
     fechaRegistro: DateTime.parse(json["FechaRegistro"]),
-    idPlanNavigation: Plan.fromJson(json["IdPlanNavigation"]),
+    idPlanNavigation: json["IdPlanNavigation"],
     idProductoNavigation: Producto.fromJson(json["IdProductoNavigation"]),
   );
 
@@ -50,7 +50,7 @@ class Cobertura {
     "Porcentaje": porcentaje,
     "FechaVencimiento": fechaVencimiento!.toIso8601String(),
     "FechaRegistro": fechaRegistro.toIso8601String(),
-    "IdPlanNavigation": idPlanNavigation.toJson(),
+    "IdPlanNavigation": idPlanNavigation!.toJson(),
     "IdProductoNavigation": idProductoNavigation.toJson(),
   };
 }

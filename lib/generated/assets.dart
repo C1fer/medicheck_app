@@ -18,7 +18,8 @@ class Assets {
   static const String homeSettings = 'lib/screens/home/settings.dart';
   static const String iconsArrowLeft = 'assets/icons/arrow-left.svg';
   static const String iconsEyeSlash = 'assets/icons/eye-slash.svg';
-  static const String iconsHeart = 'assets/icons/heart.svg';
+  static const String iconsHeartFull = 'assets/icons/heart-full.svg';
+  static const String iconsHeartOutlined = 'assets/icons/heart-outlined.svg';
   static const String iconsHospital = 'assets/icons/hospital.svg';
   static const String iconsHospitalColored = 'assets/icons/hospital-colored.svg';
   static const String iconsIncident = 'assets/icons/incident.svg';
@@ -54,7 +55,7 @@ class Assets {
   static const String modelsAseguradora = 'lib/models/aseguradora.dart';
   static const String modelsCobertura = 'lib/models/cobertura.dart';
   static const String modelsEstablecimiento = 'lib/models/establecimiento.dart';
-  static const String modelsLocale = 'lib/models/locale.dart';
+  static const String modelsLocale = 'lib/models/localeNotifier.dart';
   static const String modelsPlan = 'lib/models/plan.dart';
   static const String modelsProducto = 'lib/models/producto.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';

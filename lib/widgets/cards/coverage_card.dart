@@ -5,6 +5,7 @@ import 'package:medicheck/styles/app_colors.dart';
 import '../../models/cobertura.dart';
 import '../../styles/app_styles.dart';
 import '../../widgets/cards/feature_card.dart';
+import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 class CoverageCard extends StatelessWidget {
   const CoverageCard({super.key, required this.coverage});
@@ -45,7 +46,7 @@ class CoverageCard extends StatelessWidget {
               height: 4.0,
             ),
             Text(
-              coverage.idProductoNavigation.categoria,
+              toBeginningOfSentenceCase(coverage.idProductoNavigation.categoria)!,
               style: AppStyles.coverageCardCategoryTextStyle,
             ),
             Padding(

@@ -37,11 +37,11 @@ class _HomeState extends State<Home> {
   }
 
   void _fetchData() async {
-    await ApiService.getCoverages()
-        .then((value) => setState(() => planCoverages = value));
-
     //JWT fetch
     var userInfo = await JWTService.decodeJWT();
+
+    await ApiService.getCoveragesbyUserID(userInfo!['IdUsuario'])
+        .then((value) => setState(() => planCoverages = value));
 
     // API Fetch
     await ApiService.getUserById(userInfo!['IdUsuario'])
@@ -135,7 +135,7 @@ class _HomeState extends State<Home> {
                 ),
                 MenuActionCard(
                     title: AppLocalizations.of(context).favourites,
-                    iconPath: 'assets/icons/heart.svg',
+                    iconPath: 'assets/icons/heart-outlined.svg',
                     route: SavedCoverages.id)
               ],
             ),

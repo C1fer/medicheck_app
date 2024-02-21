@@ -36,7 +36,6 @@ class JWTService{
       String? token = await storage.read(key: 'jwt');
       final Map<String, dynamic> decodedToken = Jwt.parseJwt(token?? '');
       return decodedToken;
-
     } catch (except) {
       print('Error reading token: $except');
       return null;

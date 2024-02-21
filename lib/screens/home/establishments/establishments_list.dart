@@ -5,6 +5,7 @@ import '../../../models/establecimiento.dart';
 import '../../../widgets/cards/establishment_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
 class EstablishmentsList extends StatefulWidget {
   const EstablishmentsList({super.key});
   static const String id = 'establishments_list';
