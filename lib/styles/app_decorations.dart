@@ -9,6 +9,8 @@ class AppDecorations {
       ));
 
   static final formTextFieldDecoration = InputDecoration(
+    floatingLabelBehavior: FloatingLabelBehavior.auto,
+    labelStyle: TextStyle(color: AppColors.jadeGreen),
     fillColor: AppColors.offWhite,
       hintStyle: TextStyle(color: AppColors.lightGray, fontWeight: FontWeight.normal),
       prefixIconColor: AppColors.lightGray,

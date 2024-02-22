@@ -14,7 +14,8 @@
   "signup": "Registrar",
   "emailFieldLabel": "Correo electrónico",
   "passwordFieldLabel": "Contraseña",
-
+  "phoneFieldLabel": "No. de teléfono",
+  "invalid_input" : "Ingrese un valor válido.",
 
   "@_WELCOME":{},
   "welcome_msg": "¡Bienvenido!",
@@ -26,10 +27,16 @@
   "create_account_cap": "Crear Cuenta",
   "register": "Registrar",
 
+
   "existing_account": "¿Tienes una cuenta?",
   "forgot_pw": "Olvidé mi Contraseña",
   "new_pw": "Reestablecer Contraseña",
-  "ssn": "Numero de Seguridad Social",
+  "ssn_full": "No. de Seguridad Social",
+  "ssn_abbrv": "NSS",
+  "national_id_card_full": "No. de Cédula",
+  "national_id_card_abbrv": "Cédula",
+  "affiliate_not_found": "No existe un afiliado a una ARS con este ID.",
+  "wrong_credentials": "Incorrect credentials",
 
   "new_pw_heading": "¿Olvidaste tu contraseña?",
   "new_pw_mail_input_instructions": "Introduce el correo electrónico asociado a tu cuenta. Enviaremos un código para restablecer tu contraseña.",

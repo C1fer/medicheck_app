@@ -27,14 +27,11 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 401) {
         // Handle successful login
         Map<String, dynamic> responseData = json.decode(response.body);
+        print(responseData);
         return responseData;
-      } else {
-        // Handle unsuccessful login (e.g., wrong credentials, server error)
-        print('Login failed. Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
       }
     } catch (e) {
       print('Request error: $e');
@@ -64,14 +61,10 @@ class ApiService {
         headers: {'Content-Type': 'application/json'},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 400) {
         // Handle successful login
         Map<String, dynamic> responseData = json.decode(response.body);
         return responseData;
-      } else {
-        // Handle unsuccessful login (e.g., wrong credentials, server error)
-        print('Signup failed. Status code: ${response.statusCode}');
-        print('Response body: ${response.body}');
       }
     } catch (e) {
       print('Request error: $e');

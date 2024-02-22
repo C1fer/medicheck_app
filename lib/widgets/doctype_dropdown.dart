@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DocumentTypeDropdown extends StatefulWidget {
-  String docType;
+  final String docType;
+  final ValueChanged<String> onChanged;
 
-  DocumentTypeDropdown({super.key, required this.docType});
+  const DocumentTypeDropdown({super.key, required this.docType, required this.onChanged});
 
   @override
   State<DocumentTypeDropdown> createState() => _DocumentTypeDropdownState();
@@ -12,25 +14,23 @@ class DocumentTypeDropdown extends StatefulWidget {
 class _DocumentTypeDropdownState extends State<DocumentTypeDropdown> {
   @override
   Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context);
+
     return DropdownButton(
         value: widget.docType,
         items: [
           DropdownMenuItem(
-            child: Text('Cédula'),
             value: 'CEDULA',
+            child: Text(locale.national_id_card_abbrv),
           ),
           DropdownMenuItem(
-            child: Text('NSS'),
             value: 'NSS',
+            child: Text(locale.ssn_abbrv),
           ),
-          DropdownMenuItem(
-            child: Text('Contrato'),
-            value: 'CONTRATO',
-          )
         ],
         onChanged: (String? value) {
           if (value != null) {
-            setState(() => widget.docType = value);
+            widget.onChanged(value);
           }
         }
     );

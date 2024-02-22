@@ -3,14 +3,17 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/screens/welcome/login.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/utils/api/api_service.dart';
-import 'package:medicheck/utils/input_validation/validation_logic.dart';
 import 'package:medicheck/widgets/doctype_dropdown.dart';
-import '../../widgets/inputs/custom_form_field.dart';
+import 'package:medicheck/widgets/inputs/email_field.dart';
+import 'package:medicheck/widgets/inputs/id_field.dart';
+import 'package:medicheck/widgets/snackbar.dart';
+import '../../utils/jwt_service.dart';
+import '../../widgets/inputs/phone_field.dart';
 import '../../widgets/logo/full_logo.dart';
-import '../../utils/input_validation/validators.dart';
 import '../../styles/app_colors.dart';
 import '../../widgets/custom_appbar.dart';
-import '../../widgets/inputs/custom_pwd_field.dart';
+import '../../widgets/inputs/pwd_field.dart';
+import '../home/home.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -21,28 +24,51 @@ class SignUp extends StatefulWidget {
 }
 
 class _LoginState extends State<SignUp> {
-  @override
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
   final _docNoController = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   String _documentType = 'CEDULA';
 
   void userSignUp() async {
-    bool? isValid = _formKey.currentState?.validate() ?? false;
-    if (isValid) {
+    bool isFormValid = _formKey.currentState?.validate() ?? false;
+    if (isFormValid) {
       setState(() => _isLoading = true);
       try {
-        await ApiService.UserSignup(
-            _docNoController.text, _documentType, _passwordController.text, _emailController.text, '');
+        var responseData = await ApiService.UserSignup(
+            _docNoController.text,
+            _documentType,
+            _passwordController.text,
+            _emailController.text,
+            _phoneController.text);
+
+        if (responseData!["isSuccess"] == false) {
+          showCustomSnackBar(context, AppLocalizations.of(context).affiliate_not_found);
+        } else {
+          int? saveJWTResult =
+              await JWTService.saveJWT(responseData['accessToken']);
+          saveJWTResult == 0
+              ? Navigator.pushReplacementNamed(context, Home.id)
+              : null;
+        }
       } catch (except) {
         print("Sign up error: $except");
       } finally {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _docNoController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -71,35 +97,35 @@ class _LoginState extends State<SignUp> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        flex: 5,
-                        child: CustomInputField(
-                          controller: _docNoController,
-                          prefixIcon: Icons.person,
-                          hintText: AppLocalizations.of(context).ssn,
-                          validator: (val) => validateID(val, _documentType)
-                        ),
-                      ),
+                          flex: 5,
+                          child: DocNoField(
+                            controller: _docNoController,
+                            docType: _documentType,
+                            autoValidate: true,
+                          )),
                       const SizedBox(
                         width: 10.0,
                       ),
                       Expanded(
                         flex: 2,
-                        child: DocumentTypeDropdown(docType: _documentType,),
+                        child: DocumentTypeDropdown(
+                          docType: _documentType,
+                          onChanged: (newVal) => setState(() {
+                            _documentType = newVal;
+                            _docNoController.clear();
+                          }),
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16.0),
-                  CustomInputField(
-                    controller: _emailController,
-                    prefixIcon: Icons.email_outlined,
-                    hintText: AppLocalizations.of(context).emailFieldLabel,
-                    validator: (val) => validateEmail(val)
-                  ),
+                  EmailField(controller: _emailController, autoValidate: true),
                   const SizedBox(height: 16.0),
-                  CustomPasswordField(
+                  PhoneField(controller: _phoneController, autoValidate: false),
+                  const SizedBox(height: 16.0),
+                  PasswordField(
                     controller: _passwordController,
-                    hintText: AppLocalizations.of(context).passwordFieldLabel,
-                    validator: (val) => validatePassword(val),
+                    autoValidate: true,
                   ),
                   const SizedBox(
                     height: 25.0,
@@ -125,7 +151,8 @@ class _LoginState extends State<SignUp> {
                           AppLocalizations.of(context).login_lowercase,
                           style: AppStyles.actionTextStyle,
                         ),
-                        onTap: () => Navigator.pushNamed(context, Login.id),
+                        onTap: () =>
+                            Navigator.pushReplacementNamed(context, Login.id),
                       ),
                     ],
                   )

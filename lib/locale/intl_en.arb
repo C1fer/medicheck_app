@@ -14,7 +14,8 @@
   "signup": "Sign Up",
   "emailFieldLabel": "Email",
   "passwordFieldLabel": "Password",
-
+  "phoneFieldLabel": "No. de teléfono",
+  "invalid_input" : "Please enter a valid input",
 
   "@_WELCOME":{},
   "welcome_msg": "Welcome!",
@@ -29,7 +30,12 @@
   "existing_account": "Already have an account?",
   "forgot_pw": "Forgot Password",
   "new_pw": "Reset Password",
-  "ssn": "Social Security Number",
+  "ssn_full": "Social Security Number",
+  "ssn_abbrv": "SSN",
+  "national_id_card_full": "National ID",
+  "national_id_card_abbrv": "ID",
+  "affiliate_not_found": "There is no ARS affiliate with the provided ID.",
+  "wrong_credentials": "Incorrect credentials",
 
   "new_pw_heading": "Forgot your password?",
   "new_pw_mail_input_instructions": "Enter the email associated with your account. We will send a code to reset your password.",

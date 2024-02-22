@@ -34,8 +34,13 @@ class Assets {
   static const String imagesOnboarding1 = 'assets/images/onboarding_1.jpg';
   static const String imagesOnboarding2 = 'assets/images/onboarding_2.jpg';
   static const String imagesOnboarding3 = 'assets/images/onboarding_3.jpg';
+  static const String inputValidationValidationLogic = 'lib/utils/input_validation/validation_logic.dart';
+  static const String inputValidationValidators = 'lib/utils/input_validation/validators.dart';
   static const String inputsCustomFormField = 'lib/widgets/inputs/custom_form_field.dart';
-  static const String inputsCustomPwdField = 'lib/widgets/inputs/custom_pwd_field.dart';
+  static const String inputsEmailField = 'lib/widgets/inputs/email_field.dart';
+  static const String inputsIdField = 'lib/widgets/inputs/id_field.dart';
+  static const String inputsPhoneField = 'lib/widgets/inputs/phone_field.dart';
+  static const String inputsPwdField = 'lib/widgets/inputs/pwd_field.dart';
   static const String interInterBlack = 'assets/fonts/Inter/Inter-Black.ttf';
   static const String interInterBold = 'assets/fonts/Inter/Inter-Bold.ttf';
   static const String interInterExtraBold = 'assets/fonts/Inter/Inter-ExtraBold.ttf';
@@ -55,7 +60,7 @@ class Assets {
   static const String modelsAseguradora = 'lib/models/aseguradora.dart';
   static const String modelsCobertura = 'lib/models/cobertura.dart';
   static const String modelsEstablecimiento = 'lib/models/establecimiento.dart';
-  static const String modelsLocale = 'lib/models/localeNotifier.dart';
+  static const String modelsLocaleNotifier = 'lib/models/localeNotifier.dart';
   static const String modelsPlan = 'lib/models/plan.dart';
   static const String modelsProducto = 'lib/models/producto.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';
@@ -68,15 +73,16 @@ class Assets {
   static const String utilsCachedCoverages = 'lib/utils/cached_coverages.dart';
   static const String utilsJwtService = 'lib/utils/jwt_service.dart';
   static const String utilsLocalStorageService = 'lib/utils/local_storage_service.dart';
-  static const String utilsValidators = 'lib/utils/validators.dart';
   static const String welcomeForgotPw = 'lib/screens/welcome/forgot_pw.dart';
   static const String welcomeLogin = 'lib/screens/welcome/login.dart';
   static const String welcomeSignUp = 'lib/screens/welcome/sign_up.dart';
   static const String welcomeWelcome = 'lib/screens/welcome/welcome.dart';
   static const String widgetsCoveragesListView = 'lib/widgets/coverages_list_view.dart';
   static const String widgetsCustomAppbar = 'lib/widgets/custom_appbar.dart';
+  static const String widgetsDoctypeDropdown = 'lib/widgets/doctype_dropdown.dart';
   static const String widgetsHeadingBack = 'lib/widgets/heading_back.dart';
   static const String widgetsLogoFullLogo = 'lib/widgets/logo/full_logo.dart';
+  static const String widgetsSnackbar = 'lib/widgets/snackbar.dart';
   static const String widgetsStepCounter = 'lib/widgets/step_counter.dart';
 
 }

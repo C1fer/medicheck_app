@@ -16,7 +16,8 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   int _step = 1;
-  final int _maxSteps = 3;
+  final _maxSteps = 3;
+
 
   void _completeOnboarding()async {
     final localStorage = await SharedPreferences.getInstance();
@@ -26,6 +27,9 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    List<String> onboarding_msgs = [localization.onboarding_1, localization.onboarding_2, localization.onboarding_3];
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -38,7 +42,7 @@ class _OnboardingState extends State<Onboarding> {
                 children: [
                   GestureDetector(
                     child: Text(
-                      AppLocalizations.of(context).skip_onboarding,
+                      localization.skip_onboarding,
                       style: AppStyles.mainTextStyle,
                     ),
                     onTap: () {
@@ -65,7 +69,7 @@ class _OnboardingState extends State<Onboarding> {
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text(AppLocalizations.of(context).onboarding_1,
+                child: Text(onboarding_msgs[_step-1],
                     style: AppStyles.headingTextStyle),
               ),
               const SizedBox(
@@ -78,7 +82,7 @@ class _OnboardingState extends State<Onboarding> {
                     children: [
                       for (int i = 1; i < _maxSteps + 1; i++)
                         StepCounter(i, _step),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                     ],

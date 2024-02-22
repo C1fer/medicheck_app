@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:medicheck/utils/input_validation/validation_logic.dart';
+import 'package:medicheck/widgets/inputs/custom_form_field.dart';
 import '../../styles/app_decorations.dart';
 import '../../styles/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class CustomPasswordField extends StatefulWidget {
-  const CustomPasswordField({
+class PasswordField extends StatefulWidget {
+  const PasswordField({
     Key? key,
     required this.controller,
-    required this.hintText,
-    this.validator,
+    required this.autoValidate,
   }) : super(key: key);
 
   final TextEditingController controller;
-  final String hintText;
-  final String? Function(String?)? validator;
+  final bool autoValidate;
 
   @override
-  State<CustomPasswordField> createState() => _CustomPasswordFieldState();
+  State<PasswordField> createState() => _PasswordFieldState();
 }
 
-class _CustomPasswordFieldState extends State<CustomPasswordField> {
+class _PasswordFieldState extends State<PasswordField> {
   bool _obscureState = true;
+
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return CustomInputField(
       controller: widget.controller,
       obscureText: _obscureState,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: widget.validator,
+      autoValidateMode: widget.autoValidate ? AutovalidateMode.onUserInteraction : null,
+      validator: widget.autoValidate ? (val) => validatePassword(val, context): null,
       decoration: AppDecorations.formTextFieldDecoration.copyWith(
-          hintText: widget.hintText,
+          hintText: AppLocalizations.of(context).passwordFieldLabel,
           prefixIcon: const Icon(Icons.lock),
           prefixIconColor: MaterialStateColor.resolveWith((states) =>
               states.contains(MaterialState.focused)
