@@ -24,4 +24,15 @@ class Validators {
     final phoneRegExp = RegExp(r"^\+?0[0-9]{10}$");
     return phoneRegExp.hasMatch(phone);
   }
+
+  static bool isValidCedula(String cedula) {
+    final phoneRegExp = RegExp(r"^[0-9]\d{10}$");
+    return phoneRegExp.hasMatch(cedula);
+  }
+
+  static bool isValidNSS(String nss) {
+    final phoneRegExp = RegExp(r"^[0-9]\d{8}$");
+    return phoneRegExp.hasMatch(nss);
+  }
+
 }

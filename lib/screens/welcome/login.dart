@@ -9,7 +9,7 @@ import '../../widgets/inputs/custom_form_field.dart';
 import '../../widgets/inputs/custom_pwd_field.dart';
 import '../../widgets/logo/full_logo.dart';
 import '../../widgets/custom_appbar.dart';
-import '../../utils/validators.dart';
+import '../../utils/input_validation/validators.dart';
 import '../../utils/api/api_service.dart';
 import '../../utils/jwt_service.dart';
 

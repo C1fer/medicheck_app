@@ -5,7 +5,7 @@ import 'package:medicheck/styles/app_styles.dart';
 import '../../widgets/heading_back.dart';
 import '../../widgets/inputs/custom_form_field.dart';
 import '../../widgets/logo/full_logo.dart';
-import '../../utils/validators.dart';
+import '../../utils/input_validation/validators.dart';
 import '../../styles/app_colors.dart';
 
 class ForgotPW extends StatefulWidget {

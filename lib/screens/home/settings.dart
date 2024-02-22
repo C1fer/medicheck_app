@@ -26,7 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    Usuario? currentUser = ModalRoute.of(context)!.settings.arguments as Usuario;
+    //final currentUser = ModalRoute.of(context)!.settings.arguments as Usuario;
     var selectedLocale = Localizations.localeOf(context).toString();
     final localization = AppLocalizations.of(context);
 

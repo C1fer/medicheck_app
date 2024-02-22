@@ -3,9 +3,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/screens/welcome/login.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/utils/api/api_service.dart';
+import 'package:medicheck/utils/input_validation/validation_logic.dart';
+import 'package:medicheck/widgets/doctype_dropdown.dart';
 import '../../widgets/inputs/custom_form_field.dart';
 import '../../widgets/logo/full_logo.dart';
-import '../../utils/validators.dart';
+import '../../utils/input_validation/validators.dart';
 import '../../styles/app_colors.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/inputs/custom_pwd_field.dart';
@@ -26,7 +28,7 @@ class _LoginState extends State<SignUp> {
   final _docNoController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String _docType = 'CEDULA';
+  String _documentType = 'CEDULA';
 
   void userSignUp() async {
     bool? isValid = _formKey.currentState?.validate() ?? false;
@@ -34,16 +36,13 @@ class _LoginState extends State<SignUp> {
       setState(() => _isLoading = true);
       try {
         await ApiService.UserSignup(
-            _docNoController.text, _docType, _passwordController.text, _emailController.text, '');
+            _docNoController.text, _documentType, _passwordController.text, _emailController.text, '');
       } catch (except) {
         print("Sign up error: $except");
       } finally {
         setState(() => _isLoading = false);
       }
     }
-    else({
-      print('Invalid form')
-    });
   }
 
   @override
@@ -69,6 +68,7 @@ class _LoginState extends State<SignUp> {
                   ),
                   const SizedBox(height: 30),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         flex: 5,
@@ -76,37 +76,15 @@ class _LoginState extends State<SignUp> {
                           controller: _docNoController,
                           prefixIcon: Icons.person,
                           hintText: AppLocalizations.of(context).ssn,
-                          validator: (val) {
-                            if (!Validators.isValidEmail(val ?? '')) return 'E';
-                          },
+                          validator: (val) => validateID(val, _documentType)
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10.0,
                       ),
                       Expanded(
                         flex: 2,
-                        child: DropdownButton(
-                            value: _docType,
-                            items: [
-                              DropdownMenuItem(
-                                child: Text('Cédula'),
-                                value: 'CEDULA',
-                              ),
-                              DropdownMenuItem(
-                                child: Text('NSS'),
-                                value: 'NSS',
-                              ),
-                              DropdownMenuItem(
-                                child: Text('Contrato'),
-                                value: 'CONTRATO',
-                              )
-                            ],
-                            onChanged: (String? value) {
-                              if (value != null) {
-                                setState(() => _docType = value);
-                              }
-                            }),
+                        child: DocumentTypeDropdown(docType: _documentType,),
                       ),
                     ],
                   ),
@@ -115,14 +93,13 @@ class _LoginState extends State<SignUp> {
                     controller: _emailController,
                     prefixIcon: Icons.email_outlined,
                     hintText: AppLocalizations.of(context).emailFieldLabel,
-                    validator: (val) {
-                      if (!Validators.isValidEmail(val ?? '')) return 'E';
-                    },
+                    validator: (val) => validateEmail(val)
                   ),
                   const SizedBox(height: 16.0),
                   CustomPasswordField(
                     controller: _passwordController,
                     hintText: AppLocalizations.of(context).passwordFieldLabel,
+                    validator: (val) => validatePassword(val),
                   ),
                   const SizedBox(
                     height: 25.0,

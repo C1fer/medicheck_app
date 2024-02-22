@@ -25,6 +25,7 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
     return TextFormField(
       controller: widget.controller,
       obscureText: _obscureState,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: widget.validator,
       decoration: AppDecorations.formTextFieldDecoration.copyWith(
           hintText: widget.hintText,
@@ -46,6 +47,6 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
     const hidePwd = Icons.remove_red_eye_outlined;
     return GestureDetector(
         onTap: changeIcon,
-        child: Icon(_obscureState ? hidePwd : revealPwd));
+        child: Icon(_obscureState ? hidePwd : revealPwd, color: AppColors.lightGray,));
   }
 }
