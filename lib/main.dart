@@ -5,10 +5,12 @@ import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_coverages.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
 import 'package:medicheck/screens/home/settings.dart';
-import 'package:medicheck/screens/welcome/forgot_pw.dart';
-import 'package:medicheck/screens/welcome/login.dart';
+import 'package:medicheck/screens/welcome/pw_reset/forgot_pw.dart';
+import 'package:medicheck/screens/welcome/login_signup/login.dart';
+import 'package:medicheck/screens/welcome/pw_reset/new_pw.dart';
+import 'package:medicheck/screens/welcome/pw_reset/reset_token.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
-import 'package:medicheck/screens/welcome/sign_up.dart';
+import 'package:medicheck/screens/welcome/login_signup/sign_up.dart';
 import 'models/localeNotifier.dart';
 import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
@@ -60,6 +62,10 @@ class MyApp extends StatelessWidget {
                       context) => const CoverageDetailView(),
                   SavedCoverages.id: (context) => const SavedCoverages(),
                   SettingsPage.id: (context) => const SettingsPage(),
+                  ResetTokenInput.id: (
+                      context) => const ResetTokenInput(),
+                  NewPasswordInput.id: (
+                      context) => const NewPasswordInput(),
                 },
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

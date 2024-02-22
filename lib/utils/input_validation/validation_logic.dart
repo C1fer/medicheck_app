@@ -40,3 +40,10 @@ String? validatePhoneNo (String? input, BuildContext context){
   return null;
 }
 
+String? validateResetTokenInput (String? input, BuildContext context){
+  if (input != null){
+    bool _isValid = Validators.isValidResetToken(input!);
+    if (!_isValid) return AppLocalizations.of(context).invalid_input;
+  }
+  return null;
+}

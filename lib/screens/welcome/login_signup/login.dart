@@ -1,61 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:medicheck/screens/welcome/login.dart';
-import 'package:medicheck/styles/app_styles.dart';
-import 'package:medicheck/utils/api/api_service.dart';
-import 'package:medicheck/widgets/doctype_dropdown.dart';
-import 'package:medicheck/widgets/inputs/email_field.dart';
-import 'package:medicheck/widgets/inputs/id_field.dart';
-import 'package:medicheck/widgets/snackbar.dart';
-import '../../utils/jwt_service.dart';
-import '../../widgets/inputs/phone_field.dart';
-import '../../widgets/logo/full_logo.dart';
-import '../../styles/app_colors.dart';
-import '../../widgets/custom_appbar.dart';
-import '../../widgets/inputs/pwd_field.dart';
-import '../home/home.dart';
+import '../pw_reset/forgot_pw.dart';
+import 'sign_up.dart';
+import '../../../widgets/doctype_dropdown.dart';
+import '../../../widgets/inputs/id_field.dart';
+import '../../../widgets/snackbar.dart';
+import '../../home/home.dart';
+import '../../../styles/app_styles.dart';
+import '../../../styles/app_colors.dart';
+import '../../../widgets/inputs/pwd_field.dart';
+import '../../../widgets/logo/full_logo.dart';
+import '../../../widgets/custom_appbar.dart';
+import '../../../utils/api/api_service.dart';
+import '../../../utils/jwt_service.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
-  static const String id = 'sign_up';
+class Login extends StatefulWidget {
+  const Login({super.key});
+  static const String id = 'login';
 
   @override
-  State<SignUp> createState() => _LoginState();
+  State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<SignUp> {
+class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
   final _docNoController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   String _documentType = 'CEDULA';
 
-  void userSignUp() async {
+  // User login Logic
+  void userLogin() async {
     bool isFormValid = _formKey.currentState?.validate() ?? false;
     if (isFormValid) {
       setState(() => _isLoading = true);
       try {
-        var responseData = await ApiService.UserSignup(
+        var responseData = await ApiService.userLogin(
             _docNoController.text,
             _documentType,
-            _passwordController.text,
-            _emailController.text,
-            _phoneController.text);
-
-        if (responseData!["isSuccess"] == false) {
-          showCustomSnackBar(context, AppLocalizations.of(context).affiliate_not_found);
+            _passwordController.text);
+        if (responseData != null) {
+          if (responseData["isSuccess"] == false) {
+            showCustomSnackBar(context, AppLocalizations.of(context).wrong_credentials);
+          } else {
+            int? saveJWTResult =
+            await JWTService.saveJWT(responseData['accessToken']);
+            saveJWTResult == 0
+                ? Navigator.pushReplacementNamed(context, Home.id)
+                : null;
+          }
         } else {
-          int? saveJWTResult =
-              await JWTService.saveJWT(responseData['accessToken']);
-          saveJWTResult == 0
-              ? Navigator.pushReplacementNamed(context, Home.id)
-              : null;
+          // Handle null response
+          showCustomSnackBar(context, "Null response from server");
         }
       } catch (except) {
-        print("Sign up error: $except");
+        print("Login error: $except");
       } finally {
         setState(() => _isLoading = false);
       }
@@ -66,17 +66,17 @@ class _LoginState extends State<SignUp> {
   void dispose() {
     super.dispose();
     _docNoController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
     _passwordController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: AppLocalizations.of(context).signup),
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context).login_capitalized,
+      ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SafeArea(
           child: Form(
             key: _formKey,
@@ -108,51 +108,61 @@ class _LoginState extends State<SignUp> {
                       ),
                       Expanded(
                         flex: 2,
-                        child: DocumentTypeDropdown(
-                          docType: _documentType,
-                          onChanged: (newVal) => setState(() {
-                            _documentType = newVal;
-                            _docNoController.clear();
-                          }),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: DocumentTypeDropdown(
+                            docType: _documentType,
+                            onChanged: (newVal) => setState(() {
+                              _documentType = newVal;
+                              _docNoController.clear();
+                            }),
+                          ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16.0),
-                  EmailField(controller: _emailController, autoValidate: true),
-                  const SizedBox(height: 16.0),
-                  PhoneField(controller: _phoneController, autoValidate: false),
-                  const SizedBox(height: 16.0),
                   PasswordField(
                     controller: _passwordController,
-                    autoValidate: true,
+                    autoValidate: false,
+                  ),
+                  const SizedBox(height: 16.0),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      child: Text(
+                        AppLocalizations.of(context).forgot_pw,
+                        style: AppStyles.actionTextStyle
+                            .copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, ForgotPW.id),
+                    ),
                   ),
                   const SizedBox(
                     height: 25.0,
                   ),
                   FilledButton(
-                      onPressed: _isLoading ? null : () => userSignUp(),
+                      onPressed: _isLoading ? null : () => userLogin(),
                       child: Text(_isLoading
                           ? '...'
-                          : AppLocalizations.of(context).create_account_cap)),
+                          : AppLocalizations.of(context).login_capitalized)),
                   const SizedBox(
                     height: 24.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(AppLocalizations.of(context).existing_account,
+                      Text(AppLocalizations.of(context).not_registered,
                           style: AppStyles.subMediumTextStyle),
                       const SizedBox(
                         width: 5.0,
                       ),
                       GestureDetector(
                         child: Text(
-                          AppLocalizations.of(context).login_lowercase,
+                          AppLocalizations.of(context).create_account_low,
                           style: AppStyles.actionTextStyle,
                         ),
-                        onTap: () =>
-                            Navigator.pushReplacementNamed(context, Login.id),
+                        onTap: () => Navigator.pushReplacementNamed(context, SignUp.id),
                       ),
                     ],
                   )

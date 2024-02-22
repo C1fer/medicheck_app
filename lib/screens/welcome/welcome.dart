@@ -3,8 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/app_styles.dart';
 import '../../widgets/logo/full_logo.dart';
-import 'login.dart';
-import 'sign_up.dart';
+import 'login_signup/login.dart';
+import 'login_signup/sign_up.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});

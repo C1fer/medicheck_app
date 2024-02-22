@@ -41,6 +41,7 @@ class Assets {
   static const String inputsIdField = 'lib/widgets/inputs/id_field.dart';
   static const String inputsPhoneField = 'lib/widgets/inputs/phone_field.dart';
   static const String inputsPwdField = 'lib/widgets/inputs/pwd_field.dart';
+  static const String inputsTokenField = 'lib/widgets/inputs/token_field.dart';
   static const String interInterBlack = 'assets/fonts/Inter/Inter-Black.ttf';
   static const String interInterBold = 'assets/fonts/Inter/Inter-Bold.ttf';
   static const String interInterExtraBold = 'assets/fonts/Inter/Inter-ExtraBold.ttf';
@@ -53,6 +54,8 @@ class Assets {
   static const String libMain = 'lib/main.dart';
   static const String localeIntlEn = 'lib/locale/intl_en.arb';
   static const String localeIntlEs = 'lib/locale/intl_es.arb';
+  static const String loginSignupLogin = 'lib/screens/welcome/login_signup/login.dart';
+  static const String loginSignupSignUp = 'lib/screens/welcome/login_signup/sign_up.dart';
   static const String logoAppLogo = 'lib/widgets/logo/app_logo.dart';
   static const String logoAppName = 'assets/logo/app_name.svg';
   static const String logoFullLogo = 'assets/logo/full_logo.png';
@@ -65,6 +68,9 @@ class Assets {
   static const String modelsProducto = 'lib/models/producto.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';
+  static const String pwResetForgotPw = 'lib/screens/welcome/pw_reset/forgot_pw.dart';
+  static const String pwResetNewPw = 'lib/screens/welcome/pw_reset/new_pw.dart';
+  static const String pwResetResetToken = 'lib/screens/welcome/pw_reset/reset_token.dart';
   static const String startOnboarding = 'lib/screens/start/onboarding.dart';
   static const String startSplashScreen = 'lib/screens/start/splash_screen.dart';
   static const String stylesAppColors = 'lib/styles/app_colors.dart';
@@ -73,9 +79,6 @@ class Assets {
   static const String utilsCachedCoverages = 'lib/utils/cached_coverages.dart';
   static const String utilsJwtService = 'lib/utils/jwt_service.dart';
   static const String utilsLocalStorageService = 'lib/utils/local_storage_service.dart';
-  static const String welcomeForgotPw = 'lib/screens/welcome/forgot_pw.dart';
-  static const String welcomeLogin = 'lib/screens/welcome/login.dart';
-  static const String welcomeSignUp = 'lib/screens/welcome/sign_up.dart';
   static const String welcomeWelcome = 'lib/screens/welcome/welcome.dart';
   static const String widgetsCoveragesListView = 'lib/widgets/coverages_list_view.dart';
   static const String widgetsCustomAppbar = 'lib/widgets/custom_appbar.dart';

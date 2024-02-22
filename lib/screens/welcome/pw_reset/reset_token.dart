@@ -1,0 +1,126 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/screens/welcome/pw_reset/new_pw.dart';
+import 'package:medicheck/styles/app_styles.dart';
+import 'package:medicheck/widgets/inputs/token_field.dart';
+import '../../../utils/api/api_service.dart';
+import '../../../widgets/heading_back.dart';
+import '../../../widgets/snackbar.dart';
+
+class ResetTokenInput extends StatefulWidget {
+  const ResetTokenInput({super.key});
+  static const String id = 'token_input';
+
+  @override
+  State<ResetTokenInput> createState() => _ResetTokenInputState();
+}
+
+class _ResetTokenInputState extends State<ResetTokenInput> {
+  final _formKey = GlobalKey<FormState>();
+  final _resetTokenController = TextEditingController();
+  bool _isLoading = false;
+
+  bool isFormValid(){
+    return _formKey.currentState?.validate() ?? false;
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    final email = ModalRoute.of(context)!.settings.arguments as String;
+    final emailFormatted = '****@${email.split('@').last}';
+    final locale = AppLocalizations.of(context);
+
+    // Validate input reset token
+    void validateResetToken(String token) async {
+      if (isFormValid()) {
+        setState(() => _isLoading = true);
+        try {
+          bool response = await ApiService.validateResetToken(token);
+          if (response) {
+            Navigator.pushReplacementNamed(context, NewPasswordInput.id, arguments: _resetTokenController.text);
+            //Navigate to reset screen
+          }
+          else {
+            // Handle null response
+            showCustomSnackBar(context, locale.invalid_token);
+          }
+        } catch (except) {
+          print("Error validating token: $except");
+        } finally {
+          setState(() => _isLoading = false);
+        }
+      }
+    }
+
+    // Send Email with reset token
+    void sendResetToken(String emailAddr) async {
+      if (isFormValid()) {
+        setState(() => _isLoading = true);
+        try {
+          bool response = await ApiService.getResetToken(emailAddr);
+          if (response) {
+            showCustomSnackBar(context, "Recovery code sent");
+          }
+          else {
+            // Handle null response
+            showCustomSnackBar(context, "Null response from server");
+          }
+        } catch (except) {
+          print("Error sending email: $except");
+        } finally {
+          setState(() => _isLoading = false);
+        }
+      }
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Heading(msg: locale.new_pw),
+                const SizedBox(height: 30),
+                Text(locale.verification_no, style: AppStyles.headingTextStyle,),
+                const SizedBox(height: 8),
+                Text('${locale.reset_token_input_instructions} $emailFormatted', style: AppStyles.mainTextStyle,),
+                const SizedBox(height: 32),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: ResetTokenField(controller: _resetTokenController,),
+                ),
+                const SizedBox(height: 40.0,),
+                FilledButton(
+                    onPressed: _isLoading ? null : () => validateResetToken(_resetTokenController.text) ,
+                    child: Text(_isLoading ? '...' : locale.verify)
+                ),
+                const SizedBox(height: 25.0,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(locale.code_not_received,
+                        style: AppStyles.subMediumTextStyle),
+                    const SizedBox(
+                      width: 5.0,
+                    ),
+                    GestureDetector(
+                      child: Text(
+                        AppLocalizations.of(context).resend_code,
+                        style: AppStyles.actionTextStyle,
+                      ),
+                      onTap: () => sendResetToken(email),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -26,13 +26,18 @@ class Validators {
   }
 
   static bool isValidCedula(String cedula) {
-    final phoneRegExp = RegExp(r"^[0-9]\d{10}$");
-    return phoneRegExp.hasMatch(cedula);
+    final cedulaRegExp = RegExp(r"^[0-9]\d{10}$");
+    return cedulaRegExp.hasMatch(cedula);
   }
 
   static bool isValidNSS(String nss) {
-    final phoneRegExp = RegExp(r"^[0-9]\d{8}$");
-    return phoneRegExp.hasMatch(nss);
+    final nssRegExp = RegExp(r"^[0-9]\d{8}$");
+    return nssRegExp.hasMatch(nss);
+  }
+
+  static bool isValidResetToken(String token) {
+    final resetTokenRegExp = RegExp(r'^\d{4}$');
+    return resetTokenRegExp.hasMatch(token);
   }
 
 }

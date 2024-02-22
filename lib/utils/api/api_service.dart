@@ -8,7 +8,7 @@ import 'api_constants.dart';
 import '../jwt_service.dart';
 
 class ApiService {
-  static Future<Map<String, dynamic>?> UserLogin(
+  static Future<Map<String, dynamic>?> userLogin(
       String docNumber, String docType, String pwd) async {
     // Define API Endpoint
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.loginEndpoint);
@@ -39,8 +39,8 @@ class ApiService {
     return null;
   }
 
-  static Future<Map<String, dynamic>?> UserSignup(
-      String docNumber, String docType, String pwd, String email, String phoneNo) async {
+  static Future<Map<String, dynamic>?> userSignup(String docNumber,
+      String docType, String pwd, String email, String phoneNo) async {
     // Define API Endpoint
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.signUpEndpoint);
 
@@ -64,6 +64,7 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 400) {
         // Handle successful login
         Map<String, dynamic> responseData = json.decode(response.body);
+        print(responseData);
         return responseData;
       }
     } catch (e) {
@@ -73,7 +74,8 @@ class ApiService {
   }
 
   static Future<Usuario?> getUserById(String id) async {
-    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$id');
+    var url =
+        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$id');
 
     String? accessToken = await JWTService.readJWT();
 
@@ -115,7 +117,8 @@ class ApiService {
   }
 
   static Future<List<Producto>> getSavedProductsbyUserID(int userID) async {
-    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.savedProductsUserEndpoint}/$userID');
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.savedProductsUserEndpoint}/$userID');
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -134,7 +137,8 @@ class ApiService {
   }
 
   static Future<List<Cobertura>> getCoveragesbyUserID(String userID) async {
-    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesUserEndpoint}/$userID');
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.coveragesUserEndpoint}/$userID');
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -152,8 +156,10 @@ class ApiService {
     return <Cobertura>[];
   }
 
-  static Future<List<Cobertura>> getCoveragesbyPlanProduct(int planID, int productID) async {
-    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesEndpoint}/plan/$planID/producto/$productID');
+  static Future<List<Cobertura>> getCoveragesbyPlanProduct(
+      int planID, int productID) async {
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.coveragesEndpoint}/plan/$planID/producto/$productID');
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -196,5 +202,60 @@ class ApiService {
       print(except);
     }
     return <Cobertura>[];
+  }
+
+  static Future<bool> getResetToken(String email) async {
+    var url = Uri.parse(
+            '${ApiConstants.baseUrl}${ApiConstants.generateTokenEndpoint}')
+        .replace(queryParameters: {
+      'emailAddress': email,
+    });
+
+    try {
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+      });
+      if (response.statusCode == 202) return true;
+    } catch (except) {
+      print('Error generating token $except');
+    }
+    return false;
+  }
+
+  static Future<bool> validateResetToken(String token) async {
+    var url = Uri.parse(
+            '${ApiConstants.baseUrl}${ApiConstants.validateTokenEndpoint}')
+        .replace(queryParameters: {
+      'token': token,
+    });
+
+    try {
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+      });
+      if (response.statusCode == 200) return true;
+    } catch (except) {
+      print('Error validating token $except');
+    }
+    return false;
+  }
+
+  static Future<bool> resetPassword(String token, String newPass) async {
+    // Define API Endpoint
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.resetPasswordEndpoint);
+
+    //Map body arguments
+    Map<String, String> signUpCredentials = {
+      'token': token,
+      'newPassword': newPass,
+    };
+
+    try {
+      var response = await http.patch(url, body: json.encode(signUpCredentials), headers: {'Content-Type': 'application/json'},);
+      if (response.statusCode == 200) return true;
+    } catch (except) {
+      print('Error resetting password : $except');
+    }
+    return false;
   }
 }

@@ -40,6 +40,15 @@
   "new_pw_heading": "Forgot your password?",
   "new_pw_mail_input_instructions": "Enter the email associated with your account. We will send a code to reset your password.",
   "send_reset_pw_code": "Send code",
+  "verification_no": "Verification number",
+  "reset_token_input_instructions": "Enter the code sent to the address",
+  "code_not_received": "Did not receive the code?",
+  "resend_code": "Resend code",
+  "invalid_token": "Invalid code",
+  "verify": "Verify",
+  "create_new_pw": "Create new password",
+  "create_new_pw_instructions": "Create a new password for your user",
+  "pw_reset_success": "Password changed successfully",
 
 
   "main_menu_heading": "Review your coverage information",

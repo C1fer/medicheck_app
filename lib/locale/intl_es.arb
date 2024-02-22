@@ -41,6 +41,15 @@
   "new_pw_heading": "¿Olvidaste tu contraseña?",
   "new_pw_mail_input_instructions": "Introduce el correo electrónico asociado a tu cuenta. Enviaremos un código para restablecer tu contraseña.",
   "send_reset_pw_code": "Enviar código",
+  "verification_no": "Número de verificación",
+  "reset_token_input_instructions": "Introduce el código de restablecimiento enviado a la dirección",
+  "code_not_received": "¿No recibiste el código?",
+  "resend_code": "Reenviar código",
+  "invalid_token": "Código inválido",
+  "verify": "Verificar",
+  "create_new_pw": "Crear nueva contraseña",
+  "create_new_pw_instructions": "Crea una nueva contraseña para tu usuario",
+  "pw_reset_success": "Contraseña restablecida exitosamente",
 
 
   "main_menu_heading": "Revisa tu información de cobertura",

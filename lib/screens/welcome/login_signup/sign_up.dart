@@ -1,61 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../screens/welcome/forgot_pw.dart';
-import '../../screens/welcome/sign_up.dart';
-import '../../widgets/doctype_dropdown.dart';
-import '../../widgets/inputs/id_field.dart';
-import '../../widgets/snackbar.dart';
-import '../home/home.dart';
-import '../../styles/app_styles.dart';
-import '../../styles/app_colors.dart';
-import '../../widgets/inputs/pwd_field.dart';
-import '../../widgets/logo/full_logo.dart';
-import '../../widgets/custom_appbar.dart';
-import '../../utils/api/api_service.dart';
-import '../../utils/jwt_service.dart';
+import 'package:medicheck/screens/welcome/login_signup/login.dart';
+import 'package:medicheck/styles/app_styles.dart';
+import 'package:medicheck/utils/api/api_service.dart';
+import 'package:medicheck/widgets/doctype_dropdown.dart';
+import 'package:medicheck/widgets/inputs/email_field.dart';
+import 'package:medicheck/widgets/inputs/id_field.dart';
+import 'package:medicheck/widgets/snackbar.dart';
+import '../../../utils/jwt_service.dart';
+import '../../../widgets/inputs/phone_field.dart';
+import '../../../widgets/logo/full_logo.dart';
+import '../../../styles/app_colors.dart';
+import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/inputs/pwd_field.dart';
+import '../../home/home.dart';
+import '../welcome.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
-  static const String id = 'login';
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+  static const String id = 'sign_up';
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignUp> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
   final _docNoController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   String _documentType = 'CEDULA';
 
-  // User login Logic
-  void userLogin() async {
+  void userSignUp() async {
     bool isFormValid = _formKey.currentState?.validate() ?? false;
     if (isFormValid) {
       setState(() => _isLoading = true);
       try {
-        var responseData = await ApiService.UserLogin(
+        var responseData = await ApiService.userSignup(
             _docNoController.text,
             _documentType,
-            _passwordController.text);
-        if (responseData != null) {
-          if (responseData["isSuccess"] == false) {
-            showCustomSnackBar(context, AppLocalizations.of(context).wrong_credentials);
-          } else {
-            int? saveJWTResult =
-            await JWTService.saveJWT(responseData['accessToken']);
-            saveJWTResult == 0
-                ? Navigator.pushReplacementNamed(context, Home.id)
-                : null;
-          }
+            _passwordController.text,
+            _emailController.text,
+            _phoneController.text);
+
+        if (responseData!["isSuccess"] == false) {
+          showCustomSnackBar(context, AppLocalizations.of(context).affiliate_not_found);
         } else {
-          // Handle null response
-          showCustomSnackBar(context, "Null response from server");
+          Navigator.pushReplacementNamed(context, Welcome.id);
+          // int? saveJWTResult =
+          //     await JWTService.saveJWT(responseData['accessToken']);
+          // saveJWTResult == 0
+          //     ? Navigator.pushReplacementNamed(context, Welcome.id)
+          //     : null;
         }
       } catch (except) {
-        print("Login error: $except");
+        print("Sign up error: $except");
       } finally {
         setState(() => _isLoading = false);
       }
@@ -66,17 +68,17 @@ class _LoginState extends State<Login> {
   void dispose() {
     super.dispose();
     _docNoController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: AppLocalizations.of(context).login_capitalized,
-      ),
+      appBar: CustomAppBar(title: AppLocalizations.of(context).signup),
       body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Form(
             key: _formKey,
@@ -108,61 +110,51 @@ class _LoginState extends State<Login> {
                       ),
                       Expanded(
                         flex: 2,
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: DocumentTypeDropdown(
-                            docType: _documentType,
-                            onChanged: (newVal) => setState(() {
-                              _documentType = newVal;
-                              _docNoController.clear();
-                            }),
-                          ),
+                        child: DocumentTypeDropdown(
+                          docType: _documentType,
+                          onChanged: (newVal) => setState(() {
+                            _documentType = newVal;
+                            _docNoController.clear();
+                          }),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16.0),
+                  EmailField(controller: _emailController, autoValidate: true),
+                  const SizedBox(height: 16.0),
+                  PhoneField(controller: _phoneController, autoValidate: false),
+                  const SizedBox(height: 16.0),
                   PasswordField(
                     controller: _passwordController,
-                    autoValidate: false,
-                  ),
-                  const SizedBox(height: 16.0),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      child: Text(
-                        AppLocalizations.of(context).forgot_pw,
-                        style: AppStyles.actionTextStyle
-                            .copyWith(fontWeight: FontWeight.w500),
-                      ),
-                      onTap: () => Navigator.pushNamed(context, ForgotPW.id),
-                    ),
+                    autoValidate: true,
                   ),
                   const SizedBox(
                     height: 25.0,
                   ),
                   FilledButton(
-                      onPressed: _isLoading ? null : () => userLogin(),
+                      onPressed: _isLoading ? null : () => userSignUp(),
                       child: Text(_isLoading
                           ? '...'
-                          : AppLocalizations.of(context).login_capitalized)),
+                          : AppLocalizations.of(context).create_account_cap)),
                   const SizedBox(
                     height: 24.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(AppLocalizations.of(context).not_registered,
+                      Text(AppLocalizations.of(context).existing_account,
                           style: AppStyles.subMediumTextStyle),
                       const SizedBox(
                         width: 5.0,
                       ),
                       GestureDetector(
                         child: Text(
-                          AppLocalizations.of(context).create_account_low,
+                          AppLocalizations.of(context).login_lowercase,
                           style: AppStyles.actionTextStyle,
                         ),
-                        onTap: () => Navigator.pushReplacementNamed(context, SignUp.id),
+                        onTap: () =>
+                            Navigator.pushReplacementNamed(context, Login.id),
                       ),
                     ],
                   )
