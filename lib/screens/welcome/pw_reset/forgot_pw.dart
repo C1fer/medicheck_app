@@ -4,8 +4,9 @@ import 'package:medicheck/screens/welcome/pw_reset/reset_token.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/email_field.dart';
 import '../../../utils/api/api_service.dart';
+import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/heading_back.dart';
-import '../../../widgets/snackbar.dart';
+import '../../../widgets/popups/snackbar.dart';
 
 class ForgotPW extends StatefulWidget {
   const ForgotPW({super.key});
@@ -19,15 +20,16 @@ class _ForgotPWState extends State<ForgotPW> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   bool _isLoading = false;
+  bool? _isemailValid;
 
   // Send pwd reset token
-  void sendResetToken() async {
+  void sendResetToken(String emailAddr) async {
     bool isFormValid = _formKey.currentState?.validate() ?? false;
     if (isFormValid) {
       setState(() => _isLoading = true);
       try {
-        await ApiService.getResetToken(_emailController.text);
-        Navigator.pushReplacementNamed(context, ResetTokenInput.id, arguments: _emailController.text);
+        _isemailValid = await ApiService.sendResetToken(emailAddr);
+        Navigator.pushReplacementNamed(context, ResetTokenInput.id, arguments: emailAddr);
       } catch (except) {
         print("Error sending email: $except");
         showCustomSnackBar(context, "Null response from server");
@@ -47,26 +49,31 @@ class _ForgotPWState extends State<ForgotPW> {
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     return Scaffold(
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Heading(msg: locale.new_pw),
-                const SizedBox(height: 30),
-                Text(locale.new_pw_heading, style: AppStyles.headingTextStyle,),
-                const SizedBox(height: 8),
-                Text(locale.new_pw_mail_input_instructions, style: AppStyles.mainTextStyle,),
-                const SizedBox(height: 30),
-                EmailField(controller: _emailController, autoValidate: false),
-                const SizedBox(height: 25.0,),
-                FilledButton(
-                    onPressed: _isLoading ? null : () => sendResetToken(),
-                    child: Text(_isLoading ? '...' : locale.send_reset_pw_code)),
-              ],
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context).new_pw_heading,
+      ),
+      body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 30),
+                  Text(locale.new_pw_heading, style: AppStyles.headingTextStyle,),
+                  const SizedBox(height: 8),
+                  Text(locale.new_pw_mail_input_instructions, style: AppStyles.mainTextStyle,),
+                  const SizedBox(height: 30),
+                  EmailField(controller: _emailController, autoValidate: false),
+                  const SizedBox(height: 25.0,),
+                  FilledButton(
+                      onPressed: _isLoading ? null : () => sendResetToken(_emailController.text),
+                      child: Text(_isLoading ? '...' : locale.send_reset_pw_code)),
+                ],
+              ),
             ),
           ),
         ),

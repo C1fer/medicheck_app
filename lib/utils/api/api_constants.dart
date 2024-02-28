@@ -10,7 +10,7 @@ class ApiConstants{
   static String planEndpoint = "/planes";
   static String productEndpoint = "/productos";
   static String savedProductsUserEndpoint = "/productosguardados/usuario";
-  static String generateTokenEndpoint = "/generate-token";
-  static String validateTokenEndpoint = "/validate-token";
-  static String resetPasswordEndpoint = "/reset-password";
+  static String sendTokenEndpoint = "/otp-send-email";
+  static String validateTokenEndpoint = "/otp-validate";
+  static String resetPasswordEndpoint = "/otp-reset-password";
 }

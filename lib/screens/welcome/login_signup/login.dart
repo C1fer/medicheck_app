@@ -4,7 +4,7 @@ import '../pw_reset/forgot_pw.dart';
 import 'sign_up.dart';
 import '../../../widgets/doctype_dropdown.dart';
 import '../../../widgets/inputs/id_field.dart';
-import '../../../widgets/snackbar.dart';
+import '../../../widgets/popups/snackbar.dart';
 import '../../home/home.dart';
 import '../../../styles/app_styles.dart';
 import '../../../styles/app_colors.dart';

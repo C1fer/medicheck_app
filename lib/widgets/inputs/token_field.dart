@@ -25,7 +25,6 @@ class _ResetTokenFieldState extends State<ResetTokenField> {
       autoDismissKeyboard: true,
       textStyle: AppStyles.headingTextStyle.copyWith(fontSize: 24.0),
       animationDuration: const Duration(milliseconds: 100),
-      validator: (val) => validateResetTokenInput(val, context),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       pinTheme: PinTheme(
         borderRadius: BorderRadius.circular(10),

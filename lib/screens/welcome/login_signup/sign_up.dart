@@ -6,7 +6,7 @@ import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/widgets/doctype_dropdown.dart';
 import 'package:medicheck/widgets/inputs/email_field.dart';
 import 'package:medicheck/widgets/inputs/id_field.dart';
-import 'package:medicheck/widgets/snackbar.dart';
+import 'package:medicheck/widgets/popups/snackbar.dart';
 import '../../../utils/jwt_service.dart';
 import '../../../widgets/inputs/phone_field.dart';
 import '../../../widgets/logo/full_logo.dart';
@@ -49,12 +49,11 @@ class _LoginState extends State<SignUp> {
         if (responseData!["isSuccess"] == false) {
           showCustomSnackBar(context, AppLocalizations.of(context).affiliate_not_found);
         } else {
-          Navigator.pushReplacementNamed(context, Welcome.id);
-          // int? saveJWTResult =
-          //     await JWTService.saveJWT(responseData['accessToken']);
-          // saveJWTResult == 0
-          //     ? Navigator.pushReplacementNamed(context, Welcome.id)
-          //     : null;
+          int? saveJWTResult =
+              await JWTService.saveJWT(responseData['accessToken']);
+          saveJWTResult == 0
+              ? Navigator.pushReplacementNamed(context, Home.id)
+              : null;
         }
       } catch (except) {
         print("Sign up error: $except");

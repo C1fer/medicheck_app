@@ -48,7 +48,8 @@
   "verify": "Verify",
   "create_new_pw": "Create new password",
   "create_new_pw_instructions": "Create a new password for your user",
-  "pw_reset_success": "Password changed successfully",
+  "pw_reset_success": "Your password has been reset successfully.",
+  "success": "Success",
 
 
   "main_menu_heading": "Review your coverage information",

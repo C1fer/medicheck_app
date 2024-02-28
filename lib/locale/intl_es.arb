@@ -49,7 +49,8 @@
   "verify": "Verificar",
   "create_new_pw": "Crear nueva contraseña",
   "create_new_pw_instructions": "Crea una nueva contraseña para tu usuario",
-  "pw_reset_success": "Contraseña restablecida exitosamente",
+  "pw_reset_success": "Su contraseña ha sido restablecida correctamente.e",
+  "success": "Éxito",
 
 
   "main_menu_heading": "Revisa tu información de cobertura",

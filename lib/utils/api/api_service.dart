@@ -204,9 +204,9 @@ class ApiService {
     return <Cobertura>[];
   }
 
-  static Future<bool> getResetToken(String email) async {
+  static Future<bool> sendResetToken(String email) async {
     var url = Uri.parse(
-            '${ApiConstants.baseUrl}${ApiConstants.generateTokenEndpoint}')
+            '${ApiConstants.baseUrl}${ApiConstants.sendTokenEndpoint}')
         .replace(queryParameters: {
       'emailAddress': email,
     });
@@ -222,11 +222,12 @@ class ApiService {
     return false;
   }
 
-  static Future<bool> validateResetToken(String token) async {
+  static Future<bool> validateResetToken(String token, String emailAddr) async {
     var url = Uri.parse(
             '${ApiConstants.baseUrl}${ApiConstants.validateTokenEndpoint}')
         .replace(queryParameters: {
       'token': token,
+      'emailAdress': emailAddr
     });
 
     try {
@@ -240,7 +241,7 @@ class ApiService {
     return false;
   }
 
-  static Future<bool> resetPassword(String token, String newPass) async {
+  static Future<bool> resetPassword(String token, String newPass, String emailAddr) async {
     // Define API Endpoint
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.resetPasswordEndpoint);
 
@@ -248,6 +249,7 @@ class ApiService {
     Map<String, String> signUpCredentials = {
       'token': token,
       'newPassword': newPass,
+      'emailAddress': emailAddr,
     };
 
     try {

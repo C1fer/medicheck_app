@@ -30,6 +30,7 @@ class Assets {
   static const String iconsPillCase = 'assets/icons/pill-case.svg';
   static const String iconsSearch = 'assets/icons/search.svg';
   static const String iconsSms = 'assets/icons/sms.svg';
+  static const String iconsSuccess = 'assets/icons/success.svg';
   static const String iconsUserCircle = 'assets/icons/user-circle.svg';
   static const String imagesOnboarding1 = 'assets/images/onboarding_1.jpg';
   static const String imagesOnboarding2 = 'assets/images/onboarding_2.jpg';
@@ -68,6 +69,8 @@ class Assets {
   static const String modelsProducto = 'lib/models/producto.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';
+  static const String popupsAlert = 'lib/widgets/popups/alert.dart';
+  static const String popupsSnackbar = 'lib/widgets/popups/snackbar.dart';
   static const String pwResetForgotPw = 'lib/screens/welcome/pw_reset/forgot_pw.dart';
   static const String pwResetNewPw = 'lib/screens/welcome/pw_reset/new_pw.dart';
   static const String pwResetResetToken = 'lib/screens/welcome/pw_reset/reset_token.dart';
@@ -85,7 +88,6 @@ class Assets {
   static const String widgetsDoctypeDropdown = 'lib/widgets/doctype_dropdown.dart';
   static const String widgetsHeadingBack = 'lib/widgets/heading_back.dart';
   static const String widgetsLogoFullLogo = 'lib/widgets/logo/full_logo.dart';
-  static const String widgetsSnackbar = 'lib/widgets/snackbar.dart';
   static const String widgetsStepCounter = 'lib/widgets/step_counter.dart';
 
 }

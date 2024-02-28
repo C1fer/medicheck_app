@@ -3,9 +3,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/pwd_field.dart';
 import 'package:medicheck/widgets/inputs/token_field.dart';
+import 'package:medicheck/widgets/popups/alert.dart';
 import '../../../utils/api/api_service.dart';
+import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/heading_back.dart';
-import '../../../widgets/snackbar.dart';
+import '../../../widgets/popups/snackbar.dart';
 import '../welcome.dart';
 
 class NewPasswordInput extends StatefulWidget {
@@ -29,7 +31,7 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
 
   @override
   Widget build(BuildContext context) {
-    final resetToken = ModalRoute.of(context)!.settings.arguments as String;
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     final locale = AppLocalizations.of(context);
 
     // Change UserPassword
@@ -37,9 +39,9 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
       if (isFormValid() && new_pwd == confirm_pwd) {
         setState(() => _isLoading = true);
         try {
-          bool response = await ApiService.resetPassword(resetToken, _passwordController.text);
+          bool response = await ApiService.resetPassword(args["token"]!, new_pwd, args["email"]!);
           if (response) {
-            showCustomSnackBar(context, locale.pw_reset_success);
+            showAlertDialog(context, locale.success, body: locale.pw_reset_success);
             Navigator.pushReplacementNamed(context, Welcome.id);
           }
           else {
@@ -55,6 +57,9 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
     }
 
     return Scaffold(
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context).new_pw_heading,
+      ),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -70,6 +75,7 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
                 Text(locale.create_new_pw_instructions, style: AppStyles.mainTextStyle,),
                 const SizedBox(height: 32),
                 PasswordField(controller: _passwordController, autoValidate: true),
+                const SizedBox(height: 16),
                 PasswordField(controller: _passwordConfirmController, autoValidate: true),
                 const SizedBox(height: 40.0,),
                 FilledButton(
