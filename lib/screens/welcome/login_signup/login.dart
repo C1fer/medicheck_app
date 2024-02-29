@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/models/enums.dart';
 import '../pw_reset/forgot_pw.dart';
 import 'sign_up.dart';
 import '../../../widgets/doctype_dropdown.dart';
 import '../../../widgets/inputs/id_field.dart';
-import '../../../widgets/popups/snackbar.dart';
+import '../../../widgets/popups/snackbar/show_snackbar.dart';
 import '../../home/home.dart';
 import '../../../styles/app_styles.dart';
 import '../../../styles/app_colors.dart';
@@ -42,7 +43,7 @@ class _LoginState extends State<Login> {
             _passwordController.text);
         if (responseData != null) {
           if (responseData["isSuccess"] == false) {
-            showCustomSnackBar(context, AppLocalizations.of(context).wrong_credentials);
+            showSnackBar(context, AppLocalizations.of(context).wrong_credentials, MessageType.ERROR);
           } else {
             int? saveJWTResult =
             await JWTService.saveJWT(responseData['accessToken']);
@@ -52,7 +53,7 @@ class _LoginState extends State<Login> {
           }
         } else {
           // Handle null response
-          showCustomSnackBar(context, "Server Error");
+          showSnackBar(context,AppLocalizations.of(context).server_error, MessageType.ERROR);
         }
       } catch (except) {
         print("Login error: $except");

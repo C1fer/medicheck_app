@@ -45,6 +45,7 @@
   "reset_token_input_instructions": "Introduce el código de restablecimiento enviado a la dirección",
   "code_not_received": "¿No recibiste el código?",
   "resend_code": "Reenviar código",
+  "code_sent": "Código de recuperación enviado.",
   "invalid_token": "Código inválido",
   "verify": "Verificar",
   "create_new_pw": "Crear nueva contraseña",

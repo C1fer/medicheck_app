@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/screens/welcome/pw_reset/new_pw.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/token_field.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/custom_appbar.dart';
-import '../../../widgets/popups/snackbar.dart';
+import '../../../widgets/popups/snackbar/show_snackbar.dart';
 
 class ResetTokenInput extends StatefulWidget {
   const ResetTokenInput({super.key});
@@ -45,7 +46,7 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
             //Navigate to reset screen
           } else {
             // Handle null response
-            showCustomSnackBar(context, locale.invalid_token);
+            showSnackBar(context, locale.invalid_token, MessageType.ERROR);
           }
         } catch (except) {
           print("Error validating token: $except");
@@ -60,10 +61,10 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
       try {
         bool response = await ApiService.sendResetToken(emailAddr);
         if (response) {
-          showCustomSnackBar(context, "Recovery code sent");
+          showSnackBar(context, locale.code_sent, MessageType.SUCCESS);
         } else {
           // Handle null response
-          showCustomSnackBar(context, "Server error");
+          showSnackBar(context, locale.server_error, MessageType.ERROR);
         }
       } catch (except) {
         print("Error sending email: $except");

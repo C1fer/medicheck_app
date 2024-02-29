@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/screens/welcome/pw_reset/reset_token.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/email_field.dart';
-import 'package:medicheck/widgets/popups/dialog/base_alert.dart';
+import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/popups/dialog/custom_dialog.dart';
-import '../../../widgets/popups/snackbar.dart';
+import '../../../widgets/popups/snackbar/show_snackbar.dart';
 
 class ForgotPW extends StatefulWidget {
   const ForgotPW({super.key});
@@ -23,6 +24,23 @@ class _ForgotPWState extends State<ForgotPW> {
   bool _isLoading = false;
   bool? _isemailValid;
 
+  // Send pwd reset token
+  void sendResetToken(String emailAddr) async {
+    bool isFormValid = _formKey.currentState?.validate() ?? false;
+    if (isFormValid) {
+      setState(() => _isLoading = true);
+      try {
+        _isemailValid = await ApiService.sendResetToken(emailAddr);
+        if (_isemailValid!)
+          Navigator.pushReplacementNamed(context, ResetTokenInput.id,
+              arguments: emailAddr);
+      } catch (except) {
+        showSnackBar(context, AppLocalizations.of(context).server_error, MessageType.ERROR);
+      } finally {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -33,25 +51,6 @@ class _ForgotPWState extends State<ForgotPW> {
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
-
-    // Send pwd reset token
-    void sendResetToken(String emailAddr) async {
-      bool isFormValid = _formKey.currentState?.validate() ?? false;
-      if (isFormValid) {
-        setState(() => _isLoading = true);
-        try {
-          _isemailValid = await ApiService.sendResetToken(emailAddr);
-          if (_isemailValid!)
-            Navigator.pushReplacementNamed(context, ResetTokenInput.id,
-                arguments: emailAddr);
-        } catch (except) {
-          print("Error sending email: $except");
-          showCustomSnackBar(context, locale.server_error);
-        } finally {
-          setState(() => _isLoading = false);
-        }
-      }
-    }
 
     return Scaffold(
       appBar: CustomAppBar(

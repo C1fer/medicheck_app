@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/screens/welcome/login_signup/login.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/widgets/doctype_dropdown.dart';
 import 'package:medicheck/widgets/inputs/email_field.dart';
 import 'package:medicheck/widgets/inputs/id_field.dart';
-import 'package:medicheck/widgets/popups/snackbar.dart';
+import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
 import '../../../utils/jwt_service.dart';
 import '../../../widgets/inputs/phone_field.dart';
 import '../../../widgets/logo/full_logo.dart';
@@ -47,7 +48,7 @@ class _LoginState extends State<SignUp> {
             _phoneController.text);
 
         if (responseData!["isSuccess"] == false) {
-          showCustomSnackBar(context, AppLocalizations.of(context).affiliate_not_found);
+          showSnackBar(context, AppLocalizations.of(context).affiliate_not_found, MessageType.ERROR);
         } else {
           int? saveJWTResult =
               await JWTService.saveJWT(responseData['accessToken']);

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/pwd_field.dart';
-import 'package:medicheck/widgets/popups/dialog/base_alert.dart';
+import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/custom_dialog.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/custom_appbar.dart';
-import '../../../widgets/popups/snackbar.dart';
+import '../../../widgets/popups/snackbar/show_snackbar.dart';
 import '../welcome.dart';
 
 class NewPasswordInput extends StatefulWidget {
@@ -50,7 +51,7 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
             await Navigator.pushReplacementNamed(context, Welcome.id);
           } else {
             // Handle null response
-            showCustomSnackBar(context, locale.server_error);
+            showSnackBar(context, locale.server_error, MessageType.ERROR);
           }
         } catch (except) {
           print("Error sending email: $except");
