@@ -52,7 +52,7 @@ class _LoginState extends State<Login> {
           }
         } else {
           // Handle null response
-          showCustomSnackBar(context, "Null response from server");
+          showCustomSnackBar(context, "Server Error");
         }
       } catch (except) {
         print("Login error: $except");

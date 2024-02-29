@@ -8,6 +8,9 @@ Future<void> showAlertDialog(BuildContext context, String title, {String? body, 
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          insetPadding: const EdgeInsets.all(24.0),
+          backgroundColor: Colors.white,
+            actionsAlignment: MainAxisAlignment.center,
             contentPadding: const EdgeInsets.all(32),
             content: Column(
               children: [

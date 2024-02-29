@@ -76,6 +76,6 @@
   "change_lang": "Change Language",
   "spanish": "Spanish",
   "english": "English",
-  "details": "Details"
-
+  "details": "Details",
+  "server_error": "Server Error"
 }

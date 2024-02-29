@@ -6,6 +6,7 @@ import 'package:medicheck/widgets/inputs/email_field.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/heading_back.dart';
+import '../../../widgets/popups/alert.dart';
 import '../../../widgets/popups/snackbar.dart';
 
 class ForgotPW extends StatefulWidget {
@@ -29,10 +30,12 @@ class _ForgotPWState extends State<ForgotPW> {
       setState(() => _isLoading = true);
       try {
         _isemailValid = await ApiService.sendResetToken(emailAddr);
-        Navigator.pushReplacementNamed(context, ResetTokenInput.id, arguments: emailAddr);
+        if (_isemailValid!)
+          Navigator.pushReplacementNamed(context, ResetTokenInput.id,
+              arguments: emailAddr);
       } catch (except) {
         print("Error sending email: $except");
-        showCustomSnackBar(context, "Null response from server");
+        showCustomSnackBar(context, "Server Error");
       } finally {
         setState(() => _isLoading = false);
       }
@@ -48,9 +51,10 @@ class _ForgotPWState extends State<ForgotPW> {
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: AppLocalizations.of(context).new_pw_heading,
+        title: AppLocalizations.of(context).new_pw,
       ),
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -62,16 +66,26 @@ class _ForgotPWState extends State<ForgotPW> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 30),
-                  Text(locale.new_pw_heading, style: AppStyles.headingTextStyle,),
+                  Text(
+                    locale.new_pw_heading,
+                    style: AppStyles.headingTextStyle,
+                  ),
                   const SizedBox(height: 8),
-                  Text(locale.new_pw_mail_input_instructions, style: AppStyles.mainTextStyle,),
+                  Text(
+                    locale.new_pw_mail_input_instructions,
+                    style: AppStyles.mainTextStyle,
+                  ),
                   const SizedBox(height: 30),
                   EmailField(controller: _emailController, autoValidate: false),
-                  const SizedBox(height: 25.0,),
+                  const SizedBox(
+                    height: 25.0,
+                  ),
                   FilledButton(
-                      onPressed: _isLoading ? null : () => sendResetToken(_emailController.text),
-                      child: Text(_isLoading ? '...' : locale.send_reset_pw_code)),
+                      onPressed: _isLoading
+                          ? null
+                          : () => sendResetToken(_emailController.text),
+                      child:
+                          Text(_isLoading ? '...' : locale.send_reset_pw_code)),
                 ],
               ),
             ),

@@ -28,9 +28,10 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
   @override
   Widget build(BuildContext context) {
     final email = ModalRoute.of(context)!.settings.arguments as String;
-    print("EMAIL: $email");
     final emailFormatted = '****@${email.split('@').last}';
     final locale = AppLocalizations.of(context);
+
+    print("email: $email");
 
     // Validate input reset token
     void validateResetToken(String token, email) async {
@@ -57,27 +58,24 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
 
     // Send Email with reset token
     void sendResetToken(String emailAddr) async {
-      if (isFormValid()) {
-        setState(() => _isLoading = true);
-        try {
-          bool response = await ApiService.sendResetToken(emailAddr);
-          if (response) {
-            showCustomSnackBar(context, "Recovery code sent");
-          } else {
-            // Handle null response
-            showCustomSnackBar(context, "Null response from server");
-          }
-        } catch (except) {
-          print("Error sending email: $except");
-        } finally {
-          setState(() => _isLoading = false);
+      try {
+        bool response = await ApiService.sendResetToken(emailAddr);
+        if (response) {
+          showCustomSnackBar(context, "Recovery code sent");
+        } else {
+          // Handle null response
+          showCustomSnackBar(context, locale.server_error);
         }
+      } catch (except) {
+        print("Error sending email: $except");
+      } finally {
+        setState(() => _isLoading = false);
       }
     }
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: AppLocalizations.of(context).new_pw_heading,
+        title: AppLocalizations.of(context).new_pw,
       ),
       body: SafeArea(
         child: Form(
@@ -87,7 +85,6 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 30),
                 Text(
                   locale.verification_no,
                   style: AppStyles.headingTextStyle,
@@ -110,7 +107,8 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
                 FilledButton(
                     onPressed: _isLoading
                         ? null
-                        : () => validateResetToken(_resetTokenController.text, email),
+                        : () => validateResetToken(
+                            _resetTokenController.text, email),
                     child: Text(_isLoading ? '...' : locale.verify)),
                 const SizedBox(
                   height: 25.0,
