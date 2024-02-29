@@ -14,7 +14,7 @@
   "signup": "Sign Up",
   "emailFieldLabel": "Email",
   "passwordFieldLabel": "Password",
-  "phoneFieldLabel": "No. de teléfono",
+  "phoneFieldLabel": "Phone number",
   "invalid_input" : "Please enter a valid input",
 
   "@_WELCOME":{},

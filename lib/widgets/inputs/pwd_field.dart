@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/utils/input_validation/validation_logic.dart';
 import 'package:medicheck/widgets/inputs/custom_form_field.dart';
 import '../../styles/app_decorations.dart';
@@ -29,14 +30,9 @@ class _PasswordFieldState extends State<PasswordField> {
       obscureText: _obscureState,
       autoValidateMode: widget.autoValidate ? AutovalidateMode.onUserInteraction : null,
       validator: widget.autoValidate ? (val) => validatePassword(val, context): null,
-      decoration: AppDecorations.formTextFieldDecoration.copyWith(
-          hintText: AppLocalizations.of(context).passwordFieldLabel,
-          prefixIcon: const Icon(Icons.lock),
-          prefixIconColor: MaterialStateColor.resolveWith((states) =>
-              states.contains(MaterialState.focused)
-                  ? AppColors.jadeGreen
-                  : Colors.grey),
-          suffixIcon: PasswordToggle()),
+      hintText: AppLocalizations.of(context).passwordFieldLabel,
+      prefixIcon: SvgPicture.asset('assets/icons/lock.svg'),
+      suffixIcon: PasswordToggle(),
     );
   }
 

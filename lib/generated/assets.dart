@@ -27,6 +27,7 @@ class Assets {
   static const String iconsHospitalColored = 'assets/icons/hospital-colored.svg';
   static const String iconsIncident = 'assets/icons/incident.svg';
   static const String iconsLock = 'assets/icons/lock.svg';
+  static const String iconsMail = 'assets/icons/mail.svg';
   static const String iconsMedicalClipboard = 'assets/icons/medical-clipboard.svg';
   static const String iconsMedicalHistory = 'assets/icons/medical-history.svg';
   static const String iconsPharmacy = 'assets/icons/pharmacy.svg';
@@ -35,6 +36,7 @@ class Assets {
   static const String iconsSms = 'assets/icons/sms.svg';
   static const String iconsSuccess = 'assets/icons/success.svg';
   static const String iconsUserCircle = 'assets/icons/user-circle.svg';
+  static const String iconsUserOutline = 'assets/icons/user-outline.svg';
   static const String imagesOnboarding1 = 'assets/images/onboarding_1.jpg';
   static const String imagesOnboarding2 = 'assets/images/onboarding_2.jpg';
   static const String imagesOnboarding3 = 'assets/images/onboarding_3.jpg';
@@ -77,7 +79,7 @@ class Assets {
   static const String pwResetNewPw = 'lib/screens/welcome/pw_reset/new_pw.dart';
   static const String pwResetResetToken = 'lib/screens/welcome/pw_reset/reset_token.dart';
   static const String snackbarCustomSnackbar = 'lib/widgets/popups/snackbar/custom_snackbar.dart';
-  static const String snackbarSnackbar = 'lib/widgets/popups/snackbar/show_snackbar.dart';
+  static const String snackbarShowSnackbar = 'lib/widgets/popups/snackbar/show_snackbar.dart';
   static const String startOnboarding = 'lib/screens/start/onboarding.dart';
   static const String startSplashScreen = 'lib/screens/start/splash_screen.dart';
   static const String stylesAppColors = 'lib/styles/app_colors.dart';

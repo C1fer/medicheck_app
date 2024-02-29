@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../styles/app_colors.dart';
 import '../../styles/app_decorations.dart';
 
 class CustomInputField extends StatelessWidget {
@@ -15,13 +16,15 @@ class CustomInputField extends StatelessWidget {
     this.maxLength,
     this.decoration,
     required this.obscureText,
+    this.suffixIcon,
   }) : super(key: key);
 
   final TextEditingController controller;
   final String? hintText;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final AutovalidateMode? autoValidateMode;
   final TextInputType? keyboardType;
   final int? maxLength;
@@ -38,8 +41,26 @@ class CustomInputField extends StatelessWidget {
       controller: controller,
       inputFormatters: inputFormatters,
       validator: validator,
-      decoration: decoration ?? AppDecorations.formTextFieldDecoration
-          .copyWith(hintText: hintText, prefixIcon: Icon(prefixIcon), labelText: hintText),
+      decoration: decoration ??
+          AppDecorations.formTextFieldDecoration.copyWith(
+              hintText: hintText,
+              prefixIcon: prefixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: prefixIcon,
+                    )
+                  : null,
+              prefixIconColor: MaterialStateColor.resolveWith((states) =>
+                  states.contains(MaterialState.focused)
+                      ? AppColors.jadeGreen
+                      : Colors.grey),
+              suffixIcon: suffixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: suffixIcon,
+                    )
+                  : null,
+              labelText: hintText),
     );
   }
 }

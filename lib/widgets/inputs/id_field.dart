@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import '../../utils/input_validation/validation_logic.dart';
 import 'custom_form_field.dart';
 
@@ -23,7 +24,7 @@ class _DocNoFieldState extends State<DocNoField> {
     return CustomInputField(
       autoValidateMode: widget.autoValidate ? AutovalidateMode.onUserInteraction : null,
       controller: widget.controller,
-      prefixIcon: Icons.person,
+      prefixIcon: SvgPicture.asset('assets/icons/user-outline.svg'),
       keyboardType: TextInputType.number,
       hintText: widget.docType == "CEDULA" ? locale.national_id_card_full: locale.ssn_full,
       validator: (val) => validateID(val, widget.docType, context),

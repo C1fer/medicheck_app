@@ -23,7 +23,7 @@ class _PhoneFieldState extends State<PhoneField> {
       autoValidateMode:
           widget.autoValidate ? AutovalidateMode.onUserInteraction : null,
       controller: widget.controller,
-      prefixIcon: Icons.phone,
+      prefixIcon: Icon(Icons.phone),
       keyboardType: TextInputType.phone,
       hintText: AppLocalizations.of(context).phoneFieldLabel,
       validator: widget.autoValidate ? (val) => validatePhoneNo(val, context) : null,

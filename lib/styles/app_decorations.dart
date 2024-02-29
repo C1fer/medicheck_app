@@ -10,19 +10,20 @@ class AppDecorations {
 
   static final formTextFieldDecoration = InputDecoration(
     floatingLabelBehavior: FloatingLabelBehavior.auto,
-    labelStyle: TextStyle(color: AppColors.jadeGreen),
-    fillColor: AppColors.offWhite,
-      hintStyle: TextStyle(color: AppColors.lightGray, fontWeight: FontWeight.normal),
+    labelStyle: const TextStyle(color: AppColors.jadeGreen),
+    fillColor: AppColors.whiteGray,
+      hintStyle: const TextStyle(color: AppColors.lightGray, fontWeight: FontWeight.normal),
       prefixIconColor: AppColors.lightGray,
       border: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 0.5,
+          borderSide: const BorderSide(
+            width: 1,
             color: AppColors.deeperGray,
+            strokeAlign: 1
           ),
         borderRadius: BorderRadius.circular(24)
       ),
     focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
+        borderSide: const BorderSide(
           width: 1,
           color: AppColors.jadeGreen,
         ),
