@@ -50,7 +50,7 @@ class Cobertura {
     "Porcentaje": porcentaje,
     "FechaVencimiento": fechaVencimiento!.toIso8601String(),
     "FechaRegistro": fechaRegistro.toIso8601String(),
-    "IdPlanNavigation": idPlanNavigation!.toJson(),
+    "IdPlanNavigation": idPlanNavigation?.toJson(),
     "IdProductoNavigation": idProductoNavigation.toJson(),
   };
 }

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../../styles/app_colors.dart';
 import '../../styles/app_decorations.dart';
 
-class CustomInputField extends StatelessWidget {
+class CustomInputField extends StatefulWidget {
   CustomInputField({
     Key? key,
     required this.controller,
@@ -32,35 +32,40 @@ class CustomInputField extends StatelessWidget {
   bool obscureText;
 
   @override
+  State<CustomInputField> createState() => _CustomInputFieldState();
+}
+
+class _CustomInputFieldState extends State<CustomInputField> {
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      obscureText: obscureText,
-      maxLength: maxLength,
-      keyboardType: keyboardType ?? TextInputType.text,
-      autovalidateMode: autoValidateMode,
-      controller: controller,
-      inputFormatters: inputFormatters,
-      validator: validator,
-      decoration: decoration ??
+      obscureText: widget.obscureText,
+      maxLength: widget.maxLength,
+      keyboardType: widget.keyboardType ?? TextInputType.text,
+      autovalidateMode: widget.autoValidateMode,
+      controller: widget.controller,
+      inputFormatters: widget.inputFormatters,
+      validator: widget.validator,
+      decoration: widget.decoration ??
           AppDecorations.formTextFieldDecoration.copyWith(
-              hintText: hintText,
-              prefixIcon: prefixIcon != null
+              hintText: widget.hintText,
+              prefixIcon: widget.prefixIcon != null
                   ? Padding(
                       padding: const EdgeInsets.all(12),
-                      child: prefixIcon,
+                      child: widget.prefixIcon,
                     )
                   : null,
               prefixIconColor: MaterialStateColor.resolveWith((states) =>
                   states.contains(MaterialState.focused)
                       ? AppColors.jadeGreen
                       : Colors.grey),
-              suffixIcon: suffixIcon != null
+              suffixIcon: widget.suffixIcon != null
                   ? Padding(
                       padding: const EdgeInsets.all(12),
-                      child: suffixIcon,
+                      child: widget.suffixIcon,
                     )
                   : null,
-              labelText: hintText),
+              labelText: widget.hintText),
     );
   }
 }

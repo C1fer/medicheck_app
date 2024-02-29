@@ -24,24 +24,6 @@ class _ForgotPWState extends State<ForgotPW> {
   bool _isLoading = false;
   bool? _isemailValid;
 
-  // Send pwd reset token
-  void sendResetToken(String emailAddr) async {
-    bool isFormValid = _formKey.currentState?.validate() ?? false;
-    if (isFormValid) {
-      setState(() => _isLoading = true);
-      try {
-        _isemailValid = await ApiService.sendResetToken(emailAddr);
-        if (_isemailValid!)
-          Navigator.pushReplacementNamed(context, ResetTokenInput.id,
-              arguments: emailAddr);
-      } catch (except) {
-        showSnackBar(context, AppLocalizations.of(context).server_error, MessageType.ERROR);
-      } finally {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -51,6 +33,24 @@ class _ForgotPWState extends State<ForgotPW> {
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
+
+    // Send pwd reset token
+    void sendResetToken(String emailAddr) async {
+      bool isFormValid = _formKey.currentState?.validate() ?? false;
+      if (isFormValid) {
+        setState(() => _isLoading = true);
+        try {
+          _isemailValid = await ApiService.sendResetToken(emailAddr);
+          if (_isemailValid!)
+            Navigator.pushReplacementNamed(context, ResetTokenInput.id,
+                arguments: emailAddr);
+        } catch (except) {
+          showSnackBar(context, locale.server_error, MessageType.ERROR);
+        } finally {
+          setState(() => _isLoading = false);
+        }
+      }
+    }
 
     return Scaffold(
       appBar: CustomAppBar(

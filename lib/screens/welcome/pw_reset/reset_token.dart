@@ -31,8 +31,6 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
     final emailFormatted = '****@${email.split('@').last}';
     final locale = AppLocalizations.of(context);
 
-    print("email: $email");
-
     // Validate input reset token
     void validateResetToken(String token, email) async {
       if (isFormValid()) {

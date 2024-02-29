@@ -14,6 +14,7 @@ class Assets {
   static const String coverageSavedCoverages = 'lib/screens/home/coverage/saved_coverages.dart';
   static const String dialogCustomDialog = 'lib/widgets/popups/dialog/custom_dialog.dart';
   static const String dialogShowCustomDialog = 'lib/widgets/popups/dialog/show_custom_dialog.dart';
+  static const String dropdownDropdown = 'lib/widgets/dropdown/dropdown.dart';
   static const String establishmentsEstablishmentsList = 'lib/screens/home/establishments/establishments_list.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String homeHome = 'lib/screens/home/home.dart';
@@ -92,7 +93,6 @@ class Assets {
   static const String widgetsCoveragesListView = 'lib/widgets/coverages_list_view.dart';
   static const String widgetsCustomAppbar = 'lib/widgets/custom_appbar.dart';
   static const String widgetsDoctypeDropdown = 'lib/widgets/doctype_dropdown.dart';
-  static const String widgetsHeadingBack = 'lib/widgets/heading_back.dart';
   static const String widgetsLogoFullLogo = 'lib/widgets/logo/full_logo.dart';
   static const String widgetsStepCounter = 'lib/widgets/step_counter.dart';
 

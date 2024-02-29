@@ -32,37 +32,6 @@ class _LoginState extends State<Login> {
   String _documentType = 'CEDULA';
 
   // User login Logic
-  void userLogin() async {
-    bool isFormValid = _formKey.currentState?.validate() ?? false;
-    if (isFormValid) {
-      setState(() => _isLoading = true);
-      try {
-        var responseData = await ApiService.userLogin(
-            _docNoController.text,
-            _documentType,
-            _passwordController.text);
-        if (responseData != null) {
-          if (responseData["isSuccess"] == false) {
-            showSnackBar(context, AppLocalizations.of(context).wrong_credentials, MessageType.ERROR);
-          } else {
-            int? saveJWTResult =
-            await JWTService.saveJWT(responseData['accessToken']);
-            saveJWTResult == 0
-                ? Navigator.pushReplacementNamed(context, Home.id)
-                : null;
-          }
-        } else {
-          // Handle null response
-          showSnackBar(context,AppLocalizations.of(context).server_error, MessageType.ERROR);
-        }
-      } catch (except) {
-        print("Login error: $except");
-      } finally {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -72,9 +41,43 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context);
+
+    void userLogin() async {
+      bool isFormValid = _formKey.currentState?.validate() ?? false;
+      if (isFormValid) {
+        setState(() => _isLoading = true);
+        try {
+          var responseData = await ApiService.userLogin(
+              _docNoController.text,
+              _documentType,
+              _passwordController.text);
+          if (responseData != null) {
+            if (responseData["isSuccess"] == false) {
+              showSnackBar(context, locale.wrong_credentials, MessageType.ERROR);
+            } else {
+              int? saveJWTResult =
+              await JWTService.saveJWT(responseData['accessToken']);
+              saveJWTResult == 0
+                  ? Navigator.pushReplacementNamed(context, Home.id)
+                  : null;
+            }
+          } else {
+            // Handle null response
+            showSnackBar(context,locale.server_error, MessageType.ERROR);
+          }
+        } catch (except) {
+          print("Login error: $except");
+        } finally {
+          setState(() => _isLoading = false);
+        }
+      }
+    }
+
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: AppLocalizations.of(context).login_capitalized,
+        title: locale.login_capitalized,
       ),
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -132,7 +135,7 @@ class _LoginState extends State<Login> {
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       child: Text(
-                        AppLocalizations.of(context).forgot_pw,
+                        locale.forgot_pw,
                         style: AppStyles.actionTextStyle
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
@@ -146,21 +149,21 @@ class _LoginState extends State<Login> {
                       onPressed: _isLoading ? null : () => userLogin(),
                       child: Text(_isLoading
                           ? '...'
-                          : AppLocalizations.of(context).login_capitalized)),
+                          : locale.login_capitalized)),
                   const SizedBox(
                     height: 24.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(AppLocalizations.of(context).not_registered,
+                      Text(locale.not_registered,
                           style: AppStyles.subMediumTextStyle),
                       const SizedBox(
                         width: 5.0,
                       ),
                       GestureDetector(
                         child: Text(
-                          AppLocalizations.of(context).create_account_low,
+                          locale.create_account_low,
                           style: AppStyles.actionTextStyle,
                         ),
                         onTap: () => Navigator.pushReplacementNamed(context, SignUp.id),
