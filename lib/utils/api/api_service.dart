@@ -25,7 +25,7 @@ class ApiService {
         url,
         body: json.encode(loginCredentials),
         headers: {'Content-Type': 'application/json'},
-      );
+      ).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200 || response.statusCode == 401) {
         // Handle successful login
@@ -59,7 +59,7 @@ class ApiService {
         url,
         body: json.encode(signUpCredentials),
         headers: {'Content-Type': 'application/json'},
-      );
+      ).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         // Handle successful login
@@ -83,7 +83,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         return Usuario.fromJson(responseData);
@@ -103,7 +103,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return responseData
@@ -125,7 +125,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return responseData.map((data) => Producto.fromJson(data)).toList();
@@ -145,7 +145,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return responseData.map((data) => Cobertura.fromJson(data)).toList();
@@ -166,7 +166,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return responseData.map((data) => Cobertura.fromJson(data)).toList();
@@ -193,7 +193,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return responseData.map((data) => Cobertura.fromJson(data)).toList();
@@ -205,16 +205,16 @@ class ApiService {
   }
 
   static Future<bool> sendResetToken(String email) async {
-    var url = Uri.parse(
-            '${ApiConstants.baseUrl}${ApiConstants.sendTokenEndpoint}')
-        .replace(queryParameters: {
+    var url =
+        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.sendTokenEndpoint}')
+            .replace(queryParameters: {
       'emailAddress': email,
     });
 
     try {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 202) return true;
     } catch (except) {
       print('Error generating token $except');
@@ -223,17 +223,16 @@ class ApiService {
   }
 
   static Future<bool> validateResetToken(String token, String emailAddr) async {
-    var url = Uri.parse(
-            '${ApiConstants.baseUrl}${ApiConstants.validateTokenEndpoint}')
-        .replace(queryParameters: {
-      'token': token,
-      'emailAdress': emailAddr
-    });
+    Map<String, String> reqParams = {'token': token, 'emailAdress': emailAddr};
+
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.validateTokenEndpoint)
+            .replace(queryParameters: reqParams);
 
     try {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
-      });
+      }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) return true;
     } catch (except) {
       print('Error validating token $except');
@@ -241,19 +240,24 @@ class ApiService {
     return false;
   }
 
-  static Future<bool> resetPassword(String token, String newPass, String emailAddr) async {
-    // Define API Endpoint
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.resetPasswordEndpoint);
-
-    //Map body arguments
-    Map<String, String> signUpCredentials = {
+  static Future<bool> resetPassword(
+      String token, String newPass, String emailAddr) async {
+    Map<String, String> reqParams = {
       'token': token,
       'newPassword': newPass,
       'emailAddress': emailAddr,
     };
 
+    // Define API Endpoint
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.resetPasswordEndpoint)
+            .replace(queryParameters: reqParams);
+
     try {
-      var response = await http.patch(url, body: json.encode(signUpCredentials), headers: {'Content-Type': 'application/json'},);
+      var response = await http.patch(
+        url,
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) return true;
     } catch (except) {
       print('Error resetting password : $except');
