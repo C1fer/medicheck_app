@@ -5,7 +5,6 @@ import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/token_field.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/custom_appbar.dart';
-import '../../../widgets/heading_back.dart';
 import '../../../widgets/popups/snackbar.dart';
 
 class ResetTokenInput extends StatefulWidget {
@@ -64,7 +63,7 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
           showCustomSnackBar(context, "Recovery code sent");
         } else {
           // Handle null response
-          showCustomSnackBar(context, locale.server_error);
+          showCustomSnackBar(context, "Server error");
         }
       } catch (except) {
         print("Error sending email: $except");

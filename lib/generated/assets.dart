@@ -12,11 +12,14 @@ class Assets {
   static const String coverageCoverageDetails = 'lib/screens/home/coverage/coverage_details.dart';
   static const String coverageCoverageSearch = 'lib/screens/home/coverage/coverage_search.dart';
   static const String coverageSavedCoverages = 'lib/screens/home/coverage/saved_coverages.dart';
+  static const String dialogsBaseAlert = 'lib/widgets/popups/dialogs/base_alert.dart';
+  static const String dialogsSuccessAlert = 'lib/widgets/popups/dialogs/custom_dialog.dart';
   static const String establishmentsEstablishmentsList = 'lib/screens/home/establishments/establishments_list.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String homeHome = 'lib/screens/home/home.dart';
   static const String homeSettings = 'lib/screens/home/settings.dart';
   static const String iconsArrowLeft = 'assets/icons/arrow-left.svg';
+  static const String iconsDone = 'assets/icons/done.svg';
   static const String iconsEyeSlash = 'assets/icons/eye-slash.svg';
   static const String iconsHeartFull = 'assets/icons/heart-full.svg';
   static const String iconsHeartOutlined = 'assets/icons/heart-outlined.svg';
@@ -69,7 +72,6 @@ class Assets {
   static const String modelsProducto = 'lib/models/producto.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';
-  static const String popupsAlert = 'lib/widgets/popups/alert.dart';
   static const String popupsSnackbar = 'lib/widgets/popups/snackbar.dart';
   static const String pwResetForgotPw = 'lib/screens/welcome/pw_reset/forgot_pw.dart';
   static const String pwResetNewPw = 'lib/screens/welcome/pw_reset/new_pw.dart';

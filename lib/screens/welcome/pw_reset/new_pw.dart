@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/pwd_field.dart';
-import 'package:medicheck/widgets/popups/alert.dart';
+import 'package:medicheck/widgets/popups/dialog/base_alert.dart';
+import 'package:medicheck/widgets/popups/dialog/custom_dialog.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/custom_appbar.dart';
-import '../../../widgets/heading_back.dart';
 import '../../../widgets/popups/snackbar.dart';
 import '../welcome.dart';
 
@@ -31,19 +31,22 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-    print("args: $args");
     final locale = AppLocalizations.of(context);
 
     // Change UserPassword
-    void setNewPassword(String new_pwd, String confirm_pwd) async {
+    void setNewPassword(String newPwd, String confirmPwd) async {
       if (isFormValid()) {
         setState(() => _isLoading = true);
         try {
           bool response = await ApiService.resetPassword(
-              args["token"]!, new_pwd, args["email"]!);
+              args["token"]!, newPwd, args["email"]!);
           if (response) {
-            await showAlertDialog(context, locale.success,
-                body: locale.pw_reset_success);
+            await showCustomDialog(
+                context,
+                CustomDialog(
+                  title: locale.success,
+                  body: locale.pw_reset_success,
+                ));
             await Navigator.pushReplacementNamed(context, Welcome.id);
           } else {
             // Handle null response
