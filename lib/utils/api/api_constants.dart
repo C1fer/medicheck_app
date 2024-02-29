@@ -5,6 +5,7 @@ class ApiConstants{
   static String signUpEndpoint = "/register";
   static String usersEndpoint = "/usuarios";
   static String coveragesEndpoint = "/coberturas";
+  static String coveragesSearchEndpoint = "/coberturas/busquedaavanzada";
   static String coveragesUserEndpoint = "/coberturas/usuario";
   static String establishmentsEndpoint = "/establecimientos";
   static String planEndpoint = "/planes";

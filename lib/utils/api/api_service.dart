@@ -179,14 +179,17 @@ class ApiService {
 
   static Future<List<Cobertura>> getCoveragesAdvanced(
       String? name, String? desc, String? type, String? category) async {
+
+    Map<String, String?> queryParams = {
+      'nombre': name,
+      'descripcion': desc,
+      'tipo': type,
+      'categoria': category,
+    };
+
     var url =
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesEndpoint}')
-            .replace(queryParameters: {
-      'name': name,
-      'desc': desc,
-      'type': type,
-      'category': category,
-    });
+        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesSearchEndpoint}')
+            .replace(queryParameters: queryParams);
     String? accessToken = await JWTService.readJWT();
 
     try {
