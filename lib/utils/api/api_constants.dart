@@ -14,4 +14,6 @@ class ApiConstants{
   static String sendTokenEndpoint = "/otp-send-email";
   static String validateTokenEndpoint = "/otp-validate";
   static String resetPasswordEndpoint = "/otp-reset-password";
+  static String incidentsUserEndpoint = "/reportesincidentes/usuario/";
+  static String planUserEndpoint = "/planes/usuario/";
 }

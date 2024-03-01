@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/establecimiento.dart';
 import 'dart:convert';
+import '../../models/plan.dart';
 import '../../models/producto.dart';
 import '../../models/usuario.dart';
 import 'api_constants.dart';
@@ -189,7 +190,7 @@ class ApiService {
 
     var url =
         Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesSearchEndpoint}')
-            .replace(queryParameters: queryParams);
+            .replace(queryParameters: queryParams );
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -267,4 +268,25 @@ class ApiService {
     }
     return false;
   }
+
+  static Future<List<Plan>> getPlansbyUserID(int userID) async {
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.planUserEndpoint}/$userID');
+    String? accessToken = await JWTService.readJWT();
+
+    try {
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      }).timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        return responseData.map((data) => Plan.fromJson(data)).toList();
+      }
+    } catch (except) {
+      print('Error retrieving plans: $except');
+    }
+    return <Plan>[];
+  }
+
 }

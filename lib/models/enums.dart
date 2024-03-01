@@ -18,4 +18,15 @@ class Constants {
     'MEDICAMENTO',
     'PROCEDIMIENTO'
   ];
+
+  static const List<String> incidentStatuses = [
+    'CREADO',
+    'EN_REVISION',
+    'CERRADO',
+  ];
+  static const List<String> establishmentTypes = [
+    'CENTRO_MEDICO',
+    'FARMACIA',
+    'LABORATORIO',
+  ];
 }
