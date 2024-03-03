@@ -18,6 +18,7 @@ class Assets {
   static const String establishmentsEstablishmentsList = 'lib/screens/home/establishments/establishments_list.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String homeHome = 'lib/screens/home/home.dart';
+  static const String homeIncidentReports = 'lib/screens/home/incident_reports.dart';
   static const String homeSettings = 'lib/screens/home/settings.dart';
   static const String iconsArrowLeft = 'assets/icons/arrow-left.svg';
   static const String iconsDone = 'assets/icons/done.svg';
@@ -74,6 +75,7 @@ class Assets {
   static const String modelsLocaleNotifier = 'lib/models/localeNotifier.dart';
   static const String modelsPlan = 'lib/models/plan.dart';
   static const String modelsProducto = 'lib/models/producto.dart';
+  static const String modelsUserInfoNotifier = 'lib/models/user_info_notifier.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';
   static const String pwResetForgotPw = 'lib/screens/welcome/pw_reset/forgot_pw.dart';

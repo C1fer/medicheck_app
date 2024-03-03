@@ -8,10 +8,12 @@ class Plan {
   int idPlan;
   String descripcion;
   int idAseguradora;
-  String fechaRegistro;
-  List<dynamic> cobeturas;
+  DateTime fechaRegistro;
+  List<dynamic>? cobeturas;
   dynamic idAseguradoraNavigation;
-  List<dynamic> usuarioPlans;
+  List<dynamic>? personaPlans;
+  List<dynamic>? reporteIncidentes;
+  List<dynamic>? usuarioPlans;
 
   Plan({
     required this.idPlan,
@@ -20,26 +22,33 @@ class Plan {
     required this.fechaRegistro,
     required this.cobeturas,
     required this.idAseguradoraNavigation,
+    required this.personaPlans,
+    required this.reporteIncidentes,
     required this.usuarioPlans,
   });
 
+
   factory Plan.fromJson(Map<String, dynamic> json) => Plan(
-    idPlan: json["IdPlan"],
-    descripcion: json["Descripcion"],
-    idAseguradora: json["IdAseguradora"],
-    fechaRegistro: json["FechaRegistro"],
-    cobeturas: json["Coberturas"] != null ? List<dynamic>.from(json["Coberturas"].map((x) => x)) : [],
-    idAseguradoraNavigation: json["IdAseguradoraNavigation"],
-    usuarioPlans: json["UsuarioPlans"] != null ? List<dynamic>.from(json["UsuarioPlans"].map((x) => x)) : [],
+    idPlan: json["idPlan"],
+    descripcion: json["descripcion"],
+    idAseguradora: json["idAseguradora"],
+    fechaRegistro: DateTime.parse(json["fechaRegistro"]),
+    cobeturas: json["coberturas"],
+    idAseguradoraNavigation: json["idAseguradoraNavigation"],
+    personaPlans: json["UsuarioPlans"],
+    reporteIncidentes: json["reporteIncidentes"],
+    usuarioPlans: json["UsuarioPlans"],
   );
 
   Map<String, dynamic> toJson() => {
-    "IdPlan": idPlan,
-    "Descripcion": descripcion,
-    "IdAseguradora": idAseguradora,
-    "FechaRegistro": fechaRegistro,
-    "Cobeturas": List<dynamic>.from(cobeturas.map((x) => x)),
-    "IdAseguradoraNavigation": idAseguradoraNavigation,
-    "UsuarioPlans": List<dynamic>.from(usuarioPlans.map((x) => x)),
+    "idPlan": idPlan,
+    "descripcion": descripcion,
+    "idAseguradora": idAseguradora,
+    "fechaRegistro": fechaRegistro.toIso8601String(),
+    "cobeturas": cobeturas != null ? List<dynamic>.from(cobeturas!.map((x) => x)) : null,
+    "idAseguradoraNavigation": idAseguradoraNavigation,
+    "personaPlans": cobeturas != null ? List<dynamic>.from(personaPlans!.map((x) => x)) : null,
+    "reporteIncidentes": cobeturas != null ? List<dynamic>.from(reporteIncidentes!.map((x) => x)) : null,
+    "usuarioPlans": usuarioPlans != null ? List<dynamic>.from(usuarioPlans!.map((x) => x)) : null,
   };
 }

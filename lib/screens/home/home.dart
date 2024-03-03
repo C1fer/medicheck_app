@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_coverages.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
@@ -10,6 +11,9 @@ import 'package:medicheck/styles/app_colors.dart';
 import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/utils/cached_coverages.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
+import 'package:medicheck/widgets/dropdown/dropdown.dart';
+import 'package:provider/provider.dart';
+import '../../models/plan.dart';
 import '../../models/usuario.dart';
 import '../../utils/jwt_service.dart';
 import '../../widgets/cards/menu_action_card.dart';
@@ -25,9 +29,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Usuario? currentUser;
   List<Cobertura> planCoverages = [];
   List<Cobertura> recentSearches = [];
+  List<Plan> userPlans = [];
 
   @override
   void initState() {
@@ -36,144 +40,183 @@ class _HomeState extends State<Home> {
     _fetchData();
   }
 
-  void _fetchData() async {
-    //JWT fetch
-    var userInfo = await JWTService.decodeJWT();
+  Future<void> _fetchUserPlans(int userID) async {
+    var response = await ApiService.getPlansbyUserID(userID);
+    if (response.isNotEmpty) setState(() => userPlans = response);
+    Provider.of<UserInfoModel>(context, listen: false)
+        .setCurrentPlan(response.first);
+  }
 
-    await ApiService.getCoveragesbyUserID(userInfo!['IdUsuario'])
-        .then((value) => setState(() => planCoverages = value));
+  Future<void> _fetchCoverages(int planID) async {
+    List<Cobertura> response = await ApiService.getCoveragesAdvanced(planID);
+    if (response.isNotEmpty) setState(() => planCoverages = response);
+  }
 
-    // API Fetch
-    await ApiService.getUserById(userInfo!['IdUsuario'])
-        .then((value) => setState(() => currentUser = value));
+  Future<void> _fetchData() async {
+    final userProvider = Provider.of<UserInfoModel>(context, listen: false);
+    if (userPlans.isEmpty)
+      await _fetchUserPlans(userProvider.curentUser!.idUsuario);
 
-    // await CachedCoveragesService.get()
-    //     .then((value) => setState(() => recentSearches = value));
+    int? planID = userProvider.selectedPlanID;
+    if (planID != null) await _fetchCoverages(planID);
+  }
+
+  void _changeSelectedPlan(String newPlanID) async{
+    final userProvider = Provider.of<UserInfoModel>(context, listen: false);
+    await userProvider.setCurrentPlan(
+        userPlans.firstWhere((Plan plan) =>
+        plan.idPlan.toString() == newPlanID));
+    _fetchCoverages(userProvider.selectedPlanID!.toInt());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24,12,24,24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () => Navigator.pushNamed(context, SettingsPage.id, arguments: currentUser),
+    return Consumer<UserInfoModel>(
+      builder: (context, user, child) => Scaffold(
+          body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    flex: 9,
+                    child: Consumer<UserInfoModel>(
+                        builder: (context, user, __) => Text(
+                              '${AppLocalizations.of(context).welcome_msg}, ${user.curentUser!.nombre!.split(' ').first}',
+                              style: AppStyles.headingTextStyle,
+                              softWrap: true,
+                            )),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: () =>
+                          Navigator.pushNamed(context, SettingsPage.id),
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        child: SvgPicture.asset(
+                          'assets/icons/user-circle.svg',
+                          color: AppColors.jadeGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (userPlans.length > 1)
+                const SizedBox(height: 6.0,),
+                Consumer<UserInfoModel>(
+                  builder: (context, userInfo, _) => CustomDropdownButton(
+                      currentVal: userInfo.selectedPlanID.toString(),
+                      onChanged: (newPlanID) => _changeSelectedPlan(newPlanID),
+                      entries: userPlans
+                          .map((Plan plan) => DropdownMenuItem(
+                                value: plan.idPlan.toString(),
+                                child: Text(plan.descripcion),
+                              ))
+                          .toList()),
+                ),
+              const SizedBox(
+                height: 24.0,
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pushNamed(context, CoverageSearch.id),
                 child: Container(
-                  width: 36,
-                  height: 36,
-                  child: SvgPicture.asset(
-                    'assets/icons/user-circle.svg',
-                    color: AppColors.jadeGreen,
+                  alignment: Alignment.center,
+                  width: 324,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(24)),
+                      color: Color(0xffFBFBFB)),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
+                    child: Row(children: [
+                      const Icon(
+                        Icons.search,
+                        size: 18.0,
+                        weight: 0.8,
+                        color: AppColors.deepLightGray,
+                      ),
+                      const SizedBox(
+                        width: 12.0,
+                      ),
+                      Text(
+                        AppLocalizations.of(context).search_box_placeholder,
+                        style: const TextStyle(
+                            color: AppColors.deepLightGray, fontSize: 12),
+                      )
+                    ]),
                   ),
                 ),
               ),
-            ),
-            Text(
-              AppLocalizations.of(context).main_menu_heading,
-              style: AppStyles.headingTextStyle,
-              softWrap: true,
-            ),
-            const SizedBox(
-              height: 24.0,
-            ),
-            GestureDetector(
-              onTap: () => Navigator.pushNamed(context, CoverageSearch.id),
-              child: Container(
-                alignment: Alignment.center,
-                width: 324,
-                height: 40,
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(24)),
-                    color: Color(0xffFBFBFB)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  child: Row(children: [
-                    const Icon(
-                      Icons.search,
-                      size: 18.0,
-                      weight: 0.8,
-                      color: AppColors.deepLightGray,
-                    ),
-                    const SizedBox(
-                      width: 12.0,
-                    ),
-                    Text(
-                      AppLocalizations.of(context).search_box_placeholder,
-                      style: const TextStyle(
-                          color: AppColors.deepLightGray, fontSize: 12),
-                    )
-                  ]),
-                ),
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                MenuActionCard(
-                    title: AppLocalizations.of(context).incidents,
-                    iconPath: 'assets/icons/incident.svg',
-                    route: ''),
-                const SizedBox(
-                  width: 22.0,
-                ),
-                MenuActionCard(
-                    title: AppLocalizations.of(context).medical_centers,
-                    iconPath: 'assets/icons/hospital.svg',
-                    route: EstablishmentsList.id),
-                const SizedBox(
-                  width: 22.0,
-                ),
-                MenuActionCard(
-                    title: AppLocalizations.of(context).favourites,
-                    iconPath: 'assets/icons/heart-outlined.svg',
-                    route: SavedCoverages.id)
-              ],
-            ),
-            const SizedBox(
-              height: 24.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  AppLocalizations.of(context).recent_coverages,
-                  style: AppStyles.sectionTextStyle,
-                ),
-                // GestureDetector(
-                //   onTap: () {},
-                //   child: Text(
-                //     AppLocalizations.of(context).view_all,
-                //     style: AppStyles.actionTextStyle,
-                //   ),
-                // ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: CoveragesListView(coverages: planCoverages),
-            ),
-            Text(
-              AppLocalizations.of(context).new_coverages,
-              style: AppStyles.sectionTextStyle,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-              child: CoveragesListView(coverages: planCoverages),
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  MenuActionCard(
+                      title: AppLocalizations.of(context).incidents,
+                      iconPath: 'assets/icons/incident.svg',
+                      route: ''),
+                  const SizedBox(
+                    width: 22.0,
+                  ),
+                  MenuActionCard(
+                      title: AppLocalizations.of(context).medical_centers,
+                      iconPath: 'assets/icons/hospital.svg',
+                      route: EstablishmentsList.id),
+                  const SizedBox(
+                    width: 22.0,
+                  ),
+                  MenuActionCard(
+                      title: AppLocalizations.of(context).favourites,
+                      iconPath: 'assets/icons/heart-outlined.svg',
+                      route: SavedCoverages.id)
+                ],
+              ),
+              const SizedBox(
+                height: 24.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context).recent_coverages,
+                    style: AppStyles.sectionTextStyle,
+                  ),
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: Text(
+                  //     AppLocalizations.of(context).view_all,
+                  //     style: AppStyles.actionTextStyle,
+                  //   ),
+                  // ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                child: CoveragesListView(coverages: planCoverages),
+              ),
+              Text(
+                AppLocalizations.of(context).new_coverages,
+                style: AppStyles.sectionTextStyle,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                child: CoveragesListView(coverages: planCoverages),
+              ),
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 }

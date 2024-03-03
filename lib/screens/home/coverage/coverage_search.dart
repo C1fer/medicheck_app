@@ -3,6 +3,8 @@ import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/dropdown/dropdown.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
+import 'package:provider/provider.dart';
+import '../../../models/user_info_notifier.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/cards/coverage_card_sm.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -43,13 +45,17 @@ class _CoverageSearchState extends State<CoverageSearch> {
   }
 
   void _searchCoverage() async {
-    if (mounted && _coverageController.text.length > 0) {
-      await ApiService.getCoveragesAdvanced(
-              _coverageController.text, null, _typeVal, _categoryVal)
+    int? planID =
+        Provider.of<UserInfoModel>(context, listen: false).selectedPlanID;
+    if (mounted && _coverageController.text.isNotEmpty) {
+      await ApiService.getCoveragesAdvanced(planID!,
+              name: _coverageController.text,
+              type: _typeVal,
+              category: _categoryVal)
           .then((value) => setState(() => coverages = value));
     }
 
-    if (_coverageController.text.length == 0) {
+    if (_coverageController.text.isEmpty) {
       coverages.clear();
     }
   }
@@ -134,14 +140,24 @@ class _CoverageSearchState extends State<CoverageSearch> {
         CustomDropdownButton(
             currentVal: _categoryVal ?? Constants.productCategories.first,
             onChanged: (newVal) => setState(() => _categoryVal = newVal),
-            values: Constants.productCategories),
+            entries: Constants.productCategories
+                .map((String category) => DropdownMenuItem(
+                      value: category,
+                      child: Text(category),
+                    ))
+                .toList()),
         const SizedBox(
           height: 16,
         ),
         CustomDropdownButton(
-            currentVal:  _typeVal ?? Constants.productTypes.first,
+            currentVal: _typeVal ?? Constants.productTypes.first,
             onChanged: (newVal) => setState(() => _typeVal = newVal),
-            values: Constants.productTypes),
+            entries: Constants.productTypes
+                .map((String type) => DropdownMenuItem(
+                      value: type,
+                      child: Text(type),
+                    ))
+                .toList()),
         const SizedBox(height: 24),
         SizedBox(
           width: double.infinity,

@@ -74,9 +74,9 @@ class ApiService {
     return null;
   }
 
-  static Future<Usuario?> getUserById(String id) async {
+  static Future<Usuario?> getUserById(int userID) async {
     var url =
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$id');
+        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$userID');
 
     String? accessToken = await JWTService.readJWT();
 
@@ -178,14 +178,14 @@ class ApiService {
     return <Cobertura>[];
   }
 
-  static Future<List<Cobertura>> getCoveragesAdvanced(
-      String? name, String? desc, String? type, String? category) async {
+  static Future<List<Cobertura>> getCoveragesAdvanced(int selectedPlanID, {String? name, String? desc, String? type, String? category}) async {
 
-    Map<String, String?> queryParams = {
+    Map<String, dynamic> queryParams = {
       'nombre': name,
       'descripcion': desc,
       'tipo': type,
       'categoria': category,
+      'idPlan': selectedPlanID.toString(),
     };
 
     var url =
@@ -281,7 +281,8 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => Plan.fromJson(data)).toList();
+        var x =  responseData.map((data) => Plan.fromJson(data)).toList();
+        return x;
       }
     } catch (except) {
       print('Error retrieving plans: $except');

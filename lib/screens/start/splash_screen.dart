@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:medicheck/screens/home/home.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:medicheck/utils/cached_coverages.dart';
+import 'package:provider/provider.dart';
+import '../../models/user_info_notifier.dart';
+import '../../utils/api/api_service.dart';
 import 'onboarding.dart';
 import 'package:medicheck/widgets/logo/full_logo.dart';
 import 'package:medicheck/styles/app_colors.dart';
@@ -20,25 +23,46 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    //JWTService.deleteJWT();
+    _initCheck();
+  }
+
+  // Check if session is active
+  void _initCheck() async {
+    String? accessToken = await JWTService.readJWT();
+    if (accessToken != null) {
+      try {
+        var userInfo = await JWTService.decodeJWT();
+        int userID = int.parse(userInfo!['IdUsuario']);
+        await _fetchUserInfo(userID);
+      }
+      catch(except){
+        print("Error fetching user info: $except");
+      }
+    }
     _redirectUser();
   }
 
+  // User redirection logic
   void _redirectUser() async {
-    CachedCoveragesService.deleteCache();
-
-    // Redirect to home screen if JWT is available
-    String? accessToken = await JWTService.readJWT();
-    if (accessToken != null) {
+    final userProvider = Provider.of<UserInfoModel>(context, listen: false);
+    if (userProvider.curentUser != null) {
       Navigator.pushReplacementNamed(context, Home.id);
     } else {
       // Redirect to Welcome screen if user had completed onboarding
       final localStorage = await SharedPreferences.getInstance();
       final bool? onboardingCompleted = localStorage.getBool('onboarding_completed');
-      onboardingCompleted == true
-          ? Navigator.pushReplacementNamed(context, Welcome.id)
-          : Navigator.pushReplacementNamed(context, Onboarding.id);
+
+      final String redirectRoute = onboardingCompleted! ? Welcome.id : Onboarding.id;
+      Navigator.pushReplacementNamed(context, redirectRoute);
     }
+  }
+
+  // Fetch current user info
+  Future<void> _fetchUserInfo(int userID) async {
+    var response = await ApiService.getUserById(userID);
+    if (response != null)
+      Provider.of<UserInfoModel>(context, listen: false)
+          .setCurrentUser(response);
   }
 
   @override
