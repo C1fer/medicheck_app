@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/cobertura.dart';
-import 'package:medicheck/models/user_info_notifier.dart';
+import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
+import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
 import 'package:medicheck/widgets/coverages_list_view.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,9 @@ class _SavedCoveragesState extends State<SavedCoverages> {
         List<Producto>?  response = await ApiService.getSavedProductsbyUserID(userID);
         if (response != null)
           setState(() => savedProducts = response);
+          final savedProductProvider = Provider.of<SavedProductModel>(context, listen: true);
+          savedProductProvider.clear();
+          savedProductProvider.addSavedProducts(response);
       }
     } catch (ex) {
       print("Error fetching saved products $ex");
@@ -56,7 +60,7 @@ class _SavedCoveragesState extends State<SavedCoverages> {
 
   Future<void> _fetchData() async{
     final userProvider = Provider.of<UserInfoModel>(context, listen: false);
-    await _fetchSavedProducts(userProvider.curentUser!.idUsuario);
+    await _fetchSavedProducts(userProvider.currentUser!.idUsuario);
 
     if (savedProducts.isNotEmpty){
      await fetchProductCoverages();

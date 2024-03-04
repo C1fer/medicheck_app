@@ -3,7 +3,7 @@ import 'package:medicheck/screens/home/home.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:medicheck/utils/cached_coverages.dart';
 import 'package:provider/provider.dart';
-import '../../models/user_info_notifier.dart';
+import '../../models/notifiers/user_info_notifier.dart';
 import '../../utils/api/api_service.dart';
 import 'onboarding.dart';
 import 'package:medicheck/widgets/logo/full_logo.dart';
@@ -45,7 +45,7 @@ class _SplashState extends State<Splash> {
   // User redirection logic
   void _redirectUser() async {
     final userProvider = Provider.of<UserInfoModel>(context, listen: false);
-    if (userProvider.curentUser != null) {
+    if (userProvider.currentUser != null) {
       Navigator.pushReplacementNamed(context, Home.id);
     } else {
       // Redirect to Welcome screen if user had completed onboarding

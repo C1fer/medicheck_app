@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:medicheck/models/user_info_notifier.dart';
+import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
+import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_coverages.dart';
@@ -12,7 +13,7 @@ import 'package:medicheck/screens/welcome/pw_reset/new_pw.dart';
 import 'package:medicheck/screens/welcome/pw_reset/reset_token.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:medicheck/screens/welcome/login_signup/sign_up.dart';
-import 'models/localeNotifier.dart';
+import 'models/notifiers/localeNotifier.dart';
 import 'screens/start/splash_screen.dart';
 import 'screens/start/onboarding.dart';
 import 'screens/home/home.dart';
@@ -24,7 +25,8 @@ void main() {
   runApp(
       MultiProvider(providers: [
         ChangeNotifierProvider(create: (context) => LocaleModel()),
-        ChangeNotifierProvider(create: (context) => UserInfoModel())
+        ChangeNotifierProvider(create: (context) => UserInfoModel()),
+        ChangeNotifierProvider(create: (context) => SavedProductModel())
       ],
         child: MyApp(),
       ),

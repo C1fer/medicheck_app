@@ -4,7 +4,7 @@ import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
-import '../../../models/user_info_notifier.dart';
+import '../../../models/notifiers/user_info_notifier.dart';
 import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/cards/coverage_card_sm.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

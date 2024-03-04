@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
+import 'package:medicheck/models/notifiers/user_info_notifier.dart';
+import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/widgets/cards/feature_card.dart';
+import 'package:provider/provider.dart';
+import '../../../models/producto.dart';
 import '../../../widgets/custom_appbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../styles/app_colors.dart';
@@ -17,15 +22,48 @@ class CoverageDetailView extends StatefulWidget {
 }
 
 class _CoverageDetailViewState extends State<CoverageDetailView> {
+  bool? isSaved;
+
+  //TODO: Remove saved product using API
+  void _saveProduct(Producto product) async {
+    final userProvider = Provider.of<UserInfoModel>(context, listen: false);
+    final savedProductProvider = Provider.of<SavedProductModel>(context, listen: false);
+
+    if (isSaved!) {
+      savedProductProvider.deleteSavedProduct(product);
+      setState(() => isSaved = false);
+    } else {
+      // final bool response = await ApiService.postSavedProduct(
+      //     userProvider.curentUser!.idUsuario, product.idProducto);
+      savedProductProvider.addSavedProduct(product);
+      setState(() => isSaved = true);
+    }
+  }
+
+  Future<void> isProductSaved(int productID) async {
+    final savedProductProvider =
+        Provider.of<SavedProductModel>(context, listen: false);
+    List<int> savedProductIDs = savedProductProvider.savedProductIDs;
+    if (savedProductIDs.isNotEmpty) {
+      setState(() => isSaved = savedProductProvider.isProductInList(productID));
+    } else {
+      int? userID =
+          Provider.of<UserInfoModel>(context, listen: false).currentUserID;
+      List<Producto> response =
+          await ApiService.getSavedProductsbyUserID(userID!);
+      if (response.isNotEmpty) {
+        savedProductProvider.addSavedProducts(response);
+        setState(
+            () => isSaved = savedProductProvider.isProductInList(productID));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final coverage = ModalRoute.of(context)!.settings.arguments as Cobertura;
+    isProductSaved(coverage.idProducto);
     final localization = AppLocalizations.of(context);
-    bool isSaved = false;
-
-    void _saveCoverages() async {
-      setState(() => isSaved = !isSaved);
-    }
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -84,22 +122,17 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                     ],
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => _saveCoverages(),
-                  child: Container(
-                      child: isSaved == false
-                          ? const Icon(
-                              Icons.heart_broken,
-                              size: 45.0,
-                              color: AppColors.lightGray,
-                            )
-                          : const Icon(
-                              Icons.heart_broken,
-                                size: 45.0,
-                              color: AppColors.heartPink,
-                            )
-                      ),
-                )
+                if (isSaved != null)
+                  GestureDetector(
+                    onTap: () => _saveProduct(coverage.idProductoNavigation),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      child: isSaved!
+                          ? SvgPicture.asset('assets/icons/heart-full.svg')
+                          : SvgPicture.asset('assets/icons/heart-outlined.svg'),
+                    ),
+                  )
               ],
             ),
             const SizedBox(

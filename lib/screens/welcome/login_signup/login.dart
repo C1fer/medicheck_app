@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/models/enums.dart';
 import 'package:provider/provider.dart';
-import '../../../models/user_info_notifier.dart';
+import '../../../models/notifiers/user_info_notifier.dart';
 import '../pw_reset/forgot_pw.dart';
 import 'sign_up.dart';
 import '../../../widgets/doctype_dropdown.dart';
@@ -71,7 +71,7 @@ class _LoginState extends State<Login> {
                 var userInfo = await JWTService.decodeJWT();
                 int userID = int.parse(userInfo!['IdUsuario']);
                 await _fetchUserInfo(userID);
-                if (Provider.of<UserInfoModel>(context, listen: false).curentUser != null)
+                if (Provider.of<UserInfoModel>(context, listen: false).currentUser != null)
                   Navigator.pushReplacementNamed(context, Home.id);
               }
             }

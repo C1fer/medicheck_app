@@ -8,16 +8,18 @@ class MenuActionCard extends StatelessWidget {
       {super.key,
       required this.title,
       required this.iconPath,
-      required this.route});
+      required this.route,
+      this.arguments});
 
   String title;
   String iconPath;
   String route;
+  Object? arguments;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, route),
+      onTap: () => Navigator.pushNamed(context, route, arguments: arguments),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +49,7 @@ class MenuActionCard extends StatelessWidget {
                 ),
               )),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+            padding: const EdgeInsets.only(top: 8.0),
             child: Text(title, style: AppStyles.subMediumTextStyle),
           ),
         ],

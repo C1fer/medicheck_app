@@ -72,13 +72,14 @@ class Assets {
   static const String modelsCobertura = 'lib/models/cobertura.dart';
   static const String modelsEnums = 'lib/models/enums.dart';
   static const String modelsEstablecimiento = 'lib/models/establecimiento.dart';
-  static const String modelsLocaleNotifier = 'lib/models/localeNotifier.dart';
   static const String modelsPlan = 'lib/models/plan.dart';
   static const String modelsProducto = 'lib/models/producto.dart';
   static const String modelsSavedProduct = 'lib/models/savedProduct.dart';
-  static const String modelsUserInfoNotifier = 'lib/models/user_info_notifier.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';
+  static const String notifiersLocaleNotifier = 'lib/models/notifiers/localeNotifier.dart';
+  static const String notifiersSavedProductsNotifier = 'lib/models/notifiers/saved_products_notifier.dart';
+  static const String notifiersUserInfoNotifier = 'lib/models/notifiers/user_info_notifier.dart';
   static const String pwResetForgotPw = 'lib/screens/welcome/pw_reset/forgot_pw.dart';
   static const String pwResetNewPw = 'lib/screens/welcome/pw_reset/new_pw.dart';
   static const String pwResetResetToken = 'lib/screens/welcome/pw_reset/reset_token.dart';

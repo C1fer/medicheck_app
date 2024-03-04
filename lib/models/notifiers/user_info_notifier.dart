@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'plan.dart';
-import 'usuario.dart';
+import '../plan.dart';
+import '../usuario.dart';
 
 class UserInfoModel extends ChangeNotifier{
   Usuario? _currentUser;
   Plan? _selectedPlan;
 
-  Usuario? get curentUser => _currentUser;
+  Usuario? get currentUser => _currentUser;
+
+  int? get currentUserID => _currentUser?.idUsuario;
 
   int? get selectedPlanID => _selectedPlan?.idPlan;
 

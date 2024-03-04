@@ -6,7 +6,7 @@ import '../../../utils/jwt_service.dart';
 import '../../../models/usuario.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../models/usuario.dart';
-import '../../../models/localeNotifier.dart';
+import '../../models/notifiers/localeNotifier.dart';
 import '../welcome/welcome.dart';
 import 'package:provider/provider.dart';
 

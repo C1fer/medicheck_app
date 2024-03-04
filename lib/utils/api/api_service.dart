@@ -291,4 +291,30 @@ class ApiService {
     return <Plan>[];
   }
 
+  static Future<bool> postSavedProduct(int userID, int productID) async {
+    // Define API Endpoint
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.signUpEndpoint);
+
+    //Map body arguments
+    Map<String, int> requestBody = {
+      'idUsuario': userID,
+      'idProducto': productID,
+    };
+
+    try {
+      var response = await http.post(
+        url,
+        body: json.encode(requestBody),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      print('Request error: $e');
+    }
+    return false;
+  }
+
 }

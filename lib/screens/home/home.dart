@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/cobertura.dart';
-import 'package:medicheck/models/user_info_notifier.dart';
+import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_coverages.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
   Future<void> _fetchData() async {
     final userProvider = Provider.of<UserInfoModel>(context, listen: false);
     if (userPlans.isEmpty)
-      await _fetchUserPlans(userProvider.curentUser!.idUsuario);
+      await _fetchUserPlans(userProvider.currentUser!.idUsuario);
 
     int? planID = userProvider.selectedPlanID;
     if (planID != null) await _fetchCoverages(planID);
@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
                       flex: 9,
                       child: Consumer<UserInfoModel>(
                           builder: (context, user, __) => Text(
-                                '${AppLocalizations.of(context).welcome_msg}, ${user.curentUser!.nombre!.split(' ').first}',
+                                '${AppLocalizations.of(context).welcome_msg}, ${user.currentUser!.nombre!.split(' ').first}',
                                 style: AppStyles.headingTextStyle,
                                 softWrap: true,
                               )),
@@ -183,7 +183,7 @@ class _HomeState extends State<Home> {
                     MenuActionCard(
                         title: AppLocalizations.of(context).favourites,
                         iconPath: 'assets/icons/heart-outlined.svg',
-                        route: SavedCoverages.id)
+                        route: SavedCoverages.id,)
                   ],
                 ),
                 const SizedBox(
