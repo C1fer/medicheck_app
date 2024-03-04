@@ -86,7 +86,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                   child: Container(
                     width: 40,
                     height: 40,
-                    child: SvgPicture.asset('assets/icons/heart-outlined.svg}', color: AppColors.heartPink)
+                    child: SvgPicture.asset('assets/icons/heart-outlined.svg', color: AppColors.heartPink)
                   ),
                 )
               ],

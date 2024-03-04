@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/styles/app_styles.dart';
-import 'package:medicheck/widgets/dropdown/dropdown.dart';
+import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../models/user_info_notifier.dart';
@@ -32,6 +32,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
     // TODO: implement initState
     super.initState();
     _coverageController.addListener(() => _searchProductCoverages());
+    _searchProductCoverages();
   }
 
   @override
@@ -42,17 +43,15 @@ class _CoverageSearchState extends State<CoverageSearch> {
   }
 
   void _searchProductCoverages() async {
-    int? planID = Provider.of<UserInfoModel>(context, listen: false).selectedPlanID;
-    if (mounted && _coverageController.text.isNotEmpty) {
+    print("Name: ${_coverageController.text}\ntype:$_typeVal\ncategory:$_categoryVal");
+    int? planID =
+        Provider.of<UserInfoModel>(context, listen: false).selectedPlanID;
+    if (mounted) {
       await ApiService.getCoveragesAdvanced(planID!,
               name: _coverageController.text,
               type: _typeVal,
               category: _categoryVal)
           .then((value) => setState(() => coverages = value));
-    }
-
-    if (_coverageController.text.isEmpty) {
-      coverages.clear();
     }
   }
 
@@ -103,7 +102,10 @@ class _CoverageSearchState extends State<CoverageSearch> {
                       onTap: () => showCustomDialog(
                           context, AdvancedSearchDropdown(context),
                           dismissible: true),
-                      child: const Icon(Icons.filter_alt, color: AppColors.lightGray,),
+                      child: const Icon(
+                        Icons.filter_alt,
+                        color: AppColors.lightGray,
+                      ),
                     ))
                   ],
                 ),
@@ -134,15 +136,22 @@ class _CoverageSearchState extends State<CoverageSearch> {
   Widget AdvancedSearchDropdown(BuildContext context) {
     final locale = AppLocalizations.of(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Center(child: Text(locale.filter_options,style: AppStyles.headingTextStyle.copyWith(fontSize: 16.0),)),
+        Center(
+            child: Text(
+          locale.filter_options,
+          style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
+        )),
         const SizedBox(height: 16.0),
-        Text(locale.category, style: AppStyles.headingTextStyle.copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
+        Text(locale.category,
+            style: AppStyles.headingTextStyle
+                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
         const SizedBox(height: 4),
         CustomDropdownButton(
             value: _categoryVal,
-            nullable: true,
+            isNullable: true,
+            isExpanded: true,
             onChanged: (newVal) => setState(() => _categoryVal = newVal),
             entries: Constants.productCategories
                 .map((String category) => DropdownMenuItem(
@@ -153,12 +162,17 @@ class _CoverageSearchState extends State<CoverageSearch> {
         const SizedBox(
           height: 16,
         ),
-        Text(locale.type, style: AppStyles.headingTextStyle.copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        Text(
+          locale.type,
+          style: AppStyles.headingTextStyle
+              .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
+        ),
         const SizedBox(height: 4),
         CustomDropdownButton(
             value: _typeVal,
-            nullable: true,
-            onChanged: (newVal) => setState((){ _typeVal = newVal; print(_typeVal);}),
+            isNullable: true,
+            isExpanded: true,
+            onChanged: (newVal) => setState(() => _typeVal = newVal),
             entries: Constants.productTypes
                 .map((String type) => DropdownMenuItem(
                       value: type,
@@ -169,7 +183,11 @@ class _CoverageSearchState extends State<CoverageSearch> {
         SizedBox(
           width: double.infinity,
           child: FilledButton(
-              onPressed: () => Navigator.pop(context), child: const Text('OK')),
+              onPressed: () {
+                _searchProductCoverages();
+                Navigator.pop(context);
+              },
+              child: const Text('OK')),
         )
       ],
     );

@@ -11,7 +11,7 @@ import 'package:medicheck/styles/app_colors.dart';
 import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/utils/cached_coverages.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
-import 'package:medicheck/widgets/dropdown/dropdown.dart';
+import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:provider/provider.dart';
 import '../../models/plan.dart';
 import '../../models/usuario.dart';
@@ -113,7 +113,7 @@ class _HomeState extends State<Home> {
                 Consumer<UserInfoModel>(
                   builder: (context, userInfo, _) => CustomDropdownButton(
                       value: userInfo.selectedPlanID.toString(),
-                      onChanged: (newPlanID) => _changeSelectedPlan(newPlanID),
+                      onChanged: (newPlanID) => _changeSelectedPlan(newPlanID!),
                       entries: userPlans
                           .map((Plan plan) => DropdownMenuItem(
                                 value: plan.idPlan.toString(),

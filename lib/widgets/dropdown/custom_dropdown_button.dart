@@ -9,13 +9,15 @@ class CustomDropdownButton extends StatefulWidget {
       required this.onChanged,
       required this.entries,
       this.hintText,
-      this.nullable = false});
+      this.isNullable = false,
+      this.isExpanded = false});
 
   String? value;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String?> onChanged;
   final List<DropdownMenuItem<String>> entries;
   final String? hintText;
-  final bool nullable;
+  final bool isNullable;
+  final bool isExpanded;
 
   @override
   State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
@@ -30,10 +32,11 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           border: Border.all(width: 1, color: AppColors.lightGray),
           borderRadius: BorderRadius.circular(24.0)),
       child: DropdownButton<String?>(
+        isExpanded: widget.isExpanded,
         hint: widget.hintText != null ? Text(widget.hintText!) : null,
         value: widget.value,
         items: [
-          if (widget.nullable)
+          if (widget.isNullable)
             DropdownMenuItem(
               value: null,
               child: Text(AppLocalizations.of(context).select_an_option),
@@ -41,9 +44,8 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           ...widget.entries,
         ],
         onChanged: (String? value) {
-          if (value != null) {
-            widget.onChanged(value);
-          }
+          widget.onChanged(value);
+          setState(() => widget.value = value);
         },
         style: const TextStyle(fontSize: 16.0, color: Colors.black),
         underline: const SizedBox(),

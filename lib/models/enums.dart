@@ -1,7 +1,7 @@
 enum MessageType { WARNING, INFO, ERROR, SUCCESS }
 
 class Constants {
-  static const List<String> productTypes = [
+  static const List<String> productCategories = [
     'CARDIOLOGIA',
     'CIRUGIA',
     'DERMATOLOGIA',
@@ -12,7 +12,7 @@ class Constants {
     'ODONTOLOGIA',
     'ORTOPEDIA'
   ];
-  static const List<String> productCategories = [
+  static const List<String> productTypes = [
     'ANALITICA',
     'CONSULTA',
     'MEDICAMENTO',
