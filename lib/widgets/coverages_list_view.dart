@@ -13,7 +13,7 @@ class CoveragesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 175,
+      height: 200,
       child: ListView.separated(
         itemBuilder: (context, index) =>
             CoverageCard(coverage: coverages[index]),

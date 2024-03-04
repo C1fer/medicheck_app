@@ -52,8 +52,12 @@ class _SplashState extends State<Splash> {
       final localStorage = await SharedPreferences.getInstance();
       final bool? onboardingCompleted = localStorage.getBool('onboarding_completed');
 
-      final String redirectRoute = onboardingCompleted! ? Welcome.id : Onboarding.id;
-      Navigator.pushReplacementNamed(context, redirectRoute);
+      if (onboardingCompleted != null){
+        if (onboardingCompleted!){
+          Navigator.pushReplacementNamed(context, Welcome.id);
+        }
+      }
+      Navigator.pushReplacementNamed(context, Onboarding.id);
     }
   }
 

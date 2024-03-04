@@ -129,7 +129,7 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => Producto.fromJson(data)).toList();
+        return responseData.map((data) => Producto.fromJson2(data)).toList();
       }
     } catch (except) {
       print('Error retrieving coverages: $except');
@@ -157,7 +157,7 @@ class ApiService {
     return <Cobertura>[];
   }
 
-  static Future<List<Cobertura>> getCoveragesbyPlanProduct(
+  static Future<Cobertura?> getCoveragesbyPlanProduct(
       int planID, int productID) async {
     var url = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.coveragesEndpoint}/plan/$planID/producto/$productID');
@@ -169,13 +169,13 @@ class ApiService {
         'Authorization': 'Bearer $accessToken'
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => Cobertura.fromJson(data)).toList();
+        final responseData = json.decode(response.body);
+        return Cobertura.fromJson(responseData);
       }
     } catch (except) {
       print('Error retrieving coverages: $except');
     }
-    return <Cobertura>[];
+    return null;
   }
 
   static Future<List<Cobertura>> getCoveragesAdvanced(int selectedPlanID, {String? name, String? desc, String? type, String? category}) async {
@@ -200,7 +200,8 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => Cobertura.fromJson(data)).toList();
+        var x = responseData.map((data) => Cobertura.fromJson(data)).toList();
+        return x;
       }
     } catch (except) {
       print(except);

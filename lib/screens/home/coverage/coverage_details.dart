@@ -23,9 +23,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
     final localization = AppLocalizations.of(context);
     bool isSaved = false;
 
-    void _saveCoverages () async{
-        setState(() => isSaved = !isSaved);
-        print(isSaved);
+    void _saveCoverages() async {
+      setState(() => isSaved = !isSaved);
     }
 
     return Scaffold(
@@ -57,37 +56,49 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      coverage.idProductoNavigation.nombre,
-                      style:
-                          AppStyles.sectionTextStyle.copyWith(fontSize: 30.0),
-                    ),
-                    const SizedBox(
-                      height: 6.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${coverage.porcentaje}% ${localization.coverage_percentage}',
-                          style: AppStyles.actionTextStyle.copyWith(
-                              fontSize: 26, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ],
+                Expanded(
+                  flex: 9,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        coverage.idProductoNavigation.nombre,
+                        style:
+                            AppStyles.sectionTextStyle.copyWith(fontSize: 30.0),
+                      ),
+                      const SizedBox(
+                        height: 6.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${coverage.porcentaje}% ${localization.coverage_percentage}',
+                            style: AppStyles.actionTextStyle.copyWith(
+                                fontSize: 26, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () => _saveCoverages(),
                   child: Container(
-                    width: 40,
-                    height: 40,
-                    child: SvgPicture.asset('assets/icons/heart-outlined.svg', color: AppColors.heartPink)
-                  ),
+                      child: isSaved == false
+                          ? const Icon(
+                              Icons.heart_broken,
+                              size: 45.0,
+                              color: AppColors.lightGray,
+                            )
+                          : const Icon(
+                              Icons.heart_broken,
+                                size: 45.0,
+                              color: AppColors.heartPink,
+                            )
+                      ),
                 )
               ],
             ),

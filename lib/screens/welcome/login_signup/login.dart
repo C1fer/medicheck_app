@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/models/enums.dart';
+import 'package:provider/provider.dart';
+import '../../../models/user_info_notifier.dart';
 import '../pw_reset/forgot_pw.dart';
 import 'sign_up.dart';
 import '../../../widgets/doctype_dropdown.dart';
@@ -39,6 +41,14 @@ class _LoginState extends State<Login> {
     _passwordController.dispose();
   }
 
+  // Fetch current user info
+  Future<void> _fetchUserInfo(int userID) async {
+    var response = await ApiService.getUserById(userID);
+    if (response != null)
+      Provider.of<UserInfoModel>(context, listen: false)
+          .setCurrentUser(response);
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
@@ -56,11 +66,14 @@ class _LoginState extends State<Login> {
             if (responseData["isSuccess"] == false) {
               showSnackBar(context, locale.wrong_credentials, MessageType.ERROR);
             } else {
-              int? saveJWTResult =
-              await JWTService.saveJWT(responseData['accessToken']);
-              saveJWTResult == 0
-                  ? Navigator.pushReplacementNamed(context, Home.id)
-                  : null;
+              int? saveJWTResult = await JWTService.saveJWT(responseData['accessToken']);
+              if (saveJWTResult == 0){
+                var userInfo = await JWTService.decodeJWT();
+                int userID = int.parse(userInfo!['IdUsuario']);
+                await _fetchUserInfo(userID);
+                if (Provider.of<UserInfoModel>(context, listen: false).curentUser != null)
+                  Navigator.pushReplacementNamed(context, Home.id);
+              }
             }
           } else {
             // Handle null response

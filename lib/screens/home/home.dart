@@ -30,7 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Cobertura> planCoverages = [];
-  List<Cobertura> recentSearches = [];
+  List<Cobertura> newCoverages = [];
   List<Plan> userPlans = [];
 
   @override
@@ -49,7 +49,11 @@ class _HomeState extends State<Home> {
 
   Future<void> _fetchCoverages(int planID) async {
     List<Cobertura> response = await ApiService.getCoveragesAdvanced(planID);
-    if (response.isNotEmpty) setState(() => planCoverages = response);
+    if (response.isNotEmpty)
+      setState(() => planCoverages = response);
+
+      response.sort((Cobertura a, Cobertura b) => b.fechaRegistro.compareTo(a.fechaRegistro));
+      setState(() => newCoverages = response );
   }
 
   Future<void> _fetchData() async {
@@ -73,150 +77,152 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Consumer<UserInfoModel>(
       builder: (context, user, child) => Scaffold(
-          body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 9,
-                    child: Consumer<UserInfoModel>(
-                        builder: (context, user, __) => Text(
-                              '${AppLocalizations.of(context).welcome_msg}, ${user.curentUser!.nombre!.split(' ').first}',
-                              style: AppStyles.headingTextStyle,
-                              softWrap: true,
-                            )),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: () =>
-                          Navigator.pushNamed(context, SettingsPage.id),
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        child: SvgPicture.asset(
-                          'assets/icons/user-circle.svg',
-                          color: AppColors.jadeGreen,
+          body: SingleChildScrollView(
+            child: SafeArea(
+                    child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 9,
+                      child: Consumer<UserInfoModel>(
+                          builder: (context, user, __) => Text(
+                                '${AppLocalizations.of(context).welcome_msg}, ${user.curentUser!.nombre!.split(' ').first}',
+                                style: AppStyles.headingTextStyle,
+                                softWrap: true,
+                              )),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () =>
+                            Navigator.pushNamed(context, SettingsPage.id),
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          child: SvgPicture.asset(
+                            'assets/icons/user-circle.svg',
+                            color: AppColors.jadeGreen,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              if (userPlans.length > 1)
-                const SizedBox(height: 6.0,),
-                Consumer<UserInfoModel>(
-                  builder: (context, userInfo, _) => CustomDropdownButton(
-                      value: userInfo.selectedPlanID.toString(),
-                      onChanged: (newPlanID) => _changeSelectedPlan(newPlanID!),
-                      entries: userPlans
-                          .map((Plan plan) => DropdownMenuItem(
-                                value: plan.idPlan.toString(),
-                                child: Text(plan.descripcion),
-                              ))
-                          .toList()),
+                  ],
                 ),
-              const SizedBox(
-                height: 24.0,
-              ),
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(context, CoverageSearch.id),
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 324,
-                  height: 40,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(24)),
-                      color: Color(0xffFBFBFB)),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18),
-                    child: Row(children: [
-                      const Icon(
-                        Icons.search,
-                        size: 18.0,
-                        weight: 0.8,
-                        color: AppColors.deepLightGray,
-                      ),
-                      const SizedBox(
-                        width: 12.0,
-                      ),
-                      Text(
-                        AppLocalizations.of(context).search_box_placeholder,
-                        style: const TextStyle(
-                            color: AppColors.deepLightGray, fontSize: 12),
-                      )
-                    ]),
+                if (userPlans.length > 1)
+                  const SizedBox(height: 6.0,),
+                  Consumer<UserInfoModel>(
+                    builder: (context, userInfo, _) => CustomDropdownButton(
+                        value: userInfo.selectedPlanID.toString(),
+                        onChanged: (newPlanID) => _changeSelectedPlan(newPlanID!),
+                        entries: userPlans
+                            .map((Plan plan) => DropdownMenuItem(
+                                  value: plan.idPlan.toString(),
+                                  child: Text(plan.descripcion),
+                                ))
+                            .toList()),
+                  ),
+                const SizedBox(
+                  height: 24.0,
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, CoverageSearch.id),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 324,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(24)),
+                        color: Color(0xffFBFBFB)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: Row(children: [
+                        const Icon(
+                          Icons.search,
+                          size: 18.0,
+                          weight: 0.8,
+                          color: AppColors.deepLightGray,
+                        ),
+                        const SizedBox(
+                          width: 12.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context).search_box_placeholder,
+                          style: const TextStyle(
+                              color: AppColors.deepLightGray, fontSize: 12),
+                        )
+                      ]),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  MenuActionCard(
-                      title: AppLocalizations.of(context).incidents,
-                      iconPath: 'assets/icons/incident.svg',
-                      route: ''),
-                  const SizedBox(
-                    width: 22.0,
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    MenuActionCard(
+                        title: AppLocalizations.of(context).incidents,
+                        iconPath: 'assets/icons/incident.svg',
+                        route: ''),
+                    const SizedBox(
+                      width: 22.0,
+                    ),
+                    MenuActionCard(
+                        title: AppLocalizations.of(context).medical_centers,
+                        iconPath: 'assets/icons/hospital.svg',
+                        route: EstablishmentsList.id),
+                    const SizedBox(
+                      width: 22.0,
+                    ),
+                    MenuActionCard(
+                        title: AppLocalizations.of(context).favourites,
+                        iconPath: 'assets/icons/heart-outlined.svg',
+                        route: SavedCoverages.id)
+                  ],
+                ),
+                const SizedBox(
+                  height: 24.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).recent_coverages,
+                      style: AppStyles.sectionTextStyle,
+                    ),
+                    // GestureDetector(
+                    //   onTap: () {},
+                    //   child: Text(
+                    //     AppLocalizations.of(context).view_all,
+                    //     style: AppStyles.actionTextStyle,
+                    //   ),
+                    // ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15.0),
+                  child: CoveragesListView(coverages: planCoverages),
+                ),
+                Text(
+                  AppLocalizations.of(context).new_coverages,
+                  style: AppStyles.sectionTextStyle,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                  child: CoveragesListView(coverages: newCoverages),
+                ),
+              ],
+            ),
+                    ),
                   ),
-                  MenuActionCard(
-                      title: AppLocalizations.of(context).medical_centers,
-                      iconPath: 'assets/icons/hospital.svg',
-                      route: EstablishmentsList.id),
-                  const SizedBox(
-                    width: 22.0,
-                  ),
-                  MenuActionCard(
-                      title: AppLocalizations.of(context).favourites,
-                      iconPath: 'assets/icons/heart-outlined.svg',
-                      route: SavedCoverages.id)
-                ],
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    AppLocalizations.of(context).recent_coverages,
-                    style: AppStyles.sectionTextStyle,
-                  ),
-                  // GestureDetector(
-                  //   onTap: () {},
-                  //   child: Text(
-                  //     AppLocalizations.of(context).view_all,
-                  //     style: AppStyles.actionTextStyle,
-                  //   ),
-                  // ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15.0),
-                child: CoveragesListView(coverages: planCoverages),
-              ),
-              Text(
-                AppLocalizations.of(context).new_coverages,
-                style: AppStyles.sectionTextStyle,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                child: CoveragesListView(coverages: planCoverages),
-              ),
-            ],
-          ),
-        ),
-      )),
+          )),
     );
   }
 }

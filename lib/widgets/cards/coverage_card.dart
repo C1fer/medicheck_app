@@ -38,9 +38,13 @@ class CoverageCard extends StatelessWidget {
               child: SvgPicture.asset('assets/icons/medical-history.svg', fit: BoxFit.fitHeight,),
             ),
             const SizedBox(height: 16.0),
-            Text(
-              coverage.idProductoNavigation.nombre,
-              style: AppStyles.coverageCardHeadingTextStyle,
+            Flexible(
+              child: Text(
+                coverage.idProductoNavigation.nombre,
+                style: AppStyles.coverageCardHeadingTextStyle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(
               height: 4.0,

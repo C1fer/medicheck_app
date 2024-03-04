@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 Producto productoFromJson(String str) => Producto.fromJson(json.decode(str));
-Producto productoFromJson2(String str) => Producto.fromJson(json.decode(str));
 
 String productoToJson(Producto data) => json.encode(data.toJson());
 
@@ -41,19 +40,6 @@ class Producto {
     cobeturas: json["Coberturas"] != null ? List<dynamic>.from(json["Coberturas"].map((x) => x)) : [],
     productosGuardados: json["ProductosGuardados"] != null ? List<dynamic>.from(json["ProductosGuardados"].map((x) => x)) : [],
     reporteIncidentes: json["ReporteIncidentes"] != null ? List<dynamic>.from(json["ReporteIncidentes"].map((x) => x)) : [],
-  );
-
-  factory Producto.fromJson2(Map<String, dynamic> json) => Producto(
-    idProducto: json["idProducto"],
-    nombre: json["nombre"],
-    descripcion: json["descripcion"],
-    habilitado: json["habilitado"],
-    tipo: json["tipo"],
-    categoria: json["categoria"],
-    fechaRegistro: json["fechaRegistro"],
-    cobeturas: json["cobeturas"] != null ? List<dynamic>.from(json["cobeturas"].map((x) => x)) : [],
-    productosGuardados: json["productosGuardados"] != null ? List<dynamic>.from(json["productosGuardados"].map((x) => x)) : [],
-    reporteIncidentes: json["reporteIncidentes"] != null ? List<dynamic>.from(json["reporteIncidentes"].map((x) => x)) : [],
   );
 
   Map<String, dynamic> toJson() => {

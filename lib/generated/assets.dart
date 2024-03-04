@@ -14,7 +14,7 @@ class Assets {
   static const String coverageSavedCoverages = 'lib/screens/home/coverage/saved_coverages.dart';
   static const String dialogCustomDialog = 'lib/widgets/popups/dialog/custom_dialog.dart';
   static const String dialogShowCustomDialog = 'lib/widgets/popups/dialog/show_custom_dialog.dart';
-  static const String dropdownDropdown = 'lib/widgets/dropdown/custom_dropdown_button.dart';
+  static const String dropdownCustomDropdownButton = 'lib/widgets/dropdown/custom_dropdown_button.dart';
   static const String establishmentsEstablishmentsList = 'lib/screens/home/establishments/establishments_list.dart';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String homeHome = 'lib/screens/home/home.dart';
@@ -75,6 +75,7 @@ class Assets {
   static const String modelsLocaleNotifier = 'lib/models/localeNotifier.dart';
   static const String modelsPlan = 'lib/models/plan.dart';
   static const String modelsProducto = 'lib/models/producto.dart';
+  static const String modelsSavedProduct = 'lib/models/savedProduct.dart';
   static const String modelsUserInfoNotifier = 'lib/models/user_info_notifier.dart';
   static const String modelsUsuario = 'lib/models/usuario.dart';
   static const String montserratMontserratBold = 'assets/fonts/Montserrat/Montserrat-Bold.ttf';

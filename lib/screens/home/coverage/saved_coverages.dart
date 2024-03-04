@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/user_info_notifier.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
+import 'package:medicheck/widgets/coverages_list_view.dart';
+import 'package:provider/provider.dart';
 import '../../../models/producto.dart';
 import '../../../models/usuario.dart';
 import '../../../widgets/custom_appbar.dart';
@@ -17,31 +20,55 @@ class SavedCoverages extends StatefulWidget {
 
 class _SavedCoveragesState extends State<SavedCoverages> {
   List<Producto> savedProducts = [];
-  List<Cobertura> coverages = [];
+  List<Cobertura> productCoverages = [];
   late Usuario currentUser;
 
   @override
   void initState() {
     super.initState();
-    currentUser = ModalRoute.of(context)!.settings.arguments as Usuario;
-    _getSavedCoverages();
+    _fetchData();
   }
 
-  void _getSavedCoverages() async {
+  Future<void> _fetchSavedProducts(int userID) async {
     try {
       if (mounted) {
-        await ApiService.getSavedProductsbyUserID(currentUser.idUsuario)
-            .then((value) => setState(() => savedProducts = value));
+        List<Producto>?  response = await ApiService.getSavedProductsbyUserID(userID);
+        if (response != null)
+          setState(() => savedProducts = response);
+      }
+    } catch (ex) {
+      print("Error fetching saved products $ex");
+    }
+  }
 
-        // for (Producto product in savedProducts) {
-        //   await ApiService.getCoveragesbyPlanProduct(currentUser., product.idProducto)
-        //     .then((value) => setState(() => coverages.add(value)));
-        // }
+  Future<void> _fetchCoverageByProductPlan(int planID, int productID) async {
+    try {
+      if (mounted) {
+        var response = await ApiService.getCoveragesbyPlanProduct(planID, productID);
+        if (response != null) {
+          setState(() => productCoverages.add(response));
+        }
       }
     } catch (ex) {
       print(ex);
     }
   }
+
+  Future<void> _fetchData() async{
+    final userProvider = Provider.of<UserInfoModel>(context, listen: false);
+    await _fetchSavedProducts(userProvider.curentUser!.idUsuario);
+
+    if (savedProducts.isNotEmpty){
+     await fetchProductCoverages();
+    }
+  }
+
+  Future<void> fetchProductCoverages() async{
+    for (Producto product in savedProducts){
+      _fetchCoverageByProductPlan(Provider.of<UserInfoModel>(context, listen: false).selectedPlanID!, product.idProducto);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +77,21 @@ class _SavedCoveragesState extends State<SavedCoverages> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context).saved_products,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.separated(
-            scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) =>
-                  CoverageCard(coverage: coverages[index]),
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemCount: coverages.length),
+      body: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: productCoverages.isEmpty ? MainAxisAlignment.center : MainAxisAlignment.start,
+              children: [
+                productCoverages.isEmpty ?
+                    Center(child: Text('No Saved Products to Show'))
+                :
+                CoveragesListView(coverages: productCoverages,)
+              ],
+            ),
+          ),
         ),
       ),
     );

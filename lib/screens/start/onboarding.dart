@@ -82,8 +82,8 @@ class _OnboardingState extends State<Onboarding> {
                     children: [
                       for (int i = 1; i < _maxSteps + 1; i++)
                         StepCounter(i, _step),
-                      const SizedBox(
-                        width: 10,
+                        const SizedBox(
+                          width: 10,
                       ),
                     ],
                   ),
