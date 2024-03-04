@@ -111,10 +111,10 @@ class _CoverageSearchState extends State<CoverageSearch> {
                 ),
               ),
               const SizedBox(
-                height: 55.0,
+                height: 40.0,
               ),
               if (coverages.isNotEmpty)
-                Expanded(
+                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, index) =>
                         CoverageCardSmall(coverage: coverages[index]),

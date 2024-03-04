@@ -1,7 +1,7 @@
 class ApiConstants{
   //static String baseUrl = "https://medicheck-api.azurewebsites.net";
-  //static String baseUrl = "http://10.0.2.2:5280";
-  static String baseUrl = "http://localhost:5280";
+  static String baseUrl = "http://10.0.2.2:5280";
+  //static String baseUrl = "http://localhost:5280";
   static String loginEndpoint = "/Auth/Login";
   static String signUpEndpoint = "/register";
   static String usersEndpoint = "/usuarios";
