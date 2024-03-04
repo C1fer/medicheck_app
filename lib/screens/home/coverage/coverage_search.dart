@@ -11,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../styles/app_colors.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../models/enums.dart';
-import '../../../widgets/popups/dialog/custom_dialog.dart';
 
 class CoverageSearch extends StatefulWidget {
   const CoverageSearch({super.key});
@@ -23,8 +22,6 @@ class CoverageSearch extends StatefulWidget {
 
 class _CoverageSearchState extends State<CoverageSearch> {
   final _coverageController = TextEditingController();
-  // String _typeVal = Constants.productTypes.first;
-  // String _categoryVal = Constants.productCategories.first;
   String? _typeVal;
   String? _categoryVal;
 
@@ -34,7 +31,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _coverageController.addListener(() => _searchCoverage());
+    _coverageController.addListener(() => _searchProductCoverages());
   }
 
   @override
@@ -44,9 +41,8 @@ class _CoverageSearchState extends State<CoverageSearch> {
     _coverageController.dispose();
   }
 
-  void _searchCoverage() async {
-    int? planID =
-        Provider.of<UserInfoModel>(context, listen: false).selectedPlanID;
+  void _searchProductCoverages() async {
+    int? planID = Provider.of<UserInfoModel>(context, listen: false).selectedPlanID;
     if (mounted && _coverageController.text.isNotEmpty) {
       await ApiService.getCoveragesAdvanced(planID!,
               name: _coverageController.text,
@@ -62,9 +58,11 @@ class _CoverageSearchState extends State<CoverageSearch> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: AppLocalizations.of(context).search_screen_title,
+        title: locale.search_screen_title,
       ),
       body: SafeArea(
         child: Padding(
@@ -80,7 +78,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                       flex: 8,
                       child: SearchBar(
                         controller: _coverageController,
-                        hintText: AppLocalizations.of(context).search_product,
+                        hintText: locale.search_product,
                         backgroundColor: const MaterialStatePropertyAll<Color>(
                             Color(0xFFF9FAFB)),
                         leading: const Icon(
@@ -103,9 +101,9 @@ class _CoverageSearchState extends State<CoverageSearch> {
                     Expanded(
                         child: GestureDetector(
                       onTap: () => showCustomDialog(
-                          context, AdvancedSearchDropdown(),
+                          context, AdvancedSearchDropdown(context),
                           dismissible: true),
-                      child: const Icon(Icons.umbrella),
+                      child: const Icon(Icons.filter_alt, color: AppColors.lightGray,),
                     ))
                   ],
                 ),
@@ -125,7 +123,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                   ),
                 ),
               if (coverages.isEmpty)
-                const Center(child: Text('No coverages to show'))
+                Center(child: Text(locale.no_products_to_show))
             ],
           ),
         ),
@@ -133,12 +131,18 @@ class _CoverageSearchState extends State<CoverageSearch> {
     );
   }
 
-  Widget AdvancedSearchDropdown() {
+  Widget AdvancedSearchDropdown(BuildContext context) {
+    final locale = AppLocalizations.of(context);
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Center(child: Text(locale.filter_options,style: AppStyles.headingTextStyle.copyWith(fontSize: 16.0),)),
+        const SizedBox(height: 16.0),
+        Text(locale.category, style: AppStyles.headingTextStyle.copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
         CustomDropdownButton(
-            currentVal: _categoryVal ?? Constants.productCategories.first,
+            value: _categoryVal,
+            nullable: true,
             onChanged: (newVal) => setState(() => _categoryVal = newVal),
             entries: Constants.productCategories
                 .map((String category) => DropdownMenuItem(
@@ -149,9 +153,12 @@ class _CoverageSearchState extends State<CoverageSearch> {
         const SizedBox(
           height: 16,
         ),
+        Text(locale.type, style: AppStyles.headingTextStyle.copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),),
+        const SizedBox(height: 4),
         CustomDropdownButton(
-            currentVal: _typeVal ?? Constants.productTypes.first,
-            onChanged: (newVal) => setState(() => _typeVal = newVal),
+            value: _typeVal,
+            nullable: true,
+            onChanged: (newVal) => setState((){ _typeVal = newVal; print(_typeVal);}),
             entries: Constants.productTypes
                 .map((String type) => DropdownMenuItem(
                       value: type,

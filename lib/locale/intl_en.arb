@@ -78,5 +78,12 @@
   "spanish": "Spanish",
   "english": "English",
   "details": "Details",
-  "server_error": "Server Error"
+  "server_error": "Server Error",
+  "type": "Type",
+  "category": "Category",
+  "product_type": "Product type",
+  "product_category": "Product category",
+  "no_products_to_show": "No products to show",
+  "filter_options": "Filter options",
+  "select_an_option": "Select an option"
 }

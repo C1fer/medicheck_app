@@ -112,7 +112,7 @@ class _HomeState extends State<Home> {
                 const SizedBox(height: 6.0,),
                 Consumer<UserInfoModel>(
                   builder: (context, userInfo, _) => CustomDropdownButton(
-                      currentVal: userInfo.selectedPlanID.toString(),
+                      value: userInfo.selectedPlanID.toString(),
                       onChanged: (newPlanID) => _changeSelectedPlan(newPlanID),
                       entries: userPlans
                           .map((Plan plan) => DropdownMenuItem(

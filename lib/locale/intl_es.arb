@@ -79,6 +79,12 @@
   "spanish": "Español",
   "english": "Inglés",
   "details": "Detalles",
-  "server_error": "Error en conexion con servidor"
-
+  "server_error": "Error en conexion con servidor",
+  "type": "Tipo",
+  "category": "Categoría",
+  "product_type": "Tipo de Producto",
+  "product_category": "Categoría de Producto",
+  "no_products_to_show": "No hay productos por mostrar.",
+  "filter_options": "Opciones de filtrado",
+  "select_an_option": "Selecciona una opción"
 }
