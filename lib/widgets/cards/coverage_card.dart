@@ -5,6 +5,7 @@ import 'package:medicheck/styles/app_colors.dart';
 import '../../models/cobertura.dart';
 import '../../styles/app_styles.dart';
 import '../../widgets/cards/feature_card.dart';
+import '../../models/enums.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 class CoverageCard extends StatelessWidget {
@@ -35,7 +36,7 @@ class CoverageCard extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 12),
               width: 54,
               height: 54,
-              child: SvgPicture.asset('assets/icons/medical-history.svg', fit: BoxFit.fitHeight,),
+              child: SvgPicture.asset(Constants.productTypeIcons[coverage.idProductoNavigation.tipo]!, fit: BoxFit.fitHeight,),
             ),
             const SizedBox(height: 16.0),
             Flexible(
@@ -50,7 +51,7 @@ class CoverageCard extends StatelessWidget {
               height: 4.0,
             ),
             Text(
-              toBeginningOfSentenceCase(coverage.idProductoNavigation.categoria)!,
+              toBeginningOfSentenceCase(coverage.idProductoNavigation.tipo)!,
               style: AppStyles.coverageCardCategoryTextStyle,
             ),
             Padding(

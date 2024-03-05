@@ -6,6 +6,7 @@ import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/widgets/cards/feature_card.dart';
 import 'package:provider/provider.dart';
+import '../../../models/enums.dart';
 import '../../../models/producto.dart';
 import '../../../widgets/custom_appbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -84,7 +85,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                 width: 120,
                 height: 120,
                 child: SvgPicture.asset(
-                  'assets/icons/medical-history.svg',
+                  Constants.productTypeIcons[coverage.idProductoNavigation.tipo]!,
                   fit: BoxFit.fitHeight,
                 ),
               ),

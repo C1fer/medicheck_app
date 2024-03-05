@@ -29,4 +29,13 @@ class Constants {
     'FARMACIA',
     'LABORATORIO',
   ];
+
+  static Map<String, String> productTypeIcons = {
+  'ANALITICA': "assets/icons/analitic.svg",
+  'CONSULTA': "assets/icons/appointment.svg",
+  'MEDICAMENTO': "assets/icons/pill.svg",
+  'PROCEDIMIENTO': "assets/icons/procedure.svg"
+  };
+
+
 }

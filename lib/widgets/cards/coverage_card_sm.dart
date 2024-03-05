@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
 import '../../models/cobertura.dart';
+import '../../models/enums.dart';
 import '../../styles/app_styles.dart';
 import '../../widgets/cards/feature_card.dart';
 import '../../utils/cached_coverages.dart';
@@ -33,7 +34,7 @@ class CoverageCardSmall extends StatelessWidget {
                   width: 36,
                   height: 36,
                   child: SvgPicture.asset(
-                    'assets/icons/medical-history.svg',
+                    Constants.productTypeIcons[coverage.idProductoNavigation.tipo]!,
                     fit: BoxFit.fitHeight,
                   ),
                 ),

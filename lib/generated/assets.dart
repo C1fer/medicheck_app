@@ -20,6 +20,8 @@ class Assets {
   static const String homeHome = 'lib/screens/home/home.dart';
   static const String homeIncidentReports = 'lib/screens/home/incident_reports.dart';
   static const String homeSettings = 'lib/screens/home/settings.dart';
+  static const String iconsAnalitic = 'assets/icons/analitic.svg';
+  static const String iconsAppointment = 'assets/icons/appointment.svg';
   static const String iconsArrowLeft = 'assets/icons/arrow-left.svg';
   static const String iconsDone = 'assets/icons/done.svg';
   static const String iconsEyeSlash = 'assets/icons/eye-slash.svg';
@@ -33,7 +35,9 @@ class Assets {
   static const String iconsMedicalClipboard = 'assets/icons/medical-clipboard.svg';
   static const String iconsMedicalHistory = 'assets/icons/medical-history.svg';
   static const String iconsPharmacy = 'assets/icons/pharmacy.svg';
+  static const String iconsPill = 'assets/icons/pill.svg';
   static const String iconsPillCase = 'assets/icons/pill-case.svg';
+  static const String iconsProcedure = 'assets/icons/procedure.svg';
   static const String iconsSearch = 'assets/icons/search.svg';
   static const String iconsSms = 'assets/icons/sms.svg';
   static const String iconsSuccess = 'assets/icons/success.svg';
