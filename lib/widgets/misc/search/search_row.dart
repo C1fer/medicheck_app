@@ -8,12 +8,12 @@ class SearchBarWithFilter extends StatelessWidget {
       required this.searchController,
       required this.hintText,
       required this.onChanged,
-      required this.filterDialogContent});
+      required this.filterDialog});
 
   final TextEditingController searchController;
   final String hintText;
   final ValueChanged<String?> onChanged;
-  final Widget filterDialogContent;
+  final Widget filterDialog;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class SearchBarWithFilter extends StatelessWidget {
         ),
         Expanded(
             child: FilterButton(
-          dialogContent: filterDialogContent,
+          dialogContent: filterDialog,
         ))
       ],
     );

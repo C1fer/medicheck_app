@@ -3,6 +3,7 @@ import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/misc/search/search_row.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/product_filter_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../models/notifiers/user_info_notifier.dart';
 import '../../../widgets/misc/custom_appbar.dart';
@@ -32,14 +33,22 @@ class _CoverageSearchState extends State<CoverageSearch> {
     _coverageController.dispose();
   }
 
-  void _searchProductCoverages() async {
+  @override
+  void initState() {
+    super.initState();
+    _searchProductCoverages();
+  }
+
+  Future<void> _searchProductCoverages() async {
     int? planID = context.read<UserInfoModel>().selectedPlanID;
     if (mounted) {
-      await ApiService.getCoveragesAdvanced(planID!,
-              name: _coverageController.text,
-              type: _typeVal,
-              category: _categoryVal)
-          .then((value) => setState(() => coverages = value));
+      List<Cobertura> foundCoverages = await ApiService.getCoveragesAdvanced(
+          planID!,
+          name: _coverageController.text,
+          type: _typeVal,
+          category: _categoryVal);
+
+      setState(() => coverages = foundCoverages);
     }
   }
 
@@ -47,9 +56,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     return Scaffold(
-      appBar: CustomAppBar(
-        title: locale.search_screen_title,
-      ),
+      appBar: CustomAppBar(title: locale.search_screen_title),
       body: SafeArea(
         child: Padding(
           padding:
@@ -62,7 +69,17 @@ class _CoverageSearchState extends State<CoverageSearch> {
                     searchController: _coverageController,
                     hintText: locale.search_product,
                     onChanged: (String? val) => _searchProductCoverages(),
-                    filterDialogContent: AdvancedSearchDialog()),
+                    filterDialog: ProductFilterDialog(
+                        typeValue: _typeVal,
+                        categoryValue: _categoryVal,
+                        onCategoryChanged: (String? val) =>
+                            setState(() => _categoryVal = val),
+                        onTypeChanged: (String? val) =>
+                            setState(() => _typeVal = val),
+                        onButtonPressed: () async {
+                          _searchProductCoverages();
+                          Navigator.pop(context);
+                        })),
               ),
               const SizedBox(
                 height: 40.0,
@@ -84,66 +101,6 @@ class _CoverageSearchState extends State<CoverageSearch> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget AdvancedSearchDialog() {
-    final locale = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Center(
-            child: Text(
-          locale.filter_options,
-          style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
-        )),
-        const SizedBox(height: 16.0),
-        Text(locale.category,
-            style: AppStyles.headingTextStyle
-                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 4),
-        CustomDropdownButton(
-            value: _categoryVal,
-            isNullable: true,
-            isExpanded: true,
-            onChanged: (newVal) => setState(() => _categoryVal = newVal),
-            entries: Constants.productCategories
-                .map((String category) => DropdownMenuItem(
-                      value: category,
-                      child: Text(category),
-                    ))
-                .toList()),
-        const SizedBox(
-          height: 20,
-        ),
-        Text(
-          locale.type,
-          style: AppStyles.headingTextStyle
-              .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 4),
-        CustomDropdownButton(
-            value: _typeVal,
-            isNullable: true,
-            isExpanded: true,
-            onChanged: (newVal) => setState(() => _typeVal = newVal),
-            entries: Constants.productTypes
-                .map((String type) => DropdownMenuItem(
-                      value: type,
-                      child: Text(type),
-                    ))
-                .toList()),
-        const SizedBox(height: 24),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-              onPressed: () {
-                _searchProductCoverages();
-                Navigator.pop(context);
-              },
-              child: const Text('OK')),
-        )
-      ],
     );
   }
 }

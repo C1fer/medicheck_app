@@ -14,7 +14,7 @@ class _FilterButtonState extends State<FilterButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => showCustomDialog(context, (context) => widget.dialogContent, dismissible: true),
+      onTap: () => showCustomDialog(context, widget.dialogContent, dismissible: true),
       child: const Icon(
         Icons.filter_alt_outlined,
         color: AppColors.lightGray,

@@ -4,7 +4,7 @@ import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/pwd_field.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
-import 'package:medicheck/widgets/popups/dialog/custom_dialog.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/custom_dialog.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/popups/snackbar/show_snackbar.dart';
@@ -44,7 +44,7 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
           if (response) {
             await showCustomDialog(
                 context,
-                (context) => CustomDialog(
+                CustomDialog(
                       title: locale.success,
                       body: locale.pw_reset_success,
                     ));

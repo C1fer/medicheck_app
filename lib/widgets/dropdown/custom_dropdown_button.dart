@@ -24,6 +24,13 @@ class CustomDropdownButton extends StatefulWidget {
 }
 
 class _CustomDropdownButtonState extends State<CustomDropdownButton> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,8 +51,8 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           ...widget.entries,
         ],
         onChanged: (String? value) {
-          widget.onChanged(value);
           setState(() => widget.value = value);
+          widget.onChanged(value);
         },
         style: const TextStyle(fontSize: 16.0, color: Colors.black),
         underline: const SizedBox(),

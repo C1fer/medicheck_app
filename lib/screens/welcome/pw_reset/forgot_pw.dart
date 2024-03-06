@@ -7,7 +7,7 @@ import 'package:medicheck/widgets/inputs/email_field.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/misc/custom_appbar.dart';
-import '../../../widgets/popups/dialog/custom_dialog.dart';
+import '../../../widgets/popups/dialog/dialogs/custom_dialog.dart';
 import '../../../widgets/popups/snackbar/show_snackbar.dart';
 
 class ForgotPW extends StatefulWidget {

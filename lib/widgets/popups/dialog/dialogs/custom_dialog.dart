@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/styles/app_styles.dart';
 
-import '../../../styles/app_colors.dart';
+import '../../../../styles/app_colors.dart';
 
 class CustomDialog extends StatelessWidget {
   const CustomDialog(
