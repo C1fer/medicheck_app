@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_coverages.dart';
@@ -71,6 +72,7 @@ class _HomeState extends State<Home> {
         userPlans.firstWhere((Plan plan) =>
         plan.idPlan.toString() == newPlanID));
     _fetchCoverages(userProvider.selectedPlanID!.toInt());
+    context.read<SavedProductModel>().clear();
   }
 
   @override

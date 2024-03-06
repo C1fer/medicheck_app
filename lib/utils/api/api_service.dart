@@ -157,7 +157,7 @@ class ApiService {
     return <Cobertura>[];
   }
 
-  static Future<Cobertura?> getCoveragesbyPlanProduct(
+  static Future<Cobertura?> getCoveragebyPlanProduct(
       int planID, int productID) async {
     var url = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.coveragesEndpoint}/plan/$planID/producto/$productID');
@@ -293,22 +293,23 @@ class ApiService {
 
   static Future<bool> postSavedProduct(int userID, int productID) async {
     // Define API Endpoint
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.signUpEndpoint);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint);
+    String? accessToken = await JWTService.readJWT();
 
     //Map body arguments
     Map<String, int> requestBody = {
       'idUsuario': userID,
-      'idProducto': productID,
+      'idProducto': productID
     };
 
     try {
       var response = await http.post(
         url,
         body: json.encode(requestBody),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $accessToken'},
       ).timeout(const Duration(seconds: 5));
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return true;
       }
     } catch (e) {
@@ -317,4 +318,23 @@ class ApiService {
     return false;
   }
 
+
+  static Future<bool> deleteSavedProduct(int userID, int productID) async {
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.savedProductsUserEndpoint}/$userID${ApiConstants.productEndpoint}/$productID');
+    String? accessToken = await JWTService.readJWT();
+
+    try {
+      var response = await http.delete(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      }).timeout(const Duration(seconds: 5));
+      if (response.statusCode == 204) {
+       return true;
+      }
+    } catch (except) {
+      print('Error retrieving plans: $except');
+    }
+    return false;
+  }
 }

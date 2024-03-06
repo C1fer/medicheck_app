@@ -10,7 +10,8 @@ class ApiConstants{
   static String coveragesUserEndpoint = "/coberturas/usuario";
   static String establishmentsEndpoint = "/establecimientos";
   static String planEndpoint = "/planes";
-  static String productEndpoint = "/productos";
+  static String productsEndpoint = "/productos";
+  static String productEndpoint = "/producto";
   static String savedProductsUserEndpoint = "/productosguardados/usuario";
   static String savedProductsEndpoint = "/productosguardados";
   static String sendTokenEndpoint = "/otp-send-email";

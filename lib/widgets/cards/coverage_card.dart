@@ -9,15 +9,15 @@ import '../../models/enums.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 class CoverageCard extends StatelessWidget {
-  const CoverageCard({super.key, required this.coverage});
+  const CoverageCard({super.key, required this.coverage, required this.onTap});
 
   final Cobertura coverage;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, CoverageDetailView.id,
-          arguments: coverage),
+      onTap: onTap,
       child: Container(
         height: 173,
         width: 118,
