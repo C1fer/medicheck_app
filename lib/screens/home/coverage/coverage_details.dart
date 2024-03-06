@@ -8,7 +8,7 @@ import 'package:medicheck/widgets/cards/feature_card.dart';
 import 'package:provider/provider.dart';
 import '../../../models/enums.dart';
 import '../../../models/producto.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../styles/app_colors.dart';
 import '../../../styles/app_styles.dart';

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
-import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
+import 'package:medicheck/widgets/misc/search/search_row.dart';
 import 'package:provider/provider.dart';
 import '../../../models/notifiers/user_info_notifier.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/cards/coverage_card_sm.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../../styles/app_colors.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../models/enums.dart';
 
@@ -29,23 +28,17 @@ class _CoverageSearchState extends State<CoverageSearch> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _coverageController.addListener(() => _searchProductCoverages());
-    _searchProductCoverages();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _coverageController.dispose();
   }
 
   void _searchProductCoverages() async {
-    print("Name: ${_coverageController.text}\ntype:$_typeVal\ncategory:$_categoryVal");
-    int? planID =
-        Provider.of<UserInfoModel>(context, listen: false).selectedPlanID;
+    int? planID = context.read<UserInfoModel>().selectedPlanID;
     if (mounted) {
       await ApiService.getCoveragesAdvanced(planID!,
               name: _coverageController.text,
@@ -58,63 +51,29 @@ class _CoverageSearchState extends State<CoverageSearch> {
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
-
     return Scaffold(
       appBar: CustomAppBar(
         title: locale.search_screen_title,
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 32, 12),
+          padding:
+              const EdgeInsets.only(left: 12, right: 32, top: 12, bottom: 12),
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 8,
-                      child: SearchBar(
-                        controller: _coverageController,
-                        hintText: locale.search_product,
-                        backgroundColor: const MaterialStatePropertyAll<Color>(
-                            Color(0xFFF9FAFB)),
-                        leading: const Icon(
-                          Icons.search,
-                          size: 20,
-                          weight: 1,
-                          color: AppColors.deepLightGray,
-                        ),
-                        padding: const MaterialStatePropertyAll<EdgeInsets>(
-                            EdgeInsets.symmetric(horizontal: 16.0)),
-                        hintStyle: const MaterialStatePropertyAll<TextStyle>(
-                            TextStyle(
-                                color: AppColors.deepLightGray, fontSize: 16)),
-                        side: const MaterialStatePropertyAll<BorderSide>(
-                          BorderSide(width: 1, color: Color(0xFFE5E7EB)),
-                        ),
-                        elevation: const MaterialStatePropertyAll<double?>(0.0),
-                      ),
-                    ),
-                    Expanded(
-                        child: GestureDetector(
-                      onTap: () => showCustomDialog(
-                          context, AdvancedSearchDropdown(context),
-                          dismissible: true),
-                      child: const Icon(
-                        Icons.filter_alt,
-                        color: AppColors.lightGray,
-                      ),
-                    ))
-                  ],
-                ),
+                padding: const EdgeInsets.only(left: 15.0),
+                child: SearchBarWithFilter(
+                    searchController: _coverageController,
+                    hintText: locale.search_product,
+                    onChanged: (String? val) => _searchProductCoverages(),
+                    filterDialogContent: AdvancedSearchDialog()),
               ),
               const SizedBox(
                 height: 40.0,
               ),
               if (coverages.isNotEmpty)
-                 Expanded(
+                Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, index) =>
                         CoverageCardSmall(coverage: coverages[index]),
@@ -133,7 +92,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
     );
   }
 
-  Widget AdvancedSearchDropdown(BuildContext context) {
+  Widget AdvancedSearchDialog() {
     final locale = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -72,8 +72,11 @@ class Assets {
   static const String logoAppName = 'assets/logo/app_name.svg';
   static const String logoFullLogo = 'assets/logo/full_logo.png';
   static const String logoLogo = 'assets/logo/logo.svg';
+  static const String miscCustomAppbar = 'lib/widgets/misc/custom_appbar.dart';
+  static const String miscStepCounter = 'lib/widgets/misc/step_counter.dart';
   static const String modelsAseguradora = 'lib/models/aseguradora.dart';
   static const String modelsCobertura = 'lib/models/cobertura.dart';
+  static const String modelsDebouncer = 'lib/models/debouncer.dart';
   static const String modelsEnums = 'lib/models/enums.dart';
   static const String modelsEstablecimiento = 'lib/models/establecimiento.dart';
   static const String modelsPlan = 'lib/models/plan.dart';
@@ -87,6 +90,9 @@ class Assets {
   static const String pwResetForgotPw = 'lib/screens/welcome/pw_reset/forgot_pw.dart';
   static const String pwResetNewPw = 'lib/screens/welcome/pw_reset/new_pw.dart';
   static const String pwResetResetToken = 'lib/screens/welcome/pw_reset/reset_token.dart';
+  static const String searchCustomSearchBar = 'lib/widgets/misc/search/custom_search_bar.dart';
+  static const String searchFilterButton = 'lib/widgets/misc/search/filter_button.dart';
+  static const String searchSearchRow = 'lib/widgets/misc/search/search_row.dart';
   static const String snackbarCustomSnackbar = 'lib/widgets/popups/snackbar/custom_snackbar.dart';
   static const String snackbarShowSnackbar = 'lib/widgets/popups/snackbar/show_snackbar.dart';
   static const String startOnboarding = 'lib/screens/start/onboarding.dart';
@@ -99,9 +105,7 @@ class Assets {
   static const String utilsLocalStorageService = 'lib/utils/local_storage_service.dart';
   static const String welcomeWelcome = 'lib/screens/welcome/welcome.dart';
   static const String widgetsCoveragesListView = 'lib/widgets/coverages_list_view.dart';
-  static const String widgetsCustomAppbar = 'lib/widgets/custom_appbar.dart';
   static const String widgetsDoctypeDropdown = 'lib/widgets/doctype_dropdown.dart';
   static const String widgetsLogoFullLogo = 'lib/widgets/logo/full_logo.dart';
-  static const String widgetsStepCounter = 'lib/widgets/step_counter.dart';
 
 }

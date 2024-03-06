@@ -3,7 +3,7 @@ import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../styles/app_styles.dart';
 import '../../styles/app_colors.dart';
-import 'package:medicheck/widgets/step_counter.dart';
+import 'package:medicheck/widgets/misc/step_counter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboarding extends StatefulWidget {

@@ -13,7 +13,7 @@ import '../../../styles/app_styles.dart';
 import '../../../styles/app_colors.dart';
 import '../../../widgets/inputs/pwd_field.dart';
 import '../../../widgets/logo/full_logo.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../utils/jwt_service.dart';
 

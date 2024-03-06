@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../models/establecimiento.dart';
 import '../../../widgets/cards/establishment_card.dart';

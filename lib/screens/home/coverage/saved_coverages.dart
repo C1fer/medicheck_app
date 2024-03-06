@@ -7,7 +7,7 @@ import 'package:medicheck/widgets/coverages_list_view.dart';
 import 'package:provider/provider.dart';
 import '../../../models/producto.dart';
 import '../../../models/usuario.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

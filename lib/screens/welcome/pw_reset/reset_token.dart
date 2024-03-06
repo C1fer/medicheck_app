@@ -5,7 +5,7 @@ import 'package:medicheck/screens/welcome/pw_reset/new_pw.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/token_field.dart';
 import '../../../utils/api/api_service.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/popups/snackbar/show_snackbar.dart';
 
 class ResetTokenInput extends StatefulWidget {

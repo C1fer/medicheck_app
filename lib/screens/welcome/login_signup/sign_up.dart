@@ -12,7 +12,7 @@ import '../../../utils/jwt_service.dart';
 import '../../../widgets/inputs/phone_field.dart';
 import '../../../widgets/logo/full_logo.dart';
 import '../../../styles/app_colors.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/inputs/pwd_field.dart';
 import '../../home/home.dart';
 import '../welcome.dart';

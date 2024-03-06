@@ -6,7 +6,7 @@ import 'package:medicheck/widgets/inputs/pwd_field.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/custom_dialog.dart';
 import '../../../utils/api/api_service.dart';
-import '../../../widgets/custom_appbar.dart';
+import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/popups/snackbar/show_snackbar.dart';
 import '../welcome.dart';
 
