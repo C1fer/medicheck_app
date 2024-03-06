@@ -27,11 +27,6 @@ class _CoverageSearchState extends State<CoverageSearch> {
   List<Cobertura> coverages = [];
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     super.dispose();
     _coverageController.dispose();
@@ -119,7 +114,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                     ))
                 .toList()),
         const SizedBox(
-          height: 16,
+          height: 20,
         ),
         Text(
           locale.type,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'custom_search_bar.dart';
 import 'filter_button.dart';
 

@@ -44,10 +44,10 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
           if (response) {
             await showCustomDialog(
                 context,
-                CustomDialog(
-                  title: locale.success,
-                  body: locale.pw_reset_success,
-                ));
+                (context) => CustomDialog(
+                      title: locale.success,
+                      body: locale.pw_reset_success,
+                    ));
             await Navigator.pushReplacementNamed(context, Welcome.id);
           } else {
             // Handle null response
