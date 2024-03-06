@@ -4,7 +4,7 @@ import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
-import 'package:medicheck/screens/home/coverage/saved_coverages.dart';
+import 'package:medicheck/screens/home/coverage/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
 import 'package:medicheck/screens/home/settings.dart';
 import 'package:medicheck/styles/app_styles.dart';
@@ -185,7 +185,7 @@ class _HomeState extends State<Home> {
                     MenuActionCard(
                         title: AppLocalizations.of(context).favourites,
                         iconPath: 'assets/icons/heart-outlined.svg',
-                        route: SavedCoverages.id,)
+                        route: SavedProducts.id,)
                   ],
                 ),
                 const SizedBox(
