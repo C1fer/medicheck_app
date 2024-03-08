@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:medicheck/models/establecimiento_response.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../models/establecimiento.dart';
 import '../../../widgets/cards/establishment_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class EstablishmentsList extends StatefulWidget {
   const EstablishmentsList({super.key});
@@ -15,7 +15,7 @@ class EstablishmentsList extends StatefulWidget {
 }
 
 class _EstablishmentsListState extends State<EstablishmentsList> {
-  late List<Establecimiento>? establishments = [];
+  EstablecimientoResponse? establishments;
 
   @override
   void initState() {
@@ -25,7 +25,8 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
 
   void _getEstablishments() async {
     try {
-      var response = await ApiService.getEstablishments();
+      final EstablecimientoResponse? response =
+          await ApiService.getEstablishments();
       if (mounted) {
         setState(() => establishments = response);
       }
@@ -43,11 +44,14 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ListView.separated(
-              itemBuilder: (context, index) =>
-                  EstablishmentCard(establecimiento: establishments![index]),
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemCount: establishments!.length),
+          child: establishments == null
+              ? Center(child: Text('No Saved Products to Show'))
+              : ListView.separated(
+                  itemBuilder: (context, index) => EstablishmentCard(
+                      establecimiento: establishments!.data[index]),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
+                  itemCount: establishments!.data.length),
         ),
       ),
     );

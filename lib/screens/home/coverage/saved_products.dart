@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/cobertura_response.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
@@ -53,10 +54,10 @@ class _SavedProductsState extends State<SavedProducts> {
       int planID, int productID) async {
     try {
       if (mounted) {
-        var response =
+        CoberturaResponse? response =
             await ApiService.getCoveragebyPlanProduct(planID, productID);
         if (response != null) {
-          return response;
+          return response.data.first;
         }
       }
     } catch (ex) {
@@ -77,9 +78,7 @@ class _SavedProductsState extends State<SavedProducts> {
     setState(() => productCoverages = coverages);
   }
 
-  Future<void> filterProducts() async {
-
-  }
+  Future<void> filterProducts() async {}
 
   @override
   void initState() {
@@ -107,7 +106,7 @@ class _SavedProductsState extends State<SavedProducts> {
                   children: [
                     productCoverages.isEmpty
                         ? Center(child: Text('No Saved Products to Show'))
-                        : ExistentSaveProductsLayout()
+                        : ExistentSaveProductsLayout(context)
                   ],
                 ),
               )),
@@ -116,14 +115,14 @@ class _SavedProductsState extends State<SavedProducts> {
     );
   }
 
-  Widget ExistentSaveProductsLayout() {
+  Widget ExistentSaveProductsLayout(BuildContext context) {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 15.0),
           child: SearchBarWithFilter(
               searchController: _savedProductContoller,
-              hintText: context.read<AppLocalizations>().search_product,
+              hintText: 'Search',
               onChanged: (String? val) => filterProducts(),
               filterDialog: ProductFilterDialog(
                   typeValue: type,
@@ -136,6 +135,7 @@ class _SavedProductsState extends State<SavedProducts> {
                     Navigator.pop(context);
                   })),
         ),
+        SizedBox(height: 16.0),
         Consumer<SavedProductModel>(
           builder: (context, savedProvider, _) => GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

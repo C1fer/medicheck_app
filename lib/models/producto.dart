@@ -31,19 +31,6 @@ class Producto {
   });
 
   factory Producto.fromJson(Map<String, dynamic> json) => Producto(
-    idProducto: json["IdProducto"],
-    nombre: json["Nombre"],
-    descripcion: json["Descripcion"],
-    habilitado: json["Habilitado"],
-    tipo: json["Tipo"],
-    categoria: json["Categoria"],
-    fechaRegistro: json["FechaRegistro"],
-    cobeturas: json["Coberturas"] != null ? List<dynamic>.from(json["Coberturas"].map((x) => x)) : [],
-    productosGuardados: json["ProductosGuardados"] != null ? List<dynamic>.from(json["ProductosGuardados"].map((x) => x)) : [],
-    reporteIncidentes: json["ReporteIncidentes"] != null ? List<dynamic>.from(json["ReporteIncidentes"].map((x) => x)) : [],
-  );
-
-  factory Producto.fromJson2(Map<String, dynamic> json) => Producto(
     idProducto: json["idProducto"],
     nombre: json["nombre"],
     descripcion: json["descripcion"],

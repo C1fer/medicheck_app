@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/cobertura_response.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/misc/search/search_row.dart';
@@ -25,7 +26,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
   String? _typeVal;
   String? _categoryVal;
 
-  List<Cobertura> coverages = [];
+ CoberturaResponse? coverages;
 
   @override
   void dispose() {
@@ -42,7 +43,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
   Future<void> _searchProductCoverages() async {
     int? planID = context.read<UserInfoModel>().selectedPlanID;
     if (mounted) {
-      List<Cobertura> foundCoverages = await ApiService.getCoveragesAdvanced(
+      CoberturaResponse? foundCoverages = await ApiService.getCoveragesAdvanced(
           planID!,
           name: _coverageController.text,
           type: _typeVal,
@@ -84,18 +85,18 @@ class _CoverageSearchState extends State<CoverageSearch> {
               const SizedBox(
                 height: 40.0,
               ),
-              if (coverages.isNotEmpty)
+              if (coverages != null)
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, index) =>
-                        CoverageCardSmall(coverage: coverages[index]),
+                        CoverageCardSmall(coverage: coverages!.data[index]),
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 40),
-                    itemCount: coverages.length,
+                    itemCount: coverages!.data.length,
                     scrollDirection: Axis.vertical,
                   ),
                 ),
-              if (coverages.isEmpty)
+              if (coverages == null)
                 Center(child: Text(locale.no_products_to_show))
             ],
           ),

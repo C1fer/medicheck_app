@@ -1,7 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/cobertura_response.dart';
 import 'package:medicheck/models/establecimiento.dart';
+import 'package:medicheck/models/plan_response.dart';
 import 'dart:convert';
+import '../../models/establecimiento_response.dart';
 import '../../models/plan.dart';
 import '../../models/producto.dart';
 import '../../models/usuario.dart';
@@ -87,7 +90,8 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        return Usuario.fromJson(responseData);
+        var x =  Usuario.fromJson(responseData);
+        return x;
       }
     } catch (except) {
       print('Error retrieving user: $except');
@@ -95,7 +99,7 @@ class ApiService {
     return null;
   }
 
-  static Future<List<Establecimiento>> getEstablishments() async {
+  static Future<EstablecimientoResponse?> getEstablishments() async {
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.establishmentsEndpoint);
     String? accessToken = await JWTService.readJWT();
@@ -106,15 +110,13 @@ class ApiService {
         'Authorization': 'Bearer $accessToken'
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        return responseData
-            .map((data) => Establecimiento.fromJson(data))
-            .toList();
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return EstablecimientoResponse.fromJson(responseData);
       }
     } catch (except) {
       print('Error retrieving establishments: $except');
     }
-    return <Establecimiento>[];
+    return null;
   }
 
   static Future<List<Producto>> getSavedProductsbyUserID(int userID) async {
@@ -129,7 +131,7 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => Producto.fromJson2(data)).toList();
+        return responseData.map((data) => Producto.fromJson(data)).toList();
       }
     } catch (except) {
       print('Error retrieving coverages: $except');
@@ -157,10 +159,14 @@ class ApiService {
     return <Cobertura>[];
   }
 
-  static Future<Cobertura?> getCoveragebyPlanProduct(
-      int planID, int productID) async {
-    var url = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiConstants.coveragesEndpoint}/plan/$planID/producto/$productID');
+  static Future<CoberturaResponse?> getCoveragebyPlanProduct(int planID, int productID) async {
+
+    Map<String, dynamic> reqParams = {
+      "idPlan": planID.toString(),
+      "idProducto": productID.toString()
+    };
+
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.coveragesSearchEndpoint).replace(queryParameters: reqParams);
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -170,7 +176,7 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        return Cobertura.fromJson(responseData);
+        return CoberturaResponse.fromJson(responseData);
       }
     } catch (except) {
       print('Error retrieving coverages: $except');
@@ -178,7 +184,7 @@ class ApiService {
     return null;
   }
 
-  static Future<List<Cobertura>> getCoveragesAdvanced(int selectedPlanID, {String? name, String? desc, String? type, String? category}) async {
+  static Future<CoberturaResponse?> getCoveragesAdvanced(int selectedPlanID, {String? name, String? desc, String? type, String? category}) async {
 
     Map<String, dynamic> queryParams = {
       'nombre': name,
@@ -199,14 +205,13 @@ class ApiService {
         'Authorization': 'Bearer $accessToken'
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        var x = responseData.map((data) => Cobertura.fromJson(data)).toList();
-        return x;
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return CoberturaResponse.fromJson(responseData);
       }
     } catch (except) {
       print(except);
     }
-    return <Cobertura>[];
+    return null;
   }
 
   static Future<bool> sendResetToken(String email) async {
@@ -270,10 +275,13 @@ class ApiService {
     return false;
   }
 
-  static Future<List<Plan>> getPlansbyUserID(int userID) async {
-    var url = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiConstants.planUserEndpoint}/$userID');
+  static Future<PlanResponse?> getPlansbyUserID(int userID) async {
+
+    Map<String, dynamic> querParams = {'idUsuario': userID.toString()};
+
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.planEndpoint).replace(queryParameters: querParams);
     String? accessToken = await JWTService.readJWT();
+
 
     try {
       var response = await http.get(url, headers: {
@@ -281,14 +289,14 @@ class ApiService {
         'Authorization': 'Bearer $accessToken'
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        var x =  responseData.map((data) => Plan.fromJson(data)).toList();
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        var x =  PlanResponse.fromJson(responseData);
         return x;
       }
     } catch (except) {
       print('Error retrieving plans: $except');
     }
-    return <Plan>[];
+    return null;
   }
 
   static Future<bool> postSavedProduct(int userID, int productID) async {

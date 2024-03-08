@@ -31,26 +31,26 @@ class Cobertura {
   });
 
   factory Cobertura.fromJson(Map<String, dynamic> json) => Cobertura(
-    idCobertura: json["IdCobertura"],
-    idProducto: json["IdProducto"],
-    idPlan: json["IdPlan"],
-    cubre: json["Cubre"],
-    porcentaje: json["Porcentaje"],
-    fechaVencimiento: DateTime.parse(json["FechaVencimiento"]),
-    fechaRegistro: DateTime.parse(json["FechaRegistro"]),
-    idPlanNavigation: json["IdPlanNavigation"],
-    idProductoNavigation: Producto.fromJson(json["IdProductoNavigation"]),
+    idCobertura: json["idCobertura"],
+    idProducto: json["idProducto"],
+    idPlan: json["idPlan"],
+    cubre: json["cubre"],
+    porcentaje: json["porcentaje"],
+    fechaVencimiento: DateTime.parse(json["fechaVencimiento"]),
+    fechaRegistro: DateTime.parse(json["fechaRegistro"]),
+    idPlanNavigation: json["idPlanNavigation"],
+    idProductoNavigation: Producto.fromJson(json["idProductoNavigation"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "IdCobertura": idCobertura,
-    "IdProducto": idProducto,
-    "IdPlan": idPlan,
-    "Cubre": cubre,
-    "Porcentaje": porcentaje,
-    "FechaVencimiento": fechaVencimiento!.toIso8601String(),
-    "FechaRegistro": fechaRegistro.toIso8601String(),
-    "IdPlanNavigation": idPlanNavigation?.toJson(),
-    "IdProductoNavigation": idProductoNavigation.toJson(),
+    "idCobertura": idCobertura,
+    "idProducto": idProducto,
+    "idPlan": idPlan,
+    "cubre": cubre,
+    "porcentaje": porcentaje,
+    "fechaVencimiento": fechaVencimiento!.toIso8601String(),
+    "fechaRegistro": fechaRegistro.toIso8601String(),
+    "idPlanNavigation": idPlanNavigation?.toJson(),
+    "idProductoNavigation": idProductoNavigation.toJson(),
   };
 }

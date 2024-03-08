@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/cobertura_response.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
+import 'package:medicheck/models/plan_response.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
@@ -30,8 +32,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Cobertura> planCoverages = [];
-  List<Cobertura> newCoverages = [];
+  CoberturaResponse? planCoverages;
   List<Plan> userPlans = [];
 
   @override
@@ -42,25 +43,24 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _fetchUserPlans(int userID) async {
-    var response = await ApiService.getPlansbyUserID(userID);
-    if (response.isNotEmpty) setState(() => userPlans = response);
+    final PlanResponse? response= await ApiService.getPlansbyUserID(userID);
+    if (response != null) setState(() => userPlans = response!.data);
     Provider.of<UserInfoModel>(context, listen: false)
-        .setCurrentPlan(response.first);
+        .setCurrentPlan(response!.data.first);
   }
 
   Future<void> _fetchCoverages(int planID) async {
-    List<Cobertura> response = await ApiService.getCoveragesAdvanced(planID);
-    if (response.isNotEmpty)
-      setState(() => planCoverages = response);
-
-      response.sort((Cobertura a, Cobertura b) => b.fechaRegistro.compareTo(a.fechaRegistro));
-      setState(() => newCoverages = response );
+    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(planID);
+    setState(() => planCoverages = response);
+      // //response.sort((Cobertura a, Cobertura b) => b.fechaRegistro.compareTo(a.fechaRegistro));
+      // setState(() => newCoverages = response!.data);
   }
 
   Future<void> _fetchData() async {
     final userProvider = Provider.of<UserInfoModel>(context, listen: false);
-    if (userPlans.isEmpty)
+    if (userPlans.isEmpty) {
       await _fetchUserPlans(userProvider.currentUser!.idUsuario);
+    }
 
     int? planID = userProvider.selectedPlanID;
     if (planID != null) await _fetchCoverages(planID);
@@ -210,7 +210,7 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: CoveragesListView(coverages: planCoverages),
+                  child: CoveragesListView(coverages: planCoverages?.data != null ? planCoverages!.data : [] ),
                 ),
                 Text(
                   AppLocalizations.of(context).new_coverages,
@@ -218,7 +218,7 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                  child: CoveragesListView(coverages: newCoverages),
+                  child: CoveragesListView(coverages: planCoverages?.data != null ? planCoverages!.data : []),
                 ),
               ],
             ),
