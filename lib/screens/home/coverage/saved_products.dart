@@ -118,24 +118,24 @@ class _SavedProductsState extends State<SavedProducts> {
   Widget ExistentSaveProductsLayout(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 15.0),
-          child: SearchBarWithFilter(
-              searchController: _savedProductContoller,
-              hintText: 'Search',
-              onChanged: (String? val) => filterProducts(),
-              filterDialog: ProductFilterDialog(
-                  typeValue: type,
-                  categoryValue: category,
-                  onCategoryChanged: (String? val) =>
-                      setState(() => category = val),
-                  onTypeChanged: (String? val) => setState(() => type = val),
-                  onButtonPressed: () async {
-                    filterProducts();
-                    Navigator.pop(context);
-                  })),
-        ),
-        SizedBox(height: 16.0),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 15.0),
+        //   child: SearchBarWithFilter(
+        //       searchController: _savedProductContoller,
+        //       hintText: 'Search',
+        //       onChanged: (String? val) => filterProducts(),
+        //       filterDialog: ProductFilterDialog(
+        //           typeValue: type,
+        //           categoryValue: category,
+        //           onCategoryChanged: (String? val) =>
+        //               setState(() => category = val),
+        //           onTypeChanged: (String? val) => setState(() => type = val),
+        //           onButtonPressed: () async {
+        //             filterProducts();
+        //             Navigator.pop(context);
+        //           })),
+        // ),
+        // SizedBox(height: 16.0),
         Consumer<SavedProductModel>(
           builder: (context, savedProvider, _) => GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
