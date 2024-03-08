@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../generated/assets.dart';
 import '../../styles/app_colors.dart';
 
 class AppLogo extends StatelessWidget {
@@ -11,6 +10,6 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: SvgPicture.asset(Assets.logoLogo, color: color, width: width, height: height));
+    return Center(child: SvgPicture.asset('assets/logo/logo.svg', color: color, width: width, height: height));
   }
 }
