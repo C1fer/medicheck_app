@@ -12,10 +12,8 @@ Future<void> showCustomDialog(
             surfaceTintColor: Colors.white,
             backgroundColor: Colors.white,
             child: Container(
-              width: width ?? 325,
-              height: height ?? 400,
               padding: const EdgeInsets.all(32.0),
-              child: content,
+              child: SingleChildScrollView(child: content),
             ),
           );
     },
