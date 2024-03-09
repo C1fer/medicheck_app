@@ -78,8 +78,8 @@ class ApiService {
   }
 
   static Future<Usuario?> getUserById(int userID) async {
-    var url =
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$userID');
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$userID');
 
     String? accessToken = await JWTService.readJWT();
 
@@ -90,7 +90,7 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        var x =  Usuario.fromJson(responseData);
+        var x = Usuario.fromJson(responseData);
         return x;
       }
     } catch (except) {
@@ -99,9 +99,12 @@ class ApiService {
     return null;
   }
 
-  static Future<EstablecimientoResponse?> getEstablishments() async {
+  static Future<EstablecimientoResponse?> getEstablishments(
+      {String? type, String? keyword, int? arsID}) async {
+    Map<String, dynamic> querParams = {"tipo": type, "search": keyword};
     var url =
-        Uri.parse(ApiConstants.baseUrl + ApiConstants.establishmentsEndpoint);
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.establishmentsEndpoint)
+            .replace(queryParameters: querParams);
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -159,14 +162,16 @@ class ApiService {
     return <Cobertura>[];
   }
 
-  static Future<CoberturaResponse?> getCoveragebyPlanProduct(int planID, int productID) async {
-
+  static Future<CoberturaResponse?> getCoveragebyPlanProduct(
+      int planID, int productID) async {
     Map<String, dynamic> reqParams = {
       "idPlan": planID.toString(),
       "idProducto": productID.toString()
     };
 
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.coveragesSearchEndpoint).replace(queryParameters: reqParams);
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.coveragesSearchEndpoint)
+            .replace(queryParameters: reqParams);
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -184,8 +189,8 @@ class ApiService {
     return null;
   }
 
-  static Future<CoberturaResponse?> getCoveragesAdvanced(int selectedPlanID, {String? name, String? desc, String? type, String? category}) async {
-
+  static Future<CoberturaResponse?> getCoveragesAdvanced(int selectedPlanID,
+      {String? name, String? desc, String? type, String? category}) async {
     Map<String, dynamic> queryParams = {
       'nombre': name,
       'descripcion': desc,
@@ -194,9 +199,9 @@ class ApiService {
       'idPlan': selectedPlanID.toString(),
     };
 
-    var url =
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.coveragesSearchEndpoint}')
-            .replace(queryParameters: queryParams );
+    var url = Uri.parse(
+            '${ApiConstants.baseUrl}${ApiConstants.coveragesSearchEndpoint}')
+        .replace(queryParameters: queryParams);
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -276,12 +281,11 @@ class ApiService {
   }
 
   static Future<PlanResponse?> getPlansbyUserID(int userID) async {
-
     Map<String, dynamic> querParams = {'idUsuario': userID.toString()};
 
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.planEndpoint).replace(queryParameters: querParams);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.planEndpoint)
+        .replace(queryParameters: querParams);
     String? accessToken = await JWTService.readJWT();
-
 
     try {
       var response = await http.get(url, headers: {
@@ -290,7 +294,7 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        var x =  PlanResponse.fromJson(responseData);
+        var x = PlanResponse.fromJson(responseData);
         return x;
       }
     } catch (except) {
@@ -301,7 +305,8 @@ class ApiService {
 
   static Future<bool> postSavedProduct(int userID, int productID) async {
     // Define API Endpoint
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint);
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint);
     String? accessToken = await JWTService.readJWT();
 
     //Map body arguments
@@ -314,7 +319,10 @@ class ApiService {
       var response = await http.post(
         url,
         body: json.encode(requestBody),
-        headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $accessToken'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken'
+        },
       ).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 201) {
@@ -325,7 +333,6 @@ class ApiService {
     }
     return false;
   }
-
 
   static Future<bool> deleteSavedProduct(int userID, int productID) async {
     var url = Uri.parse(
@@ -338,7 +345,7 @@ class ApiService {
         'Authorization': 'Bearer $accessToken'
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 204) {
-       return true;
+        return true;
       }
     } catch (except) {
       print('Error retrieving plans: $except');
