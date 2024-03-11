@@ -68,7 +68,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                 padding: const EdgeInsets.only(left: 15.0),
                 child: SearchBarWithFilter(
                     searchController: _coverageController,
-                    hintText: locale.search_product,
+                    hintText: locale.type_here,
                     onChanged: (String? val) => _searchProductCoverages(),
                     filterDialog: ProductFilterDialog(
                         typeValue: _typeVal,
@@ -97,7 +97,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                   ),
                 ),
               if (coverages == null)
-                Center(child: Text(locale.no_products_to_show))
+                Center(child: Text(locale.no_results_shown))
             ],
           ),
         ),

@@ -68,7 +68,6 @@
   "description": "Description",
   "near_centers": "Nearby Centers",
   "search_screen_title": "Search for products",
-  "search_product": "Search for a product",
   "saved_products": "Saved Products",
   "incidents": "Incidents",
   "profile_info_heading": "My Profile",
@@ -85,5 +84,7 @@
   "product_category": "Product category",
   "no_products_to_show": "No products to show",
   "filter_options": "Filter options",
-  "select_an_option": "Select an option"
+  "select_an_option": "Select an option",
+  "no_results_shown": "No results found",
+  "type_here": "Type here..."
 }
