@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/cobertura_response.dart';
-import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/models/plan_response.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
@@ -12,13 +10,8 @@ import 'package:medicheck/screens/home/settings.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/styles/app_colors.dart';
 import 'package:medicheck/utils/api/api_service.dart';
-import 'package:medicheck/utils/cached_coverages.dart';
-import 'package:medicheck/widgets/cards/coverage_card.dart';
-import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:provider/provider.dart';
-import '../../models/plan.dart';
-import '../../models/usuario.dart';
-import '../../utils/jwt_service.dart';
+import '../../models/notifiers/plan_notifier.dart';
 import '../../widgets/cards/menu_action_card.dart';
 import '../../widgets/coverages_list_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,46 +26,44 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   CoberturaResponse? planCoverages;
-  List<Plan> userPlans = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    Provider.of<PlanModel>(context, listen: false).addListener(_fetchCoverages);
     _fetchData();
   }
 
   Future<void> _fetchUserPlans(int userID) async {
-    final PlanResponse? response= await ApiService.getPlansbyUserID(userID);
-    if (response != null) setState(() => userPlans = response!.data);
-    Provider.of<UserInfoModel>(context, listen: false)
-        .setCurrentPlan(response!.data.first);
+    final PlanResponse? response = await ApiService.getPlansbyUserID(userID);
+
+    if (response != null) {
+      final planProvider = context.read<PlanModel>();
+      planProvider.addPlans(response.data);
+      planProvider.setCurrentPlan(response.data.first);
+    }
   }
 
-  Future<void> _fetchCoverages(int planID) async {
-    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(planID);
+  Future<void> _fetchCoverages() async {
+    int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
+    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(selectedPlanID);
     setState(() => planCoverages = response);
-      // //response.sort((Cobertura a, Cobertura b) => b.fechaRegistro.compareTo(a.fechaRegistro));
-      // setState(() => newCoverages = response!.data);
   }
 
   Future<void> _fetchData() async {
-    final userProvider = Provider.of<UserInfoModel>(context, listen: false);
-    if (userPlans.isEmpty) {
+    final userProvider = context.read<UserInfoModel>();
+    final planProvider = context.read<PlanModel>();
+
+    if (planProvider.plans.isEmpty) {
       await _fetchUserPlans(userProvider.currentUser!.idUsuario);
     }
 
-    int? planID = userProvider.selectedPlanID;
-    if (planID != null) await _fetchCoverages(planID);
-  }
-
-  void _changeSelectedPlan(String newPlanID) async{
-    final userProvider = Provider.of<UserInfoModel>(context, listen: false);
-    await userProvider.setCurrentPlan(
-        userPlans.firstWhere((Plan plan) =>
-        plan.idPlan.toString() == newPlanID));
-    _fetchCoverages(userProvider.selectedPlanID!.toInt());
-    context.read<SavedProductModel>().clear();
+    int? planID = planProvider.selectedPlanID;
+    if (planID != null) {
+      await _fetchCoverages();
+    }
   }
 
   @override
@@ -80,8 +71,8 @@ class _HomeState extends State<Home> {
     return Consumer<UserInfoModel>(
       builder: (context, user, child) => Scaffold(
           body: SingleChildScrollView(
-            child: SafeArea(
-                    child: Padding(
+        child: SafeArea(
+          child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,51 +106,12 @@ class _HomeState extends State<Home> {
                     ),
                   ],
                 ),
-                if (userPlans.length > 1)
-                  const SizedBox(height: 6.0,),
-                  Consumer<UserInfoModel>(
-                    builder: (context, userInfo, _) => CustomDropdownButton(
-                        value: userInfo.selectedPlanID.toString(),
-                        onChanged: (newPlanID) => _changeSelectedPlan(newPlanID!),
-                        entries: userPlans
-                            .map((Plan plan) => DropdownMenuItem(
-                                  value: plan.idPlan.toString(),
-                                  child: Text(plan.descripcion),
-                                ))
-                            .toList()),
-                  ),
                 const SizedBox(
                   height: 24.0,
                 ),
                 GestureDetector(
                   onTap: () => Navigator.pushNamed(context, CoverageSearch.id),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 324,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(24)),
-                        color: Color(0xffFBFBFB)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
-                      child: Row(children: [
-                        const Icon(
-                          Icons.search,
-                          size: 18.0,
-                          weight: 0.8,
-                          color: AppColors.deepLightGray,
-                        ),
-                        const SizedBox(
-                          width: 12.0,
-                        ),
-                        Text(
-                          AppLocalizations.of(context).search_box_placeholder,
-                          style: const TextStyle(
-                              color: AppColors.deepLightGray, fontSize: 12),
-                        )
-                      ]),
-                    ),
-                  ),
+                  child: PlaceHolderSearchBar(),
                 ),
                 const SizedBox(
                   height: 20,
@@ -183,34 +135,25 @@ class _HomeState extends State<Home> {
                       width: 22.0,
                     ),
                     MenuActionCard(
-                        title: AppLocalizations.of(context).favourites,
-                        iconPath: 'assets/icons/heart-outlined.svg',
-                        route: SavedProducts.id,)
+                      title: AppLocalizations.of(context).favourites,
+                      iconPath: 'assets/icons/heart-outlined.svg',
+                      route: SavedProducts.id,
+                    )
                   ],
                 ),
                 const SizedBox(
                   height: 24.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context).recent_coverages,
-                      style: AppStyles.sectionTextStyle,
-                    ),
-                    // GestureDetector(
-                    //   onTap: () {},
-                    //   child: Text(
-                    //     AppLocalizations.of(context).view_all,
-                    //     style: AppStyles.actionTextStyle,
-                    //   ),
-                    // ),
-                  ],
+                Text(
+                  AppLocalizations.of(context).recent_coverages,
+                  style: AppStyles.sectionTextStyle,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: CoveragesListView(coverages: planCoverages?.data != null ? planCoverages!.data : [] ),
+                  child: CoveragesListView(
+                      coverages: planCoverages?.data != null
+                          ? planCoverages!.data
+                          : []),
                 ),
                 Text(
                   AppLocalizations.of(context).new_coverages,
@@ -218,13 +161,46 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                  child: CoveragesListView(coverages: planCoverages?.data != null ? planCoverages!.data : []),
+                  child: CoveragesListView(
+                      coverages: planCoverages?.data != null
+                          ? planCoverages!.data
+                          : []),
                 ),
               ],
             ),
-                    ),
-                  ),
-          )),
+          ),
+        ),
+      )),
+    );
+  }
+
+  Container PlaceHolderSearchBar(){
+    return Container(
+      alignment: Alignment.center,
+      width: 324,
+      height: 40,
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+          color: Color(0xffFBFBFB)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Row(children: [
+          const Icon(
+            Icons.search,
+            size: 18.0,
+            weight: 0.8,
+            color: AppColors.deepLightGray,
+          ),
+          const SizedBox(
+            width: 12.0,
+          ),
+          Text(
+            AppLocalizations.of(context).search_box_placeholder,
+            style: const TextStyle(
+                color: AppColors.deepLightGray, fontSize: 12),
+          )
+        ]),
+      ),
     );
   }
 }

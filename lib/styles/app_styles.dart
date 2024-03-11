@@ -52,6 +52,13 @@ static const featureCardTextStyle = TextStyle(
     fontWeight: FontWeight.w500
   );
 
+  static const settingTextStyle = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.w600,
+    color: AppColors.deepBlue,
+  );
+
+
   static const primaryButtonStyle = ButtonStyle(
     backgroundColor: MaterialStatePropertyAll<Color>(AppColors.jadeGreen),
     textStyle: MaterialStatePropertyAll<TextStyle>(

@@ -6,6 +6,7 @@ import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
 import 'package:medicheck/widgets/coverages_list_view.dart';
 import 'package:provider/provider.dart';
+import '../../../models/notifiers/plan_notifier.dart';
 import '../../../models/producto.dart';
 import '../../../models/usuario.dart';
 import '../../../widgets/misc/custom_appbar.dart';
@@ -70,7 +71,7 @@ class _SavedProductsState extends State<SavedProducts> {
     List<Cobertura> coverages = [];
     for (Producto product in savedProducts) {
       Cobertura? productCoverage = await _fetchCoverageByProductPlan(
-          context.read<UserInfoModel>().selectedPlanID!, product.idProducto);
+          context.read<PlanModel>().selectedPlanID!, product.idProducto);
       if (productCoverage != null) {
         coverages.add(productCoverage);
       }

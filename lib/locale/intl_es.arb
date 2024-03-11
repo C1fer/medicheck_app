@@ -87,5 +87,10 @@
   "filter_options": "Opciones de filtrado",
   "select_an_option": "Selecciona una opción",
   "no_results_shown": "No hay resultados",
-  "type_here": "Escriba aquí..."
+  "type_here": "Escriba aquí...",
+  "insurer": "Aseguradora",
+  "plan": "Plan",
+  "change_plan": "Cambiar Plan",
+  "log_out_confirmation": "¿Seguro/a que quieres cerrar sesión?",
+  "cancel": "Cancelar"
 }

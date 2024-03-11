@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/cobertura_response.dart';
-import 'package:medicheck/styles/app_styles.dart';
-import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/misc/search/search_row.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/product_filter_dialog.dart';
 import 'package:provider/provider.dart';
-import '../../../models/notifiers/user_info_notifier.dart';
+import '../../../models/notifiers/plan_notifier.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/cards/coverage_card_sm.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../utils/api/api_service.dart';
-import '../../../models/enums.dart';
 
 class CoverageSearch extends StatefulWidget {
   const CoverageSearch({super.key});
@@ -41,7 +37,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
   }
 
   Future<void> _searchProductCoverages() async {
-    int? planID = context.read<UserInfoModel>().selectedPlanID;
+    int? planID = context.read<PlanModel>().selectedPlanID;
     if (mounted) {
       CoberturaResponse? foundCoverages = await ApiService.getCoveragesAdvanced(
           planID!,

@@ -4,8 +4,8 @@ import 'package:medicheck/styles/app_styles.dart';
 
 import '../../../../styles/app_colors.dart';
 
-class CustomDialog extends StatelessWidget {
-  const CustomDialog(
+class BasicDialog extends StatelessWidget {
+  const BasicDialog(
       {super.key, required this.title, this.body, this.actions, this.iconPath});
 
   final String title;
@@ -17,6 +17,7 @@ class CustomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
             alignment: Alignment.center,

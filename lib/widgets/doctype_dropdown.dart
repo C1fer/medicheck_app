@@ -17,6 +17,7 @@ class _DocumentTypeDropdownState extends State<DocumentTypeDropdown> {
     final locale = AppLocalizations.of(context);
 
     return DropdownButton(
+        borderRadius: BorderRadius.circular(24.0),
         value: widget.docType,
         items: [
           DropdownMenuItem(
