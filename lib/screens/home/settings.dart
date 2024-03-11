@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/styles/app_colors.dart';
 import 'package:medicheck/styles/app_styles.dart';
+import 'package:medicheck/widgets/cards/settings_card.dart';
 import '../../widgets/misc/custom_appbar.dart';
 import '../../../utils/jwt_service.dart';
-import '../../../models/usuario.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../../models/usuario.dart';
 import '../../models/notifiers/localeNotifier.dart';
 import '../welcome/welcome.dart';
 import 'package:provider/provider.dart';
@@ -40,40 +39,21 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () => userLogOut(),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    width: double.infinity,
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        side: const BorderSide(
-                            width: 1.25, color: Color(0xFFE8F3F1)),
-                        borderRadius: BorderRadius.circular(12),
+                    onTap: () => userLogOut(),
+                    child: SettingCard(
+                      content: Text(
+                        localization.log_out,
+                        style: AppStyles.headingTextStyle.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15.0,
+                            color: Colors.red),
                       ),
-                    ),
-                    child: Text(
-                      localization.log_out,
-                      style: AppStyles.headingTextStyle.copyWith(
-                          fontWeight: FontWeight.w600, fontSize: 15.0, color: Colors.red),
-                    ),
-                  ),
-                ),
+                    )),
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  width: double.infinity,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                          width: 1.25, color: Color(0xFFE8F3F1)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Row(
+                SettingCard(
+                  content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
