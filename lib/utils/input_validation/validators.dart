@@ -16,10 +16,6 @@ class Validators {
     return passwordRegExp.hasMatch(password);
   }
 
-  static bool isNotNull(String value) {
-    return value != null;
-  }
-
   static bool isValidPhone(String phone) {
     final phoneRegExp = RegExp(r"^[0-9]\d{9}$");
     return phoneRegExp.hasMatch(phone);

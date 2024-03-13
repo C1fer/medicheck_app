@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/styles/app_styles.dart';
+import 'package:medicheck/utils/input_validation/validation_logic.dart';
 import 'package:medicheck/widgets/inputs/pwd_field.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/basic_dialog.dart';
@@ -36,28 +37,34 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
 
     // Change UserPassword
     void setNewPassword(String newPwd, String confirmPwd) async {
-      if (isFormValid()) {
-        setState(() => _isLoading = true);
-        try {
-          bool response = await ApiService.resetPassword(
-              args["token"]!, newPwd, args["email"]!);
-          if (response) {
-            await showCustomDialog(
-                context,
-                BasicDialog(
-                      title: locale.success,
-                      body: locale.pw_reset_success,
-                    ));
-            await Navigator.pushReplacementNamed(context, Welcome.id);
-          } else {
-            // Handle null response
-            showSnackBar(context, locale.server_error, MessageType.ERROR);
-          }
-        } catch (except) {
-          print("Error sending email: $except");
-        } finally {
-          setState(() => _isLoading = false);
+      try {
+        bool response = await ApiService.resetPassword(
+            args["token"]!, newPwd, args["email"]!);
+        if (response) {
+          await showCustomDialog(
+              context,
+              BasicDialog(
+                title: locale.success,
+                body: locale.pw_reset_success,
+              ));
+          await Navigator.pushReplacementNamed(context, Welcome.id);
+        } else {
+          // Handle null response
+          showSnackBar(context, locale.server_error, MessageType.ERROR);
         }
+      } catch (except) {
+        print("Error sending email: $except");
+      } finally {
+        setState(() => _isLoading = false);
+      }
+    }
+
+    void onButtonPresed() {
+      bool isFormValid = _formKey.currentState?.validate() ?? false;
+      if (isFormValid && _isLoading == false) {
+        setState(() => _isLoading = true);
+        setNewPassword(
+            _passwordController.text, _passwordConfirmController.text);
       }
     }
 
@@ -65,41 +72,44 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context).new_pw,
       ),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  locale.create_new_pw,
-                  style: AppStyles.headingTextStyle,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  locale.create_new_pw_instructions,
-                  style: AppStyles.mainTextStyle,
-                ),
-                const SizedBox(height: 32),
-                PasswordField(
-                    controller: _passwordController, autoValidate: true),
-                const SizedBox(height: 16),
-                PasswordField(
-                    controller: _passwordConfirmController, autoValidate: true),
-                const SizedBox(
-                  height: 40.0,
-                ),
-                FilledButton(
-                    onPressed: _isLoading ||
-                            _passwordConfirmController.text !=
-                                _passwordConfirmController.text
-                        ? null
-                        : () => setNewPassword(_passwordController.text,
-                            _passwordConfirmController.text),
-                    child: Text(_isLoading ? '...' : locale.new_pw)),
-              ],
+      body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    locale.create_new_pw,
+                    style: AppStyles.headingTextStyle,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    locale.create_new_pw_instructions,
+                    style: AppStyles.mainTextStyle,
+                  ),
+                  const SizedBox(height: 32),
+                  PasswordField(
+                    controller: _passwordController,
+                    validator: (String? val) => validatePassword(val, context),
+                  ),
+                  const SizedBox(height: 16),
+                  PasswordField(
+                    controller: _passwordConfirmController,
+                    validator: (String? val) => validateConfirmPassword(
+                        _passwordController.text, val, context),
+                  ),
+                  const SizedBox(
+                    height: 40.0,
+                  ),
+                  FilledButton(
+                      onPressed: () => onButtonPresed(),
+                      child: Text(_isLoading ? '...' : locale.new_pw)),
+                ],
+              ),
             ),
           ),
         ),

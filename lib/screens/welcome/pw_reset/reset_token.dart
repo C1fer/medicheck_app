@@ -75,60 +75,63 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context).new_pw,
       ),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  locale.verification_no,
-                  style: AppStyles.headingTextStyle,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${locale.reset_token_input_instructions} $emailFormatted',
-                  style: AppStyles.mainTextStyle,
-                ),
-                const SizedBox(height: 32),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: ResetTokenField(
-                    controller: _resetTokenController,
+      body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    locale.verification_no,
+                    style: AppStyles.headingTextStyle,
                   ),
-                ),
-                const SizedBox(
-                  height: 40.0,
-                ),
-                FilledButton(
-                    onPressed: _isLoading
-                        ? null
-                        : () => validateResetToken(
-                            _resetTokenController.text, email),
-                    child: Text(_isLoading ? '...' : locale.verify)),
-                const SizedBox(
-                  height: 25.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(locale.code_not_received,
-                        style: AppStyles.subMediumTextStyle),
-                    const SizedBox(
-                      width: 5.0,
+                  const SizedBox(height: 8),
+                  Text(
+                    '${locale.reset_token_input_instructions} $emailFormatted',
+                    style: AppStyles.mainTextStyle,
+                  ),
+                  const SizedBox(height: 32),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: ResetTokenField(
+                      controller: _resetTokenController,
                     ),
-                    GestureDetector(
-                      child: Text(
-                        AppLocalizations.of(context).resend_code,
-                        style: AppStyles.actionTextStyle,
+                  ),
+                  const SizedBox(
+                    height: 40.0,
+                  ),
+                  FilledButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () => validateResetToken(
+                              _resetTokenController.text, email),
+                      child: Text(_isLoading ? '...' : locale.verify)),
+                  const SizedBox(
+                    height: 25.0,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(locale.code_not_received,
+                          style: AppStyles.subMediumTextStyle),
+                      const SizedBox(
+                        width: 5.0,
                       ),
-                      onTap: () => sendResetToken(email),
-                    ),
-                  ],
-                )
-              ],
+                      GestureDetector(
+                        child: Text(
+                          AppLocalizations.of(context).resend_code,
+                          style: AppStyles.actionTextStyle,
+                        ),
+                        onTap: () => sendResetToken(email),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

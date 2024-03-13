@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/utils/api/api_service.dart';
+import 'package:medicheck/utils/input_validation/validation_logic.dart';
+import 'package:medicheck/utils/input_validation/validators.dart';
 import 'package:medicheck/widgets/inputs/pwd_field.dart';
 import 'package:medicheck/widgets/misc/custom_appbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/basic_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -25,13 +28,19 @@ class _ChangePasswordState extends State<ChangePassword> {
   final TextEditingController _newPWController = TextEditingController();
   final TextEditingController _confirmPWController = TextEditingController();
 
-
   //TODO: change endpoint on backend
-  Future<void> setNewPassword(String currPwd, String newPwd, String confirmPwd) async {
+  Future<void> setNewPassword(
+      String currPwd, String newPwd, String confirmPwd) async {
     try {
+      final locale = AppLocalizations.of(context);
       int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
       await ApiService.changeUserPassword(userID, currPwd, newPwd);
-      await showCustomDialog(context, Placeholder());
+      await showCustomDialog(
+          context,
+          BasicDialog(
+            title: locale.success,
+            body: locale.pw_reset_success,
+          ));
       Navigator.pop(context);
     } catch (ex) {
       print("Error: $ex");
@@ -57,7 +66,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           child: Form(
             key: _formKey,
             child: Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -73,19 +82,24 @@ class _ChangePasswordState extends State<ChangePassword> {
                   const SizedBox(height: 32),
                   PasswordField(
                     controller: _currentPWController,
-                    autoValidate: false,
                     hintText: locale.current_pwd,
+                    autoValidate: false,
+                    validator: (String? val) =>
+                        validateEmptyInput(val!, context),
                   ),
                   const SizedBox(height: 16.0),
                   PasswordField(
                       controller: _newPWController,
-                      autoValidate: true,
-                      hintText: locale.new_pwd),
+                      hintText: locale.new_pwd,
+                      validator: (String? val) =>
+                          validatePassword(val, context)),
                   const SizedBox(height: 16.0),
                   PasswordField(
-                      controller: _confirmPWController,
-                      autoValidate: true,
-                      hintText: locale.confirm_pwd),
+                    controller: _confirmPWController,
+                    hintText: locale.confirm_pwd,
+                    validator: (String? val) => validateConfirmPassword(
+                        _newPWController.text, val, context),
+                  ),
                   const SizedBox(height: 40.0),
                   FilledButton(
                       onPressed: () => onChangePwdButtonPresed(),

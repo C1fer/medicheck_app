@@ -96,5 +96,6 @@
   "current_pwd" : "Current Password",
   "new_pwd" : "New Password",
   "confirm_pwd" : "Confirm Password",
-  "pwd_not_matching": "Passwords do not match"
+  "pwd_not_matching": "Passwords do not match",
+  "empty_value_constraint": "Input should not be empty"
 }

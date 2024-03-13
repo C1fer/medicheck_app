@@ -10,13 +10,15 @@ class PasswordField extends StatefulWidget {
   const PasswordField({
     Key? key,
     required this.controller,
-    required this.autoValidate,
-    this.hintText
+    this.autoValidate = true,
+    this.hintText,
+    this.validator,
   }) : super(key: key);
 
   final TextEditingController controller;
   final bool autoValidate;
   final String? hintText;
+  final String? Function(String?)? validator;
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -30,9 +32,12 @@ class _PasswordFieldState extends State<PasswordField> {
     return CustomInputField(
       controller: widget.controller,
       obscureText: _obscureState,
-      autoValidateMode: widget.autoValidate ? AutovalidateMode.onUserInteraction : null,
-      validator: widget.autoValidate ? (val) => validatePassword(val, context): null,
-      hintText: widget.hintText ?? AppLocalizations.of(context).passwordFieldLabel,
+      autoValidateMode: widget.autoValidate && widget.validator != null
+          ? AutovalidateMode.onUserInteraction
+          : null,
+      validator: widget.validator,
+      hintText:
+          widget.hintText ?? AppLocalizations.of(context).passwordFieldLabel,
       prefixIcon: SvgPicture.asset('assets/icons/lock.svg'),
       suffixIcon: PasswordToggle(),
     );
@@ -47,6 +52,9 @@ class _PasswordFieldState extends State<PasswordField> {
     const hidePwd = Icons.remove_red_eye_outlined;
     return GestureDetector(
         onTap: changeIcon,
-        child: Icon(_obscureState ? hidePwd : revealPwd, color: AppColors.lightGray,));
+        child: Icon(
+          _obscureState ? hidePwd : revealPwd,
+          color: AppColors.lightGray,
+        ));
   }
 }

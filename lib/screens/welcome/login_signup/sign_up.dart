@@ -4,6 +4,7 @@ import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/screens/welcome/login_signup/login.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/utils/api/api_service.dart';
+import 'package:medicheck/utils/input_validation/validation_logic.dart';
 import 'package:medicheck/widgets/doctype_dropdown.dart';
 import 'package:medicheck/widgets/inputs/email_field.dart';
 import 'package:medicheck/widgets/inputs/id_field.dart';
@@ -128,6 +129,7 @@ class _LoginState extends State<SignUp> {
                   PasswordField(
                     controller: _passwordController,
                     autoValidate: true,
+                    validator: (String? val) => validatePassword(val, context),
                   ),
                   const SizedBox(
                     height: 25.0,

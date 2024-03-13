@@ -2,48 +2,64 @@ import 'validators.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-String? validateID (String? input, String documentType, BuildContext context){
-  if (input != null){
-    late bool _isValid;
-    switch(documentType){
+String? validateID(String? input, String documentType, BuildContext context) {
+  if (input != null) {
+    late bool isValid;
+    switch (documentType) {
       case 'CEDULA':
-        _isValid = Validators.isValidCedula(input!);
+        isValid = Validators.isValidCedula(input);
       case 'NSS':
-        _isValid = Validators.isValidNSS(input!);
+        isValid = Validators.isValidNSS(input);
     }
-    if (!_isValid) return AppLocalizations.of(context).invalid_input;
+    if (!isValid) return AppLocalizations.of(context).invalid_input;
   }
   return null;
 }
 
-String? validateEmail (String? input, BuildContext context){
-  if (input != null){
-    bool _isValid = Validators.isValidEmail(input!);
-    if (!_isValid) return AppLocalizations.of(context).invalid_input;
+String? validateEmail(String? input, BuildContext context) {
+  if (input != null) {
+    bool isValid = Validators.isValidEmail(input);
+    if (!isValid) return AppLocalizations.of(context).invalid_input;
   }
   return null;
 }
 
-String? validatePassword (String? input, BuildContext context){
-  if (input != null){
-    bool _isValid = Validators.isValidPassword(input!);
-    if (!_isValid) return AppLocalizations.of(context).invalid_input;
+String? validatePassword(String? input, BuildContext context) {
+  if (input != null) {
+    bool isValid = Validators.isValidPassword(input);
+    if (!isValid) return AppLocalizations.of(context).invalid_input;
   }
   return null;
 }
 
-String? validatePhoneNo (String? input, BuildContext context){
-  if (input != null){
-    bool _isValid = Validators.isValidPhone(input!);
-    if (!_isValid) return AppLocalizations.of(context).invalid_input;
+String? validateConfirmPassword(
+    String? pass1, String? pass2, BuildContext context) {
+  if (pass1 != null && pass2 != null) {
+    bool isValid = pass1 == pass2;
+    if (!isValid) return AppLocalizations.of(context).pwd_not_matching;
   }
   return null;
 }
 
-String? validateResetTokenInput (String? input, BuildContext context){
-  if (input != null){
-    bool _isValid = Validators.isValidResetToken(input!);
-    if (!_isValid) return AppLocalizations.of(context).invalid_input;
+String? validatePhoneNo(String? input, BuildContext context) {
+  if (input != null) {
+    bool isValid = Validators.isValidPhone(input);
+    if (!isValid) return AppLocalizations.of(context).invalid_input;
+  }
+  return null;
+}
+
+String? validateResetTokenInput(String? input, BuildContext context) {
+  if (input != null) {
+    bool isValid = Validators.isValidResetToken(input);
+    if (!isValid) return AppLocalizations.of(context).invalid_input;
+  }
+  return null;
+}
+
+String? validateEmptyInput(String input, BuildContext context){
+  if (input.isEmpty){
+    return AppLocalizations.of(context).empty_value_constraint;
   }
   return null;
 }

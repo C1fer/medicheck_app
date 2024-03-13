@@ -97,5 +97,6 @@
   "current_pwd" : "Contraseña Actual",
   "new_pwd" : "Nueva Contraseña",
   "confirm_pwd" : "Confirmar Contraseña",
-  "pwd_not_matching": "Las contraseñas no son iguales"
+  "pwd_not_matching": "Las contraseñas no son iguales",
+  "empty_value_constraint": "El campo no puede ser válido"
 }
