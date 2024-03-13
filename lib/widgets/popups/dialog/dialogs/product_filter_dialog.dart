@@ -38,27 +38,6 @@ class _ProductFilterDialogState extends State<ProductFilterDialog> {
           style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
         )),
         const SizedBox(height: 16.0),
-        Text(locale.category,
-            style: AppStyles.headingTextStyle
-                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 4),
-        CustomDropdownButton(
-            value: widget.categoryValue,
-            isNullable: true,
-            isExpanded: true,
-            onChanged: (String? newVal) {
-              setState(() => widget.categoryValue = newVal);
-              widget.onCategoryChanged(newVal);
-            },
-            entries: Constants.productCategories
-                .map((String category) => DropdownMenuItem(
-                      value: category,
-                      child: Text(category),
-                    ))
-                .toList()),
-        const SizedBox(
-          height: 20,
-        ),
         Text(
           locale.type,
           style: AppStyles.headingTextStyle
@@ -75,8 +54,29 @@ class _ProductFilterDialogState extends State<ProductFilterDialog> {
             },
             entries: Constants.productTypes
                 .map((String type) => DropdownMenuItem(
-                      value: type,
-                      child: Text(type),
+              value: type,
+              child: Text(type),
+            ))
+                .toList()),
+        const SizedBox(
+          height: 20,
+        ),
+        Text(locale.category,
+            style: AppStyles.headingTextStyle
+                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
+        CustomDropdownButton(
+            value: widget.categoryValue,
+            isNullable: true,
+            isExpanded: true,
+            onChanged: (String? newVal) {
+              setState(() => widget.categoryValue = newVal);
+              widget.onCategoryChanged(newVal);
+            },
+            entries: Constants.productCategories
+                .map((String category) => DropdownMenuItem(
+                      value: category,
+                      child: Text(category),
                     ))
                 .toList()),
         const SizedBox(height: 24),
