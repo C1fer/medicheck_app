@@ -103,7 +103,7 @@ class ApiService {
       {String? type, String? keyword, int? arsID}) async {
     Map<String, dynamic> querParams = {"tipo": type, "search": keyword};
     var url =
-        Uri.parse(ApiConstants.baseUrl + ApiConstants.establishmentsEndpoint)
+        Uri.parse('${ApiConstants.baseUrl }${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
             .replace(queryParameters: querParams);
     String? accessToken = await JWTService.readJWT();
 

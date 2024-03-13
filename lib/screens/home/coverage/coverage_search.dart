@@ -22,7 +22,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
   String? _typeVal;
   String? _categoryVal;
 
- CoberturaResponse? coverages;
+  CoberturaResponse? coveragesData;
 
   @override
   void dispose() {
@@ -45,7 +45,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
           type: _typeVal,
           category: _categoryVal);
 
-      setState(() => coverages = foundCoverages);
+      setState(() => coveragesData = foundCoverages);
     }
   }
 
@@ -81,19 +81,17 @@ class _CoverageSearchState extends State<CoverageSearch> {
               const SizedBox(
                 height: 40.0,
               ),
-              if (coverages != null)
-                Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (context, index) =>
-                        CoverageCardSmall(coverage: coverages!.data[index]),
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 40),
-                    itemCount: coverages!.data.length,
-                    scrollDirection: Axis.vertical,
-                  ),
-                ),
-              if (coverages == null)
-                Center(child: Text(locale.no_results_shown))
+              Expanded(
+                  child: coveragesData != null && coveragesData!.data.isNotEmpty
+                      ? ListView.separated(
+                          itemBuilder: (context, index) => CoverageCardSmall(
+                              coverage: coveragesData!.data[index]),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 40),
+                          itemCount: coveragesData!.data.length,
+                          scrollDirection: Axis.vertical,
+                        )
+                      : Center(child: Text(locale.no_results_shown))),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/establecimiento_response.dart';
+import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/estabilshment_filter_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../widgets/misc/custom_appbar.dart';
@@ -28,20 +29,18 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
   @override
   void initState() {
     super.initState();
+    _getEstablishments();
   }
 
   void _getEstablishments() async {
     try {
       if (mounted) {
-        if (_establishmentsController.text != "") {
           final EstablecimientoResponse? response =
               await ApiService.getEstablishments(
+                  arsID: context.read<PlanModel>().selectedPlanID,
                   keyword: _establishmentsController.text,
                   type: establishmentType);
           setState(() => establishments = response);
-        } else {
-          setState(() => establishments = null);
-        }
       }
     } catch (ex) {
       print(ex);

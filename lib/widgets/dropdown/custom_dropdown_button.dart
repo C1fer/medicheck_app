@@ -60,7 +60,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
           widget.onChanged(value);
         },
         style: const TextStyle(fontSize: 16.0, color: Colors.black),
-        underline: widget.underlined ? const SizedBox() : null,
+        underline: widget.underlined ? null : const SizedBox() ,
         borderRadius: widget.optionsBorderRadius != null ? BorderRadius.circular(widget.optionsBorderRadius!) : null,
       ),
     );

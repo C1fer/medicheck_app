@@ -9,6 +9,7 @@ class ApiConstants{
   static String coveragesSearchEndpoint = "/coberturas/busquedaavanzada";
   static String coveragesUserEndpoint = "/coberturas/usuario";
   static String establishmentsEndpoint = "/establecimientos";
+  static String establishmentsInsurerEndpoint = "/establecimientos/aseguradora";
   static String planEndpoint = "/planes";
   static String productsEndpoint = "/productos";
   static String productEndpoint = "/producto";
