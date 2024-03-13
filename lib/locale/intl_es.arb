@@ -92,5 +92,10 @@
   "plan": "Plan",
   "change_plan": "Cambiar Plan",
   "log_out_confirmation": "¿Seguro/a que quieres cerrar sesión?",
-  "cancel": "Cancelar"
+  "cancel": "Cancelar",
+  "change_pwd": "Cambiar Contraseña",
+  "current_pwd" : "Contraseña Actual",
+  "new_pwd" : "Nueva Contraseña",
+  "confirm_pwd" : "Confirmar Contraseña",
+  "pwd_not_matching": "Las contraseñas no son iguales"
 }

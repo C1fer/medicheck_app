@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
+import 'package:medicheck/screens/home/settings/change_pw.dart';
 import 'package:medicheck/styles/app_colors.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/cards/settings_card.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/basic_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/log_out_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
-import '../../models/plan.dart';
-import '../../widgets/dropdown/custom_dropdown_button.dart';
-import '../../widgets/misc/custom_appbar.dart';
-import '../../../utils/jwt_service.dart';
+import '../../../models/plan.dart';
+import '../../../widgets/dropdown/custom_dropdown_button.dart';
+import '../../../widgets/misc/custom_appbar.dart';
+import '../../../../utils/jwt_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../models/notifiers/localeNotifier.dart';
-import '../welcome/welcome.dart';
+import '../../../models/notifiers/localeNotifier.dart';
+import '../../welcome/welcome.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -152,6 +153,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, ChangePassword.id),
+                    child: SettingCard(
+                      content: Text(
+                        locale.change_pwd,
+                        style: AppStyles.settingTextStyle,
+                      ),
+                    )),
                 const SizedBox(
                   height: 20,
                 ),

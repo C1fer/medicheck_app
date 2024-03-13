@@ -11,10 +11,12 @@ class PasswordField extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.autoValidate,
+    this.hintText
   }) : super(key: key);
 
   final TextEditingController controller;
   final bool autoValidate;
+  final String? hintText;
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
@@ -30,7 +32,7 @@ class _PasswordFieldState extends State<PasswordField> {
       obscureText: _obscureState,
       autoValidateMode: widget.autoValidate ? AutovalidateMode.onUserInteraction : null,
       validator: widget.autoValidate ? (val) => validatePassword(val, context): null,
-      hintText: AppLocalizations.of(context).passwordFieldLabel,
+      hintText: widget.hintText ?? AppLocalizations.of(context).passwordFieldLabel,
       prefixIcon: SvgPicture.asset('assets/icons/lock.svg'),
       suffixIcon: PasswordToggle(),
     );

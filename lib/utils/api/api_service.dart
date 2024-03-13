@@ -352,4 +352,31 @@ class ApiService {
     }
     return false;
   }
+
+
+  static Future<bool> changeUserPassword(int userID, String currentPwd, String newPwd ) async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.changePasswordEndpoint);
+    String? accessToken = await JWTService.readJWT();
+
+    //Map body arguments
+    Map<String, dynamic> requestBody = {
+      'idUsuario': userID,
+      'claveActual': currentPwd,
+      'nuevaClave' : newPwd
+    };
+
+    try {
+      var response = await http.put(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      },
+      body: json.encode(requestBody)).timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (except) {
+      print('Error changing password: $except');
+    }
+    return false;
+  }
 }

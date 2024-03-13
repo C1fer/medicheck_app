@@ -58,8 +58,11 @@ static const featureCardTextStyle = TextStyle(
     color: AppColors.deepBlue,
   );
 
+  static const minimumButtonSize = MaterialStatePropertyAll<Size>(Size(10,55));
+
 
   static const primaryButtonStyle = ButtonStyle(
+    minimumSize: minimumButtonSize,
     backgroundColor: MaterialStatePropertyAll<Color>(AppColors.jadeGreen),
     textStyle: MaterialStatePropertyAll<TextStyle>(
         TextStyle(
@@ -71,6 +74,7 @@ static const featureCardTextStyle = TextStyle(
   );
 
   static const outlinedButtonStyle = ButtonStyle(
+    minimumSize: minimumButtonSize,
     foregroundColor: MaterialStatePropertyAll<Color>(AppColors.jadeGreen),
     textStyle: MaterialStatePropertyAll<TextStyle>(
         TextStyle(
@@ -82,8 +86,8 @@ static const featureCardTextStyle = TextStyle(
     side: MaterialStatePropertyAll<BorderSide>(BorderSide(color: AppColors.jadeGreen ))
   );
 
-
   static const TextButtonStyle = ButtonStyle(
+    minimumSize: minimumButtonSize,
     textStyle: MaterialStatePropertyAll<TextStyle>(
         TextStyle(
           fontSize: 15.0,
