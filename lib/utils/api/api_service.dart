@@ -33,9 +33,7 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 401) {
         // Handle successful login
-        Map<String, dynamic> responseData = json.decode(response.body);
-        print(responseData);
-        return responseData;
+        return json.decode(response.body);
       }
     } catch (e) {
       print('Request error: $e');
@@ -67,14 +65,43 @@ class ApiService {
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         // Handle successful login
-        Map<String, dynamic> responseData = json.decode(response.body);
-        print(responseData);
-        return responseData;
+        return json.decode(response.body);
       }
     } catch (e) {
       print('Request error: $e');
     }
     return null;
+  }
+
+  static Future<bool> changeUserPassword(
+      int userID, String currentPwd, String newPwd) async {
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.changePasswordEndpoint);
+    String? accessToken = await JWTService.readJWT();
+
+    //Map body arguments
+    Map<String, dynamic> requestBody = {
+      'idUsuario': userID,
+      'claveActual': currentPwd,
+      'nuevaClave': newPwd
+    };
+
+    try {
+      var response = await http
+          .put(url,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $accessToken'
+              },
+              body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (except) {
+      print('Error changing password: $except');
+    }
+    return false;
   }
 
   static Future<Usuario?> getUserById(int userID) async {
@@ -102,9 +129,9 @@ class ApiService {
   static Future<EstablecimientoResponse?> getEstablishments(
       {String? type, String? keyword, int? arsID}) async {
     Map<String, dynamic> querParams = {"tipo": type, "search": keyword};
-    var url =
-        Uri.parse('${ApiConstants.baseUrl }${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
-            .replace(queryParameters: querParams);
+    var url = Uri.parse(
+            '${ApiConstants.baseUrl}${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
+        .replace(queryParameters: querParams);
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -353,29 +380,36 @@ class ApiService {
     return false;
   }
 
-
-  static Future<bool> changeUserPassword(int userID, String currentPwd, String newPwd ) async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.changePasswordEndpoint);
+  static Future<bool> postNewIncidentReport(int userID, int planID,
+      int establishmentID, int productID, String description) async {
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint);
     String? accessToken = await JWTService.readJWT();
 
     //Map body arguments
     Map<String, dynamic> requestBody = {
-      'idUsuario': userID,
-      'claveActual': currentPwd,
-      'nuevaClave' : newPwd
+      "idUsuario": userID,
+      "idPlan": planID,
+      "descripcion": description,
+      "idEstablecimiento": establishmentID,
+      "idProducto": productID,
+      "estado": "ABIERTO"
     };
 
     try {
-      var response = await http.put(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      },
-      body: json.encode(requestBody)).timeout(const Duration(seconds: 5));
+      var response = await http
+          .post(url,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $accessToken'
+              },
+              body: json.encode(requestBody))
+          .timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         return true;
       }
     } catch (except) {
-      print('Error changing password: $except');
+      print('Error creating incident report: $except');
     }
     return false;
   }

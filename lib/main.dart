@@ -7,6 +7,7 @@ import 'package:medicheck/screens/home/coverage/coverage_details.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
+import 'package:medicheck/screens/home/incident_reports.dart';
 import 'package:medicheck/screens/home/settings/change_pw.dart';
 import 'package:medicheck/screens/home/settings/settings.dart';
 import 'package:medicheck/screens/welcome/pw_reset/forgot_pw.dart';
@@ -74,6 +75,7 @@ class MyApp extends StatelessWidget {
                   ResetTokenInput.id: (context) => const ResetTokenInput(),
                   NewPasswordInput.id: (context) => const NewPasswordInput(),
                   ChangePassword.id: (context) => const ChangePassword(),
+                  IncidentReports.id: (context)  => const IncidentReports()
                 },
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

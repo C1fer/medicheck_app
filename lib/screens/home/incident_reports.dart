@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class IncidentReports extends StatefulWidget {
   const IncidentReports({super.key});
-  static const String id = 'settings';
+  static const String id = 'incident_reports';
   @override
   State<IncidentReports> createState() => _IncidentReportsState();
 }
