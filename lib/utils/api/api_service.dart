@@ -12,6 +12,35 @@ import 'api_constants.dart';
 import '../jwt_service.dart';
 
 class ApiService {
+  static final Duration defaultTimeout = Duration(seconds: 5);
+  static final Map<String, String> noAuthHeaders = {
+    'Content-Type': 'application/json'
+  };
+
+  static Future<Map<String, String>?> getAuthHeaders() async {
+    String? accessToken = await JWTService.readJWT();
+
+    if (accessToken != null){
+      final Map<String, String> authHeaders = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
+      return authHeaders;
+    }
+    return null;
+  }
+
+  static Future<Map<String, dynamic>?> checkHealth() async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.health);
+    try {
+      var response =
+          await http.get(url, headers: {'': ''}).timeout(defaultTimeout);
+    } catch (except) {
+      print("Can't reach server");
+    }
+    return null;
+  }
+
   static Future<Map<String, dynamic>?> userLogin(
       String docNumber, String docType, String pwd) async {
     // Define API Endpoint
@@ -25,11 +54,13 @@ class ApiService {
     };
 
     try {
-      var response = await http.post(
-        url,
-        body: json.encode(loginCredentials),
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 5));
+      var response = await http
+          .post(
+            url,
+            body: json.encode(loginCredentials),
+            headers: noAuthHeaders,
+          )
+          .timeout(defaultTimeout);
 
       if (response.statusCode == 200 || response.statusCode == 401) {
         // Handle successful login
@@ -57,11 +88,13 @@ class ApiService {
     };
 
     try {
-      var response = await http.post(
-        url,
-        body: json.encode(signUpCredentials),
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 5));
+      var response = await http
+          .post(
+            url,
+            body: json.encode(signUpCredentials),
+            headers: noAuthHeaders,
+          )
+          .timeout(defaultTimeout);
 
       if (response.statusCode == 200 || response.statusCode == 400) {
         // Handle successful login
@@ -94,7 +127,7 @@ class ApiService {
                 'Authorization': 'Bearer $accessToken'
               },
               body: json.encode(requestBody))
-          .timeout(const Duration(seconds: 5));
+          .timeout(defaultTimeout);
       if (response.statusCode == 200) {
         return true;
       }
@@ -106,23 +139,22 @@ class ApiService {
   }
 
   static Future<Usuario?> getUserById(int userID) async {
-    var url = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$userID');
+    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$userID');
 
-    String? accessToken = await JWTService.readJWT();
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
 
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return Usuario.fromJson(responseData);
+    if (requestHeaders != null){
+      try {
+        var response = await http.get(url, headers:requestHeaders).timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return Usuario.fromJson(responseData);
+        }
+      } catch (except) {
+        print('Error retrieving user: $except');
       }
-    } catch (except) {
-      print('Error retrieving user: $except');
     }
+
     return null;
   }
 
@@ -138,7 +170,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         return EstablecimientoResponse.fromJson(responseData);
@@ -158,7 +190,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return responseData.map((data) => Producto.fromJson(data)).toList();
@@ -178,7 +210,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         return responseData.map((data) => Cobertura.fromJson(data)).toList();
@@ -205,7 +237,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         return CoberturaResponse.fromJson(responseData);
@@ -235,7 +267,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         return CoberturaResponse.fromJson(responseData);
@@ -256,7 +288,7 @@ class ApiService {
     try {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 202) return true;
     } catch (except) {
       print('Error generating token $except');
@@ -274,7 +306,7 @@ class ApiService {
     try {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 200) return true;
     } catch (except) {
       print('Error validating token $except');
@@ -296,10 +328,12 @@ class ApiService {
             .replace(queryParameters: reqParams);
 
     try {
-      var response = await http.patch(
-        url,
-        headers: {'Content-Type': 'application/json'},
-      ).timeout(const Duration(seconds: 5));
+      var response = await http
+          .patch(
+            url,
+            headers: noAuthHeaders,
+          )
+          .timeout(defaultTimeout);
       if (response.statusCode == 200) return true;
     } catch (except) {
       print('Error resetting password : $except');
@@ -318,7 +352,7 @@ class ApiService {
       var response = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         var x = PlanResponse.fromJson(responseData);
@@ -350,7 +384,7 @@ class ApiService {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken'
         },
-      ).timeout(const Duration(seconds: 5));
+      ).timeout(defaultTimeout);
 
       if (response.statusCode == 201) {
         return true;
@@ -370,7 +404,7 @@ class ApiService {
       var response = await http.delete(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
-      }).timeout(const Duration(seconds: 5));
+      }).timeout(defaultTimeout);
       if (response.statusCode == 204) {
         return true;
       }
@@ -404,7 +438,7 @@ class ApiService {
                 'Authorization': 'Bearer $accessToken'
               },
               body: json.encode(requestBody))
-          .timeout(const Duration(seconds: 5));
+          .timeout(defaultTimeout);
       if (response.statusCode == 200) {
         return true;
       }
