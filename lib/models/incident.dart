@@ -21,7 +21,7 @@ class ReporteIncidente {
   Establecimiento establecimientoNavigation;
   Plan planNavigation;
   Producto productoNavigation;
-  Usuario usuarioNavigation;
+  Usuario? usuarioNavigation;
 
   ReporteIncidente(
       {required this.idIncidente,
@@ -48,9 +48,9 @@ class ReporteIncidente {
           descripcion: json["descripcion"],
           estado: json["estado"],
           fechaIncidente: json["fechaIncidente"],
-          fechaRegistro: DateTime.parse(json["fechaRegisro"]),
-          establecimientoNavigation: json["idEstablecimientoNavegation"],
-          planNavigation: json["idPlanNavegation"],
-          productoNavigation: json["idProductoNavegation"],
-          usuarioNavigation: json["idUsuarioNavegation"]);
+          fechaRegistro: DateTime.parse(json["fechaRegistro"]),
+          establecimientoNavigation: Establecimiento.fromJson(json["idEstablecimientoNavigation"]),
+          planNavigation: Plan.fromJson(json["idPlanNavegation"]),
+          productoNavigation: Producto.fromJson(json["idProductoNavegation"] ),
+          usuarioNavigation: null);
 }

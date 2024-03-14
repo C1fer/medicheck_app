@@ -1,6 +1,6 @@
 import '../incident.dart';
 
-class CoberturaResponse {
+class ReporteResponse {
   List<ReporteIncidente> data;
   int pageNumber;
   int pageSize;
@@ -9,7 +9,7 @@ class CoberturaResponse {
   bool hasPreviousPage;
   bool hasNextPage;
 
-  CoberturaResponse({
+  ReporteResponse({
     required this.data,
     required this.pageNumber,
     required this.pageSize,
@@ -19,8 +19,8 @@ class CoberturaResponse {
     required this.hasNextPage,
   });
 
-  factory CoberturaResponse.fromJson(Map<String, dynamic> json) {
-    return CoberturaResponse(
+  factory ReporteResponse.fromJson(Map<String, dynamic> json) {
+    return ReporteResponse(
       data: (json['data'] as List)
           .map((item) => ReporteIncidente.fromJson(item))
           .toList(),

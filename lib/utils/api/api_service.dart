@@ -3,6 +3,7 @@ import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/cobertura_response.dart';
 import 'package:medicheck/models/establecimiento.dart';
 import 'package:medicheck/models/plan_response.dart';
+import 'package:medicheck/models/responses/incident_response.dart';
 import 'dart:convert';
 import '../../models/establecimiento_response.dart';
 import '../../models/plan.dart';
@@ -418,6 +419,30 @@ class ApiService {
       print('Error retrieving plans: $except');
     }
     return false;
+  }
+
+  static Future<ReporteResponse?> getIncidentReports(int userID) async {
+    Map<String, dynamic> queryParams = {
+      'idUsuario': userID.toString(),
+    };
+
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint)
+        .replace(queryParameters: queryParams);
+
+    String? accessToken = await JWTService.readJWT();
+    try {
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      }).timeout(defaultTimeout);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return ReporteResponse.fromJson(responseData);
+      }
+    } catch (except) {
+      print(except);
+    }
+    return null;
   }
 
   static Future<bool> postNewIncidentReport(int userID, int planID,

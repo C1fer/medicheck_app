@@ -35,8 +35,8 @@ class Establecimiento {
     telefono: json["telefono"],
     correo: json["correo"],
     fechaRegistro: DateTime.parse(json["fechaRegistro"]),
-    establecimientoAseguradoras: List<dynamic>.from(json["establecimientoAseguradoras"].map((x) => x)),
-    reporteIncidentes: List<dynamic>.from(json["reporteIncidentes"].map((x) => x)),
+    establecimientoAseguradoras: [],
+    reporteIncidentes: [],
   );
 
   Map<String, dynamic> toJson() => {
