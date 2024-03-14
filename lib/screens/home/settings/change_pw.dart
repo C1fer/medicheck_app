@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/utils/input_validation/validation_logic.dart';
@@ -8,6 +9,7 @@ import 'package:medicheck/widgets/misc/custom_appbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/basic_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
+import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../styles/app_styles.dart';
@@ -29,29 +31,31 @@ class _ChangePasswordState extends State<ChangePassword> {
   final TextEditingController _confirmPWController = TextEditingController();
 
   //TODO: change endpoint on backend
-  Future<void> setNewPassword(
-      String currPwd, String newPwd, String confirmPwd) async {
-    try {
-      final locale = AppLocalizations.of(context);
-      int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
-      await ApiService.changeUserPassword(userID, currPwd, newPwd);
-      await showCustomDialog(
-          context,
-          BasicDialog(
-            title: locale.success,
-            body: locale.pw_reset_success,
-          ));
-      Navigator.pop(context);
-    } catch (ex) {
-      print("Error: $ex");
+  Future<void> setNewPassword(int userID, String currPwd, String newPwd) async {
+    final locale = AppLocalizations.of(context);
+    final bool? response = await ApiService.changeUserPassword(userID, currPwd, newPwd);
+    if (response != null) {
+      if (response) {
+        await showCustomDialog(
+            context,
+            BasicDialog(
+              title: locale.success,
+              body: locale.pw_reset_success,
+            ));
+        Navigator.pop(context);
+      } else {
+        showSnackBar(context, locale.incorrect_current_pwd, MessageType.ERROR);
+      }
+    } else {
+      showSnackBar(context, locale.server_error, MessageType.ERROR);
     }
   }
 
   void onChangePwdButtonPresed() {
     bool isFormValid = _formKey.currentState?.validate() ?? false;
     if (isFormValid) {
-      setNewPassword(_currentPWController.text, _newPWController.text,
-          _confirmPWController.text);
+      int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
+      setNewPassword(userID, _currentPWController.text, _newPWController.text);
     }
   }
 

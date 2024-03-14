@@ -73,7 +73,7 @@ class ApiService {
     return null;
   }
 
-  static Future<bool> changeUserPassword(
+  static Future<bool?> changeUserPassword(
       int userID, String currentPwd, String newPwd) async {
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.changePasswordEndpoint);
@@ -98,10 +98,11 @@ class ApiService {
       if (response.statusCode == 200) {
         return true;
       }
+      return false;
     } catch (except) {
       print('Error changing password: $except');
+      return null;
     }
-    return false;
   }
 
   static Future<Usuario?> getUserById(int userID) async {
@@ -117,8 +118,7 @@ class ApiService {
       }).timeout(const Duration(seconds: 5));
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        var x = Usuario.fromJson(responseData);
-        return x;
+        return Usuario.fromJson(responseData);
       }
     } catch (except) {
       print('Error retrieving user: $except');
