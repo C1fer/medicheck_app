@@ -44,49 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SettingCard(
-                    content: Consumer<UserInfoModel>(
-                  builder: (context, userModel, _) => Column(
-                    children: [
-                      Text(
-                        '${userModel.currentUser!.nombre} ${userModel.currentUser!.apellidos}',
-                        style: AppStyles.settingTextStyle,
-                      ),
-                      Text(
-                        userModel.currentUser!.correo!,
-                        style: AppStyles.subSmallTextStyle,
-                      ),
-                      const SizedBox(
-                        height: 25,
-                      ),
-                      Consumer<PlanModel>(
-                          builder: (context, planModel, _) => Row(
-                                children: [
-                                  Expanded(
-                                    child: _InfoSection(
-                                        userModel.currentUser!.tipoDocumento ==
-                                                "NSS"
-                                            ? locale.ssn_abbrv
-                                            : locale.national_id_card_abbrv,
-                                        userModel.currentUser!.noDocumento!),
-                                  ),
-                                  _SectionSeparator(),
-                                  Expanded(
-                                    child: _InfoSection(
-                                        locale.insurer,
-                                        planModel.selectedPlan!.idAseguradora
-                                            .toString()),
-                                  ),
-                                  _SectionSeparator(),
-                                  Expanded(
-                                    child: _InfoSection(locale.plan,
-                                        planModel.selectedPlan!.descripcion),
-                                  ),
-                                ],
-                              ))
-                    ],
-                  ),
-                )),
+                UserInfo(context),
                 const SizedBox(
                   height: 15,
                 ),
@@ -157,7 +115,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   height: 20,
                 ),
                 GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, ChangePassword.id),
+                    onTap: () =>
+                        Navigator.pushNamed(context, ChangePassword.id),
                     child: SettingCard(
                       content: Text(
                         locale.change_pwd,
@@ -180,6 +139,50 @@ class _SettingsPageState extends State<SettingsPage> {
             )),
       ),
     );
+  }
+
+  Widget UserInfo(BuildContext context) {
+    final locale = AppLocalizations.of(context);
+    return SettingCard(
+        content: Consumer<UserInfoModel>(
+      builder: (context, userModel, _) => Column(
+        children: [
+          Text(
+            '${userModel.currentUser!.nombre} ${userModel.currentUser!.apellidos}',
+            style: AppStyles.settingTextStyle,
+          ),
+          Text(
+            userModel.currentUser!.correo!,
+            style: AppStyles.subSmallTextStyle,
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          Consumer<PlanModel>(
+              builder: (context, planModel, _) => Row(
+                    children: [
+                      Expanded(
+                        child: _InfoSection(
+                            userModel.currentUser!.tipoDocumento == "NSS"
+                                ? locale.ssn_abbrv
+                                : locale.national_id_card_abbrv,
+                            userModel.currentUser!.noDocumento!),
+                      ),
+                      _SectionSeparator(),
+                      Expanded(
+                        child: _InfoSection(locale.insurer,
+                            planModel.selectedPlan!.idAseguradoraNavigation.nombre),
+                      ),
+                      _SectionSeparator(),
+                      Expanded(
+                        child: _InfoSection(
+                            locale.plan, planModel.selectedPlan!.descripcion),
+                      ),
+                    ],
+                  ))
+        ],
+      ),
+    ));
   }
 
   Widget _SectionSeparator() {

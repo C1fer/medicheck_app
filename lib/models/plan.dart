@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:medicheck/models/aseguradora.dart';
+
 Plan planFromJson(String str) => Plan.fromJson(json.decode(str));
 
 String planToJson(Plan data) => json.encode(data.toJson());
@@ -10,7 +12,7 @@ class Plan {
   int idAseguradora;
   DateTime fechaRegistro;
   List<dynamic>? cobeturas;
-  dynamic idAseguradoraNavigation;
+  Aseguradora idAseguradoraNavigation;
   List<dynamic>? personaPlans;
   List<dynamic>? reporteIncidentes;
   List<dynamic>? usuarioPlans;
@@ -34,7 +36,7 @@ class Plan {
     idAseguradora: json["idAseguradora"],
     fechaRegistro: DateTime.parse(json["fechaRegistro"]),
     cobeturas: json["coberturas"],
-    idAseguradoraNavigation: json["idAseguradoraNavigation"],
+    idAseguradoraNavigation: Aseguradora.fromJson(json["idAseguradoraNavigation"]),
     personaPlans: json["UsuarioPlans"],
     reporteIncidentes: json["reporteIncidentes"],
     usuarioPlans: json["UsuarioPlans"],
@@ -46,7 +48,7 @@ class Plan {
     "idAseguradora": idAseguradora,
     "fechaRegistro": fechaRegistro.toIso8601String(),
     "cobeturas": cobeturas != null ? List<dynamic>.from(cobeturas!.map((x) => x)) : null,
-    "idAseguradoraNavigation": idAseguradoraNavigation,
+    "idAseguradoraNavigation": idAseguradoraNavigation.toJson(),
     "personaPlans": cobeturas != null ? List<dynamic>.from(personaPlans!.map((x) => x)) : null,
     "reporteIncidentes": cobeturas != null ? List<dynamic>.from(reporteIncidentes!.map((x) => x)) : null,
     "usuarioPlans": usuarioPlans != null ? List<dynamic>.from(usuarioPlans!.map((x) => x)) : null,
