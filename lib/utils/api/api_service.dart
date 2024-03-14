@@ -20,7 +20,7 @@ class ApiService {
   static Future<Map<String, String>?> getAuthHeaders() async {
     String? accessToken = await JWTService.readJWT();
 
-    if (accessToken != null){
+    if (accessToken != null) {
       final Map<String, String> authHeaders = {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken'
@@ -30,15 +30,18 @@ class ApiService {
     return null;
   }
 
-  static Future<Map<String, dynamic>?> checkHealth() async {
+  static Future<bool> checkHealth() async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.health);
     try {
       var response =
-          await http.get(url, headers: {'': ''}).timeout(defaultTimeout);
+          await http.get(url, headers: noAuthHeaders).timeout(defaultTimeout);
+      if (response.statusCode == 200) {
+        return true;
+      }
     } catch (except) {
       print("Can't reach server");
     }
-    return null;
+    return false;
   }
 
   static Future<Map<String, dynamic>?> userLogin(
@@ -139,13 +142,16 @@ class ApiService {
   }
 
   static Future<Usuario?> getUserById(int userID) async {
-    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$userID');
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}/$userID');
 
     final Map<String, String>? requestHeaders = await getAuthHeaders();
 
-    if (requestHeaders != null){
+    if (requestHeaders != null) {
       try {
-        var response = await http.get(url, headers:requestHeaders).timeout(defaultTimeout);
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
         if (response.statusCode == 200) {
           final Map<String, dynamic> responseData = json.decode(response.body);
           return Usuario.fromJson(responseData);

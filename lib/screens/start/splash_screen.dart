@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/screens/home/home.dart';
 import 'package:medicheck/screens/welcome/welcome.dart';
 import 'package:medicheck/utils/cached_coverages.dart';
+import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
 import 'package:provider/provider.dart';
 import '../../models/notifiers/user_info_notifier.dart';
 import '../../utils/api/api_service.dart';
@@ -23,7 +27,17 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    _initCheck();
+    _isServerAlive();
+  }
+
+  void _isServerAlive() async {
+    final bool response = await ApiService.checkHealth();
+    if (response) {
+      _initCheck();
+    } else {
+      showSnackBar(context, "Unable to reach server", MessageType.ERROR);
+      await Future.delayed(const Duration(seconds: 5)).then((value) => exit(0));
+    }
   }
 
   // Check if session is active
@@ -34,8 +48,7 @@ class _SplashState extends State<Splash> {
         var userInfo = await JWTService.decodeJWT();
         int userID = int.parse(userInfo!['IdUsuario']);
         await _fetchUserInfo(userID);
-      }
-      catch(except){
+      } catch (except) {
         print("Error fetching user info: $except");
       }
     }
@@ -50,10 +63,11 @@ class _SplashState extends State<Splash> {
     } else {
       // Redirect to Welcome screen if user had completed onboarding
       final localStorage = await SharedPreferences.getInstance();
-      final bool? onboardingCompleted = localStorage.getBool('onboarding_completed');
+      final bool? onboardingCompleted =
+          localStorage.getBool('onboarding_completed');
 
-      if (onboardingCompleted != null){
-        if (onboardingCompleted!){
+      if (onboardingCompleted != null) {
+        if (onboardingCompleted!) {
           Navigator.pushReplacementNamed(context, Welcome.id);
         }
       }
