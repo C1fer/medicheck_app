@@ -36,6 +36,8 @@ class Constants {
   'MEDICAMENTO': "assets/icons/pill.svg",
   'PROCEDIMIENTO': "assets/icons/procedure.svg"
   };
-
-
 }
+
+enum incidentStatus {ABIERTO, REVISION, CERRADO}
+
+enum itemsViewMode {LIST, GRID}

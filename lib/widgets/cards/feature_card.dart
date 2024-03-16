@@ -16,7 +16,7 @@ class FeatureCard extends StatelessWidget {
       decoration: ShapeDecoration(
         color: color.withOpacity(0.11),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(2.23),
+          borderRadius: BorderRadius.circular(2.5),
         ),
       ),
       child: Text(
