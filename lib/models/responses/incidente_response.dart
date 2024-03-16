@@ -1,7 +1,7 @@
-import '../incident.dart';
+import '../incidente.dart';
 
-class ReporteResponse {
-  List<ReporteIncidente> data;
+class IncidenteResponse {
+  List<Incidente> data;
   int pageNumber;
   int pageSize;
   int totalItems;
@@ -9,7 +9,7 @@ class ReporteResponse {
   bool hasPreviousPage;
   bool hasNextPage;
 
-  ReporteResponse({
+  IncidenteResponse({
     required this.data,
     required this.pageNumber,
     required this.pageSize,
@@ -19,10 +19,10 @@ class ReporteResponse {
     required this.hasNextPage,
   });
 
-  factory ReporteResponse.fromJson(Map<String, dynamic> json) {
-    return ReporteResponse(
+  factory IncidenteResponse.fromJson(Map<String, dynamic> json) {
+    return IncidenteResponse(
       data: (json['data'] as List)
-          .map((item) => ReporteIncidente.fromJson(item))
+          .map((item) => Incidente.fromJson(item))
           .toList(),
       pageNumber: json['pageNumber'],
       pageSize: json['pageSize'],

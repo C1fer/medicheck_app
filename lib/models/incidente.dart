@@ -5,10 +5,10 @@ import 'producto.dart';
 import 'usuario.dart';
 import 'establecimiento.dart';
 
-ReporteIncidente reporteIncidentefromJson(String str) =>
-    ReporteIncidente.fromJson(json.decode(str));
+Incidente reporteIncidentefromJson(String str) =>
+    Incidente.fromJson(json.decode(str));
 
-class ReporteIncidente {
+class Incidente {
   int idIncidente;
   int idUsuario;
   int idPlan;
@@ -23,7 +23,7 @@ class ReporteIncidente {
   Producto productoNavigation;
   Usuario? usuarioNavigation;
 
-  ReporteIncidente(
+  Incidente(
       {required this.idIncidente,
       required this.idUsuario,
       required this.idPlan,
@@ -38,8 +38,8 @@ class ReporteIncidente {
       required this.productoNavigation,
       required this.usuarioNavigation});
 
-  factory ReporteIncidente.fromJson(Map<String, dynamic> json) =>
-      ReporteIncidente(
+  factory Incidente.fromJson(Map<String, dynamic> json) =>
+      Incidente(
           idIncidente: json["idIncidente"],
           idUsuario: json["idUsuario"],
           idPlan: json["idPlan"],
@@ -50,7 +50,7 @@ class ReporteIncidente {
           fechaIncidente: json["fechaIncidente"],
           fechaRegistro: DateTime.parse(json["fechaRegistro"]),
           establecimientoNavigation: Establecimiento.fromJson(json["idEstablecimientoNavigation"]),
-          planNavigation: Plan.fromJson(json["idPlanNavegation"]),
-          productoNavigation: Producto.fromJson(json["idProductoNavegation"] ),
+          planNavigation: Plan.fromJson(json["idPlanNavigation"]),
+          productoNavigation: Producto.fromJson(json["idProductoNavigation"] ),
           usuarioNavigation: null);
 }

@@ -47,7 +47,6 @@ class AppStyles {
   );
 
 static const featureCardTextStyle = TextStyle(
-    color: AppColors.jadeGreen,
     fontSize: 12,
     fontWeight: FontWeight.w500
   );

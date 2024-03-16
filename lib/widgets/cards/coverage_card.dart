@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicheck/screens/home/coverage/coverage_details.dart';
-import 'package:medicheck/styles/app_colors.dart';
 import '../../models/cobertura.dart';
 import '../../styles/app_styles.dart';
 import '../../widgets/cards/feature_card.dart';
@@ -56,7 +54,7 @@ class CoverageCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
-              child: FeatureCard(msg: '${coverage.porcentaje} %'),
+              child: FeatureCard(msg: '${coverage.porcentaje} %',),
             )
           ],
         ),

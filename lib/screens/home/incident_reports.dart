@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/establecimiento_response.dart';
-import 'package:medicheck/models/incident.dart';
+import 'package:medicheck/models/incidente.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
-import 'package:medicheck/models/responses/incident_response.dart';
+import 'package:medicheck/models/responses/incidente_response.dart';
 import 'package:medicheck/widgets/cards/incident_card.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/estabilshment_filter_dialog.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/new_incident_dialog.dart';
+import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
@@ -14,6 +16,7 @@ import '../../../widgets/cards/establishment_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../widgets/misc/search/search_row.dart';
+import '../../styles/app_colors.dart';
 
 class IncidentReports extends StatefulWidget {
   const IncidentReports({Key? key}) : super(key: key);
@@ -24,11 +27,10 @@ class IncidentReports extends StatefulWidget {
 }
 
 class _IncidentReportsState extends State<IncidentReports> {
-  ReporteResponse? reports;
+  IncidenteResponse? reports;
 
   final TextEditingController _reportsController = TextEditingController();
   String? reportStatus;
-
 
   @override
   void initState() {
@@ -36,11 +38,11 @@ class _IncidentReportsState extends State<IncidentReports> {
     _getReports();
   }
 
-  void _getReports() async {
+  Future<void> _getReports() async {
     try {
       if (mounted) {
         final int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
-        final ReporteResponse? response =
+        final IncidenteResponse? response =
             await ApiService.getIncidentReports(userID);
         setState(() => reports = response);
       }
@@ -48,6 +50,9 @@ class _IncidentReportsState extends State<IncidentReports> {
       print(ex);
     }
   }
+  
+    Future<void> onPressedNewIncidentButton() async{
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +67,7 @@ class _IncidentReportsState extends State<IncidentReports> {
             child: Column(
               children: [
                 Expanded(
-                    child: reports != null &&
-                            reports!.data.isNotEmpty
+                    child: reports != null && reports!.data.isNotEmpty
                         ? ListView.separated(
                             itemBuilder: (context, index) => IncidentCard(
                               incident: reports!.data[index],
@@ -73,10 +77,25 @@ class _IncidentReportsState extends State<IncidentReports> {
                                 const SizedBox(height: 10),
                             itemCount: reports!.data.length,
                           )
-                        : Center(child: Text(locale.no_results_shown)))
+                        : Center(child: Text(locale.no_results_shown))),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: FloatingActionButton(
+                    onPressed: () => onPressedNewIncidentButton(),
+                    backgroundColor: AppColors.jadeGreen,
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      weight: 1.5,
+                      size: 40,
+                    ),
+                  ),
+                ),
               ],
             )),
       ),
     );
   }
+
+
 }

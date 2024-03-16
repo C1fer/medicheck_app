@@ -3,7 +3,7 @@ import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/cobertura_response.dart';
 import 'package:medicheck/models/establecimiento.dart';
 import 'package:medicheck/models/plan_response.dart';
-import 'package:medicheck/models/responses/incident_response.dart';
+import 'package:medicheck/models/responses/incidente_response.dart';
 import 'dart:convert';
 import '../../models/establecimiento_response.dart';
 import '../../models/plan.dart';
@@ -421,7 +421,7 @@ class ApiService {
     return false;
   }
 
-  static Future<ReporteResponse?> getIncidentReports(int userID) async {
+  static Future<IncidenteResponse?> getIncidentReports(int userID) async {
     Map<String, dynamic> queryParams = {
       'idUsuario': userID.toString(),
     };
@@ -437,7 +437,7 @@ class ApiService {
       }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        return ReporteResponse.fromJson(responseData);
+        return IncidenteResponse.fromJson(responseData);
       }
     } catch (except) {
       print(except);

@@ -171,7 +171,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       _SectionSeparator(),
                       Expanded(
                         child: _InfoSection(locale.insurer,
-                            planModel.selectedPlan!.idAseguradoraNavigation.nombre),
+                            planModel.selectedPlan!.idAseguradoraNavigation!.nombre),
                       ),
                       _SectionSeparator(),
                       Expanded(

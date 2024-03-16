@@ -12,7 +12,7 @@ class Plan {
   int idAseguradora;
   DateTime fechaRegistro;
   List<dynamic>? cobeturas;
-  Aseguradora idAseguradoraNavigation;
+  Aseguradora? idAseguradoraNavigation;
   List<dynamic>? personaPlans;
   List<dynamic>? reporteIncidentes;
   List<dynamic>? usuarioPlans;
@@ -36,7 +36,7 @@ class Plan {
     idAseguradora: json["idAseguradora"],
     fechaRegistro: DateTime.parse(json["fechaRegistro"]),
     cobeturas: json["coberturas"],
-    idAseguradoraNavigation: Aseguradora.fromJson(json["idAseguradoraNavigation"]),
+    idAseguradoraNavigation: json["idAseguradoraNavigation"] != null ? Aseguradora.fromJson(json["idAseguradoraNavigation"]) : null,
     personaPlans: json["UsuarioPlans"],
     reporteIncidentes: json["reporteIncidentes"],
     usuarioPlans: json["UsuarioPlans"],
@@ -48,7 +48,7 @@ class Plan {
     "idAseguradora": idAseguradora,
     "fechaRegistro": fechaRegistro.toIso8601String(),
     "cobeturas": cobeturas != null ? List<dynamic>.from(cobeturas!.map((x) => x)) : null,
-    "idAseguradoraNavigation": idAseguradoraNavigation.toJson(),
+    "idAseguradoraNavigation": idAseguradoraNavigation?.toJson(),
     "personaPlans": cobeturas != null ? List<dynamic>.from(personaPlans!.map((x) => x)) : null,
     "reporteIncidentes": cobeturas != null ? List<dynamic>.from(reporteIncidentes!.map((x) => x)) : null,
     "usuarioPlans": usuarioPlans != null ? List<dynamic>.from(usuarioPlans!.map((x) => x)) : null,
