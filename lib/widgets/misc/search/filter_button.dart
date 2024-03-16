@@ -16,7 +16,7 @@ class _FilterButtonState extends State<FilterButton> {
     return GestureDetector(
       onTap: () => showCustomDialog(context, widget.dialogContent, dismissible: true),
       child: const Icon(
-        Icons.filter_alt_outlined,
+        Icons.filter_list_outlined,
         color: AppColors.lightGray,
       ),
     );
