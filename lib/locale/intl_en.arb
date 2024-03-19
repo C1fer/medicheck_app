@@ -98,5 +98,7 @@
   "confirm_pwd" : "Confirm Password",
   "pwd_not_matching": "Passwords do not match",
   "empty_value_constraint": "Input should not be empty",
-  "incorrect_current_pwd": "Incorrect current password"
+  "incorrect_current_pwd": "Incorrect current password",
+  "product": "Product",
+  "establishment": "Establishment"
 }

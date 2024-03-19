@@ -1,25 +1,27 @@
-import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:medicheck/models/cobertura_response.dart';
+import 'package:medicheck/models/establecimiento.dart';
+import 'package:medicheck/models/notifiers/user_info_notifier.dart';
+import 'package:medicheck/styles/app_decorations.dart';
+import 'package:medicheck/utils/api/api_service.dart';
+import 'package:medicheck/utils/input_validation/validation_logic.dart';
+import 'package:medicheck/widgets/inputs/custom_form_field.dart';
+import 'package:medicheck/widgets/inputs/text_field.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../models/enums.dart';
+import '../../../../models/cobertura.dart';
+import '../../../../models/debouncer.dart';
+import '../../../../models/establecimiento_response.dart';
+import '../../../../models/notifiers/plan_notifier.dart';
+import '../../../../models/producto.dart';
 import '../../../../styles/app_styles.dart';
-import '../../../dropdown/custom_dropdown_button.dart';
 
 class NewIncidentDialog extends StatefulWidget {
-  NewIncidentDialog(
-      {super.key,
-        this.categoryValue,
-        this.typeValue,
-        required this.onCategoryChanged,
-        required this.onTypeChanged,
-        required this.onButtonPressed});
+  const NewIncidentDialog({super.key, required this.onSubmit});
 
-  String? categoryValue;
-  String? typeValue;
-  final ValueChanged<String?> onCategoryChanged;
-  final ValueChanged<String?> onTypeChanged;
-  final Future<void> Function() onButtonPressed;
+  final Future<void> Function() onSubmit;
 
   @override
   State<NewIncidentDialog> createState() => _NewIncidentDialogState();
@@ -27,6 +29,33 @@ class NewIncidentDialog extends StatefulWidget {
 
 class _NewIncidentDialogState extends State<NewIncidentDialog> {
   final _formKey = GlobalKey<FormState>();
+  final _descriptionController = TextEditingController();
+  // final _establishmentController = TextEditingController();
+  // final _productController = TextEditingController();
+  final _searchDebouncer = Debouncer();
+
+  Establecimiento? selectedEstablishment;
+  Producto? selectedProduct;
+
+  Future<void> createIncident() async {
+    int userID = context.read<UserInfoModel>().currentUserID!;
+    int planID = context.read<PlanModel>().selectedPlanID!;
+    await ApiService.postNewIncidentReport(
+        userID,
+        planID,
+        selectedEstablishment!.idEstablecimiento,
+        selectedProduct!.idProducto,
+        _descriptionController.text);
+    widget.onSubmit();
+  }
+
+  bool validateForm(GlobalKey<FormState> form) {
+    return form.currentState?.validate() ?? false;
+  }
+
+  void onSubmitPressed() {
+    validateForm(_formKey) == true ? print("ok") : print("no");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,43 +67,83 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
         children: [
           Center(
               child: Text(
-                locale.filter_options,
-                style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
-              )),
+            locale.filter_options,
+            style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
+          )),
           const SizedBox(height: 16.0),
           Text(
-            locale.type,
+            locale.description,
             style: AppStyles.headingTextStyle
                 .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
+          CustomTextField(controller: _descriptionController),
           const SizedBox(
             height: 20,
           ),
-          Text(locale.category,
+          Text(locale.establishment,
               style: AppStyles.headingTextStyle
                   .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          CustomDropdownButton(
-              value: widget.categoryValue,
-              isNullable: true,
-              isExpanded: true,
-              onChanged: (String? newVal) {
-                setState(() => widget.categoryValue = newVal);
-                widget.onCategoryChanged(newVal);
+          TypeAheadField<Establecimiento>(
+              builder: (context, controller, focusNode) => TextFormField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  decoration: AppDecorations.formTextFieldDecoration,
+                  validator: (value) => validateEmptyInput(value, context)),
+              itemBuilder: (context, establishment) => ListTile(
+                    title: Text(establishment.nombre),
+                    subtitle: Text(establishment.categoria!, style: AppStyles.subSmallTextStyle,),
+                  ),
+              onSelected: (Establecimiento establishment) {
+                setState(() {
+                  selectedEstablishment = establishment;
+                });
               },
-              entries: Constants.productCategories
-                  .map((String category) => DropdownMenuItem(
-                value: category,
-                child: Text(category),
-              ))
-                  .toList()),
+              suggestionsCallback: (keyword) async {
+                int planID = context.read<PlanModel>().selectedPlanID!;
+                EstablecimientoResponse? responseData;
+                if (keyword != "") {
+                  responseData = await ApiService.getEstablishments(
+                      arsID: planID, keyword: keyword);
+                }
+                return responseData?.data ?? [];
+              }),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(locale.product,
+              style: AppStyles.headingTextStyle
+                  .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 4),
+          TypeAheadField<Cobertura>(
+              builder: (context, controller, focusNode) => TextFormField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    decoration: AppDecorations.formTextFieldDecoration.copyWith(),
+                    validator: (value) => validateEmptyInput(value, context),
+                  ),
+              itemBuilder: (context, coverage) => ListTile(
+                    title: Text(coverage.idProductoNavigation.nombre),
+                  ),
+              onSelected: (Cobertura coverage) {
+                setState(() => selectedProduct = coverage.idProductoNavigation);
+              },
+              suggestionsCallback: (keyword) async {
+                CoberturaResponse? responseData;
+                if (keyword != '') {
+                  responseData = await ApiService.getCoveragesAdvanced(
+                    context.read<PlanModel>().selectedPlanID!,
+                    name: keyword,
+                  );
+                }
+                return responseData?.data ?? [];
+              }),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: FilledButton(
-                onPressed: widget.onButtonPressed,
-                child: const Text('OK')),
+                onPressed: onSubmitPressed, child: const Text('OK')),
           )
         ],
       ),

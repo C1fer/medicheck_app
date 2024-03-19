@@ -5,6 +5,8 @@ import 'package:medicheck/models/responses/incidente_response.dart';
 import 'package:medicheck/widgets/cards/incident_card.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/misc/view_mode_button.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/new_incident_dialog.dart';
+import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
@@ -49,7 +51,9 @@ class _IncidentReportsState extends State<IncidentReports> {
     setState(() => statusFilter = newStatus);
   }
 
-  Future<void> onPressedNewIncidentButton() async {}
+  Future<void> onPressedNewIncidentButton() async {
+    showCustomDialog(context, NewIncidentDialog(onSubmit: () async {}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +96,12 @@ class _IncidentReportsState extends State<IncidentReports> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: FloatingActionButton(
-                    onPressed: () => onPressedNewIncidentButton(),
+                    onPressed: () {}, //disable new incicent dialog
                     backgroundColor: AppColors.jadeGreen,
                     child: const Icon(
                       Icons.add,
                       color: Colors.white,
-                      weight: 1.5,
-                      size: 40,
+                      size: 30,
                     ),
                   ),
                 ),

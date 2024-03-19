@@ -4,7 +4,7 @@ class Debouncer {
   final int milliseconds;
   Timer? _timer;
 
-  Debouncer({required this.milliseconds});
+  Debouncer({this.milliseconds = 200});
 
   run(void Function() action) {
     if (_timer!= null) {

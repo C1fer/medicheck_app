@@ -4,20 +4,21 @@ import '../../styles/app_colors.dart';
 import '../../styles/app_decorations.dart';
 
 class CustomInputField extends StatefulWidget {
-  CustomInputField({
-    Key? key,
-    required this.controller,
-    this.hintText,
-    this.prefixIcon,
-    this.inputFormatters,
-    this.validator,
-    this.autoValidateMode,
-    this.keyboardType,
-    this.maxLength,
-    this.decoration,
-    required this.obscureText,
-    this.suffixIcon,
-  }) : super(key: key);
+  CustomInputField(
+      {Key? key,
+      required this.controller,
+      this.hintText,
+      this.prefixIcon,
+      this.inputFormatters,
+      this.validator,
+      this.autoValidateMode,
+      this.keyboardType,
+      this.maxLength,
+      this.decoration,
+      this.obscureText = false,
+      this.suffixIcon,
+      this.maxLines = 1})
+      : super(key: key);
 
   final TextEditingController controller;
   final String? hintText;
@@ -28,6 +29,8 @@ class CustomInputField extends StatefulWidget {
   final AutovalidateMode? autoValidateMode;
   final TextInputType? keyboardType;
   final int? maxLength;
+
+  final int? maxLines;
   final InputDecoration? decoration;
   bool obscureText;
 
@@ -39,6 +42,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: widget.maxLines,
       obscureText: widget.obscureText,
       maxLength: widget.maxLength,
       keyboardType: widget.keyboardType ?? TextInputType.text,

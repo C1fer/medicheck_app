@@ -45,7 +45,7 @@ dependencies:
   jwt_decode: ^0.3.1
   provider: ^6.1.1
   pin_code_fields: ^8.0.1
-  easy_autocomplete: ^1.6.0
+  flutter_typeahead: ^5.2.0
 
 
 

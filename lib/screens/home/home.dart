@@ -42,8 +42,7 @@ class _HomeState extends State<Home> {
 
     if (response != null) {
       final planProvider = context.read<PlanModel>();
-      planProvider.addPlans(response.data);
-      planProvider.setCurrentPlan(response.data.first);
+      await planProvider.addPlans(response.data);
     }
   }
 
@@ -61,10 +60,6 @@ class _HomeState extends State<Home> {
       await _fetchUserPlans(userProvider.currentUser!.idUsuario);
     }
 
-    int? planID = planProvider.selectedPlanID;
-    if (planID != null) {
-      await _fetchCoverages();
-    }
   }
 
   @override
