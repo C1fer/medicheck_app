@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:medicheck/models/establecimiento_response.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/estabilshment_filter_dialog.dart';
@@ -20,27 +21,40 @@ class EstablishmentsList extends StatefulWidget {
 }
 
 class _EstablishmentsListState extends State<EstablishmentsList> {
+  final _establishmentsController = TextEditingController();
+  final _establishmentsPaginationController =
+      PagingController<int, Establecimiento>(firstPageKey: 1);
+
   EstablecimientoResponse? establishments;
 
-  final TextEditingController _establishmentsController =
-      TextEditingController();
   String? establishmentType;
 
   @override
   void initState() {
     super.initState();
+    _establishmentsPaginationController
+        .addPageRequestListener((pageKey) => _getEstablishments());
     _getEstablishments();
   }
 
   void _getEstablishments() async {
     try {
       if (mounted) {
-          final EstablecimientoResponse? response =
-              await ApiService.getEstablishments(
-                  arsID: context.read<PlanModel>().selectedPlanID,
-                  keyword: _establishmentsController.text,
-                  type: establishmentType);
-          setState(() => establishments = response);
+        final EstablecimientoResponse? response =
+            await ApiService.getEstablishments(
+                arsID: context.read<PlanModel>().selectedPlanID,
+                keyword: _establishmentsController.text,
+                type: establishmentType,
+                pageIndex: _establishmentsPaginationController.nextPageKey);
+
+        if (response != null) {
+          if (response.hasNextPage) {
+            _establishmentsPaginationController.appendPage(
+                response.data, response.pageNumber + 1);
+          } else {
+            _establishmentsPaginationController.appendLastPage(response.data);
+          }
+        }
       }
     } catch (ex) {
       print(ex);
@@ -78,14 +92,20 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                 ),
                 const SizedBox(height: 16.0),
                 Expanded(
-                    child: establishments != null && establishments!.data.isNotEmpty
-                        ? ListView.separated(
-                            itemBuilder: (context, index) => EstablishmentCard(
-                              establecimiento: establishments!.data[index],
-                            ),
+                    child: _establishmentsPaginationController != null &&
+                            _establishmentsPaginationController
+                                .itemList!.isNotEmpty
+                        ? PagedListView.separated(
+                            pagingController:
+                                _establishmentsPaginationController,
+                            builderDelegate:
+                                PagedChildBuilderDelegate<Establecimiento>(
+                                    itemBuilder: (context, item, index) =>
+                                        EstablishmentCard(
+                                          establecimiento: item,
+                                        )),
                             separatorBuilder: (context, index) =>
                                 const SizedBox(height: 10),
-                            itemCount: establishments!.data.length,
                           )
                         : Center(child: Text(locale.no_results_shown)))
               ],

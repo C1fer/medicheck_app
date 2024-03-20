@@ -8,11 +8,11 @@ import 'package:medicheck/widgets/misc/view_mode_button.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/new_incident_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
-import '../../../widgets/misc/custom_appbar.dart';
-import '../../../utils/api/api_service.dart';
+import '../../../../widgets/misc/custom_appbar.dart';
+import '../../../../utils/api/api_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../styles/app_colors.dart';
-import '../../styles/app_styles.dart';
+import '../../../styles/app_colors.dart';
+import '../../../styles/app_styles.dart';
 
 class IncidentReports extends StatefulWidget {
   const IncidentReports({Key? key}) : super(key: key);

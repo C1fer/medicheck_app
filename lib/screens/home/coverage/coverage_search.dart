@@ -26,7 +26,6 @@ class _CoverageSearchState extends State<CoverageSearch> {
 
   String? _typeVal;
   String? _categoryVal;
-  CoberturaResponse? coveragesData;
 
   Future<void> searchProductCoverages() async {
     if (mounted) {
@@ -46,8 +45,6 @@ class _CoverageSearchState extends State<CoverageSearch> {
           _coveragesPagingController.appendLastPage(foundCoverages.data);
         }
       }
-
-      setState(() => coveragesData = foundCoverages);
     }
   }
 

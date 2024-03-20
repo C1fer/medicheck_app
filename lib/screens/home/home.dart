@@ -6,7 +6,7 @@ import 'package:medicheck/models/plan_response.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
-import 'package:medicheck/screens/home/incident_reports.dart';
+import 'package:medicheck/screens/home/incidents/incident_reports.dart';
 import 'package:medicheck/screens/home/settings/settings.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/styles/app_colors.dart';

@@ -7,7 +7,7 @@ import 'package:medicheck/screens/home/coverage/coverage_details.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
 import 'package:medicheck/screens/home/coverage/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
-import 'package:medicheck/screens/home/incident_reports.dart';
+import 'package:medicheck/screens/home/incidents/incident_reports.dart';
 import 'package:medicheck/screens/home/settings/change_pw.dart';
 import 'package:medicheck/screens/home/settings/settings.dart';
 import 'package:medicheck/screens/welcome/pw_reset/forgot_pw.dart';

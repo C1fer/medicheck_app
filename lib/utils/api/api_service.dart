@@ -30,8 +30,9 @@ class ApiService {
     }
     return null;
   }
-  
-  static Map<String,dynamic> filterQueryParameters(Map<String, dynamic> params){
+
+  static Map<String, dynamic> filterQueryParameters(
+      Map<String, dynamic> params) {
     params.removeWhere((key, value) => value == null);
     return params;
   }
@@ -171,11 +172,24 @@ class ApiService {
   }
 
   static Future<EstablecimientoResponse?> getEstablishments(
-      {String? type, String? keyword, int? arsID}) async {
-    Map<String, dynamic> querParams = {"tipo": type, "search": keyword};
-    var url = Uri.parse(
-            '${ApiConstants.baseUrl}${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
-        .replace(queryParameters: querParams);
+      {String? type,
+      String? keyword,
+      int? arsID,
+      int? pageIndex,
+      int? pageSize,
+      String? orderField,
+      String? orderDirection}) async {
+    Map<String, dynamic> querParams = {
+      "tipo": type,
+      "search": keyword,
+      "pageIndex": pageIndex,
+      "pageSize": pageSize,
+      "orderField": orderField,
+      "orderDirection": orderDirection
+    };
+
+    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
+        .replace(queryParameters: filterQueryParameters(querParams));
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -261,7 +275,14 @@ class ApiService {
   }
 
   static Future<CoberturaResponse?> getCoveragesAdvanced(
-      {int? planID, String? name, String? desc, String? type, String? category, int? pageIndex, String? orderField, String? orderDirection}) async {
+      {int? planID,
+      String? name,
+      String? desc,
+      String? type,
+      String? category,
+      int? pageIndex,
+      String? orderField,
+      String? orderDirection}) async {
     Map<String, dynamic> queryParams = {
       'nombre': name,
       'descripcion': desc,
@@ -429,14 +450,16 @@ class ApiService {
     return false;
   }
 
-  static Future<IncidenteResponse?> getIncidentReports(int userID, String state) async {
+  static Future<IncidenteResponse?> getIncidentReports(
+      int userID, String state) async {
     Map<String, dynamic> queryParams = {
       'idUsuario': userID.toString(),
       'estado': state
     };
 
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint)
-        .replace(queryParameters: queryParams);
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint)
+            .replace(queryParameters: queryParams);
 
     String? accessToken = await JWTService.readJWT();
     try {
