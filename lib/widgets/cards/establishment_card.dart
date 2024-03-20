@@ -4,7 +4,7 @@ import 'package:medicheck/models/extensions/string_apis.dart';
 import '../../models/establecimiento.dart';
 import '../../styles/app_styles.dart';
 import '../../styles/app_colors.dart';
-import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
+
 
 class EstablishmentCard extends StatelessWidget {
   const EstablishmentCard({super.key, required this.establecimiento});
@@ -62,6 +62,26 @@ class EstablishmentCard extends StatelessWidget {
                   ),
                   Text(
                     establecimiento.telefono ?? '',
+                    style: AppStyles.subSmallTextStyle
+                        .copyWith(color: AppColors.jadeGreen),
+                  )
+                ],
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on,
+                    size: 14.0,
+                    color: AppColors.jadeGreen,
+                  ),
+                  const SizedBox(
+                    width: 4,
+                  ),
+                  Text(
+                    establecimiento.direccion?? '',
                     style: AppStyles.subSmallTextStyle
                         .copyWith(color: AppColors.jadeGreen),
                   )
