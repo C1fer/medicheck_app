@@ -50,8 +50,8 @@ class _EstablishmentFilterDialogState extends State<EstablishmentFilterDialog> {
             },
             entries: Constants.establishmentTypes
                 .map((String type) => DropdownMenuItem(
-              value: type.replaceAll('_', ' '),
-              child: Text(type),
+              value: type,
+              child: Text(type.replaceAll('_', ' ')),
             ))
                 .toList()),
         const SizedBox(height: 24),
