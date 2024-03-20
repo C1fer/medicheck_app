@@ -4,8 +4,9 @@ extension StringExtension on String {
   }
 
   String toProperCase() {
-   final x = this.split(" ");
-   final y = x.map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase()).join(' ');
-   return y;
+    return this
+        .split(" ")
+        .map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase())
+        .join(' ');
   }
 }
