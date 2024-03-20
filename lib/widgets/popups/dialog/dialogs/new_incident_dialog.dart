@@ -84,6 +84,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
             validator: (String? val) => validateEmptyInput(val, context),
             hintText: locale.type_here,
             floatingLabelBehavior: FloatingLabelBehavior.never,
+            maxLines: null,
           ),
           const SizedBox(
             height: 20,
