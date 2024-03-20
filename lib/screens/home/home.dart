@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicheck/models/cobertura_response.dart';
-import 'package:medicheck/models/notifiers/user_info_notifier.dart';
-import 'package:medicheck/models/plan_response.dart';
-import 'package:medicheck/screens/home/coverage/coverage_search.dart';
-import 'package:medicheck/screens/home/coverage/saved_products.dart';
-import 'package:medicheck/screens/home/establishments/establishments_list.dart';
-import 'package:medicheck/screens/home/incidents/incident_reports.dart';
-import 'package:medicheck/screens/home/settings/settings.dart';
-import 'package:medicheck/styles/app_styles.dart';
-import 'package:medicheck/styles/app_colors.dart';
-import 'package:medicheck/utils/api/api_service.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../models/responses/cobertura_response.dart';
+import '../../models/notifiers/user_info_notifier.dart';
+import '../../models/responses/plan_response.dart';
+import '../../screens/home/coverage/coverage_search.dart';
+import '../../screens/home/coverage/saved_products.dart';
+import '../../screens/home/establishments/establishments_list.dart';
+import '../../screens/home/incidents/incident_reports.dart';
+import '../../screens/home/settings/settings.dart';
+import '../../styles/app_styles.dart';
+import '../../styles/app_colors.dart';
+import '../../utils/api/api_service.dart';
 import '../../models/notifiers/plan_notifier.dart';
 import '../../widgets/cards/menu_action_card.dart';
 import '../../widgets/coverages_list_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -48,7 +49,8 @@ class _HomeState extends State<Home> {
 
   Future<void> _fetchCoverages() async {
     int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
-    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(planID: selectedPlanID);
+    CoberturaResponse? response =
+        await ApiService.getCoveragesAdvanced(planID: selectedPlanID);
     setState(() => planCoverages = response);
   }
 
@@ -59,7 +61,6 @@ class _HomeState extends State<Home> {
     if (planProvider.plans.isEmpty) {
       await _fetchUserPlans(userProvider.currentUser!.idUsuario);
     }
-
   }
 
   @override
@@ -170,7 +171,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Container PlaceHolderSearchBar(){
+  Container PlaceHolderSearchBar() {
     return Container(
       alignment: Alignment.center,
       width: 324,
@@ -192,8 +193,8 @@ class _HomeState extends State<Home> {
           ),
           Text(
             AppLocalizations.of(context).search_box_placeholder,
-            style: const TextStyle(
-                color: AppColors.deepLightGray, fontSize: 12),
+            style:
+                const TextStyle(color: AppColors.deepLightGray, fontSize: 12),
           )
         ]),
       ),

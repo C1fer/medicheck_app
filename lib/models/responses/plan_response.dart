@@ -1,7 +1,7 @@
-import 'cobertura.dart';
+import '../plan.dart';
 
-class CoberturaResponse {
-  List<Cobertura> data;
+class PlanResponse {
+  List<Plan> data;
   int pageNumber;
   int pageSize;
   int totalItems;
@@ -9,7 +9,7 @@ class CoberturaResponse {
   bool hasPreviousPage;
   bool hasNextPage;
 
-  CoberturaResponse({
+  PlanResponse({
     required this.data,
     required this.pageNumber,
     required this.pageSize,
@@ -19,9 +19,9 @@ class CoberturaResponse {
     required this.hasNextPage,
   });
 
-  factory CoberturaResponse.fromJson(Map<String, dynamic> json) {
-    return CoberturaResponse(
-      data: (json['data'] as List).map((item) => Cobertura.fromJson(item)).toList(),
+  factory PlanResponse.fromJson(Map<String, dynamic> json) {
+    return PlanResponse(
+      data: (json['data'] as List).map((item) => Plan.fromJson(item)).toList(),
       pageNumber: json['pageNumber'],
       pageSize: json['pageSize'],
       totalItems: json['totalItems'],

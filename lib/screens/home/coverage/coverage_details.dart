@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/cobertura.dart';
+import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/utils/api/api_service.dart';
@@ -158,14 +159,14 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                       const SizedBox(height: 10.0),
                       Row(
                         children: [
-                          FeatureCard(msg: coverage.idProductoNavigation.tipo),
+                          FeatureCard(msg: coverage.idProductoNavigation.tipo.toSentenceCase()),
                           const SizedBox(
                             width: 20,
                           ),
                           if (coverage.idProductoNavigation.tipo !=
                               coverage.idProductoNavigation.categoria)
                             (FeatureCard(
-                              msg: coverage.idProductoNavigation.categoria,
+                              msg: coverage.idProductoNavigation.categoria.toSentenceCase(),
                             )),
                         ],
                       ),

@@ -1,7 +1,7 @@
-import 'plan.dart';
+import '../establecimiento.dart';
 
-class PlanResponse {
-  List<Plan> data;
+class EstablecimientoResponse {
+  List<Establecimiento> data;
   int pageNumber;
   int pageSize;
   int totalItems;
@@ -9,7 +9,7 @@ class PlanResponse {
   bool hasPreviousPage;
   bool hasNextPage;
 
-  PlanResponse({
+  EstablecimientoResponse({
     required this.data,
     required this.pageNumber,
     required this.pageSize,
@@ -19,9 +19,9 @@ class PlanResponse {
     required this.hasNextPage,
   });
 
-  factory PlanResponse.fromJson(Map<String, dynamic> json) {
-    return PlanResponse(
-      data: (json['data'] as List).map((item) => Plan.fromJson(item)).toList(),
+  factory EstablecimientoResponse.fromJson(Map<String, dynamic> json) {
+    return EstablecimientoResponse(
+      data: (json['data'] as List).map((item) => Establecimiento.fromJson(item)).toList(),
       pageNumber: json['pageNumber'],
       pageSize: json['pageSize'],
       totalItems: json['totalItems'],

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/models/cobertura_response.dart';
+import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/widgets/misc/search/search_row.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/product_filter_dialog.dart';
 import 'package:provider/provider.dart';

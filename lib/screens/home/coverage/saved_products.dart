@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicheck/models/cobertura.dart';
-import 'package:medicheck/models/cobertura_response.dart';
+import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';

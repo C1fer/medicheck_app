@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:medicheck/models/incidente.dart';
 import '../../models/cobertura.dart';
 import '../../styles/app_colors.dart';
@@ -61,7 +62,7 @@ class IncidentCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                FeatureCard(msg: incident.estado, color: setStatusCardColor(),)
+                FeatureCard(msg: incident.estado.toProperCase(), color: setStatusCardColor(),)
               ],
             ),
             SizedBox(height: 10,),

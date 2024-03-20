@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:medicheck/models/establecimiento_response.dart';
+import 'package:medicheck/models/responses/establecimiento_response.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/estabilshment_filter_dialog.dart';
 import 'package:provider/provider.dart';

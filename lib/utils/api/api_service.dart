@@ -1,11 +1,11 @@
 import 'package:http/http.dart' as http;
 import 'package:medicheck/models/cobertura.dart';
-import 'package:medicheck/models/cobertura_response.dart';
+import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/establecimiento.dart';
-import 'package:medicheck/models/plan_response.dart';
+import 'package:medicheck/models/responses/plan_response.dart';
 import 'package:medicheck/models/responses/incidente_response.dart';
 import 'dart:convert';
-import '../../models/establecimiento_response.dart';
+import '../../models/responses/establecimiento_response.dart';
 import '../../models/plan.dart';
 import '../../models/producto.dart';
 import '../../models/usuario.dart';

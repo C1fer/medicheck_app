@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:medicheck/models/enums.dart';
+import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:medicheck/models/incidente.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/models/responses/incidente_response.dart';
@@ -104,7 +105,11 @@ class _IncidentReportsState extends State<IncidentReports> {
                         entries: Constants.incidentStatuses
                             .map((element) => DropdownMenuItem(
                                   value: element,
-                                  child: Text(element),
+                                  child: Text(element.contains("")
+                                      ? element
+                                          .replaceAll("_", " ")
+                                          .toProperCase()
+                                      : element.toProperCase()),
                                 ))
                             .toList(),
                         isExpanded: true,

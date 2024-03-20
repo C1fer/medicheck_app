@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:medicheck/models/cobertura_response.dart';
+import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/establecimiento.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/styles/app_decorations.dart';
@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../models/cobertura.dart';
 import '../../../../models/debouncer.dart';
-import '../../../../models/establecimiento_response.dart';
+import '../../../../models/responses/establecimiento_response.dart';
 import '../../../../models/notifiers/plan_notifier.dart';
 import '../../../../models/producto.dart';
 import '../../../../styles/app_styles.dart';

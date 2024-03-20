@@ -1,7 +1,8 @@
-import 'establecimiento.dart';
 
-class EstablecimientoResponse {
-  List<Establecimiento> data;
+import '../cobertura.dart';
+
+class CoberturaResponse {
+  List<Cobertura> data;
   int pageNumber;
   int pageSize;
   int totalItems;
@@ -9,7 +10,7 @@ class EstablecimientoResponse {
   bool hasPreviousPage;
   bool hasNextPage;
 
-  EstablecimientoResponse({
+  CoberturaResponse({
     required this.data,
     required this.pageNumber,
     required this.pageSize,
@@ -19,9 +20,9 @@ class EstablecimientoResponse {
     required this.hasNextPage,
   });
 
-  factory EstablecimientoResponse.fromJson(Map<String, dynamic> json) {
-    return EstablecimientoResponse(
-      data: (json['data'] as List).map((item) => Establecimiento.fromJson(item)).toList(),
+  factory CoberturaResponse.fromJson(Map<String, dynamic> json) {
+    return CoberturaResponse(
+      data: (json['data'] as List).map((item) => Cobertura.fromJson(item)).toList(),
       pageNumber: json['pageNumber'],
       pageSize: json['pageSize'],
       totalItems: json['totalItems'],

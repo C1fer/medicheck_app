@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicheck/models/extensions/string_apis.dart';
 import '../../models/cobertura.dart';
 import '../../styles/app_styles.dart';
 import '../../widgets/cards/feature_card.dart';
@@ -49,12 +50,12 @@ class CoverageCard extends StatelessWidget {
               height: 4.0,
             ),
             Text(
-              toBeginningOfSentenceCase(coverage.idProductoNavigation.tipo)!,
+              coverage.idProductoNavigation.tipo.toSentenceCase(),
               style: AppStyles.coverageCardCategoryTextStyle,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
-              child: FeatureCard(msg: '${coverage.porcentaje} %',),
+              child: FeatureCard(msg: '${coverage.porcentaje}%',),
             )
           ],
         ),
