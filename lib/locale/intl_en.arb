@@ -100,5 +100,8 @@
   "empty_value_constraint": "Input should not be empty",
   "incorrect_current_pwd": "Incorrect current password",
   "product": "Product",
-  "establishment": "Establishment"
+  "establishment": "Establishment",
+  "incident_reports": "Incident Reports",
+  "incident": "Incident",
+  "incident_status": "Incident status"
 }

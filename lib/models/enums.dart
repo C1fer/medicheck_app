@@ -20,7 +20,7 @@ class Constants {
   ];
 
   static const List<String> incidentStatuses = [
-    'CREADO',
+    'ABIERTO',
     'EN_REVISION',
     'CERRADO',
   ];
@@ -38,6 +38,5 @@ class Constants {
   };
 }
 
-enum incidentStatus {ABIERTO, REVISION, CERRADO}
 
 enum itemsViewMode {LIST, GRID}

@@ -73,118 +73,132 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       appBar: CustomAppBar(
         title: localization.coverage_details,
       ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-            child: Padding(
-          padding: const EdgeInsets.all(24.0),
+      body: SafeArea(
+        child: Align(
+          alignment: Alignment.topCenter,
           child: Column(
+            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(
-                height: 50,
-              ),
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  width: 120,
-                  height: 120,
-                  child: SvgPicture.asset(
-                    Constants
-                        .productTypeIcons[coverage.idProductoNavigation.tipo]!,
-                    fit: BoxFit.fitHeight,
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Center(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
+                          width: 120,
+                          height: 120,
+                          child: SvgPicture.asset(
+                            Constants
+                                .productTypeIcons[coverage.idProductoNavigation.tipo]!,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 75.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 9,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  coverage.idProductoNavigation.nombre,
+                                  style: AppStyles.sectionTextStyle
+                                      .copyWith(fontSize: 30.0),
+                                ),
+                                const SizedBox(
+                                  height: 6.0,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${coverage.porcentaje}% ${localization.coverage_percentage}',
+                                      style: AppStyles.actionTextStyle.copyWith(
+                                          fontSize: 26, fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (isSaved != null)
+                            GestureDetector(
+                              onTap: () => _saveProduct(coverage.idProductoNavigation),
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                child: isSaved!
+                                    ? SvgPicture.asset('assets/icons/heart-full.svg')
+                                    : SvgPicture.asset(
+                                    'assets/icons/heart-outlined.svg'),
+                              ),
+                            )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 24.0,
+                      ),
+                      Text(
+                        localization.details,
+                        style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Row(
+                        children: [
+                          FeatureCard(msg: coverage.idProductoNavigation.tipo),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          if (coverage.idProductoNavigation.tipo !=
+                              coverage.idProductoNavigation.categoria)
+                            (FeatureCard(
+                              msg: coverage.idProductoNavigation.categoria,
+                            )),
+                        ],
+                      ),
+                      const SizedBox(height: 24.0),
+                      Text(
+                        localization.description,
+                        style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
+                      ),
+                      const SizedBox(height: 11.0),
+                      Text(
+                        coverage.idProductoNavigation.descripcion,
+                        style: AppStyles.coverageCardCategoryTextStyle
+                            .copyWith(fontSize: 18),
+                      ),
+                      // const SizedBox(
+                      //   height: 50,
+                      // ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 75.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 9,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          coverage.idProductoNavigation.nombre,
-                          style: AppStyles.sectionTextStyle
-                              .copyWith(fontSize: 30.0),
-                        ),
-                        const SizedBox(
-                          height: 6.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${coverage.porcentaje}% ${localization.coverage_percentage}',
-                              style: AppStyles.actionTextStyle.copyWith(
-                                  fontSize: 26, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (isSaved != null)
-                    GestureDetector(
-                      onTap: () => _saveProduct(coverage.idProductoNavigation),
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        child: isSaved!
-                            ? SvgPicture.asset('assets/icons/heart-full.svg')
-                            : SvgPicture.asset(
-                                'assets/icons/heart-outlined.svg'),
-                      ),
-                    )
-                ],
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
-              Text(
-                localization.details,
-                style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
-              ),
-              const SizedBox(height: 10.0),
-              Row(
-                children: [
-                  FeatureCard(msg: coverage.idProductoNavigation.tipo),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  if (coverage.idProductoNavigation.tipo !=
-                      coverage.idProductoNavigation.categoria)
-                    (FeatureCard(
-                      msg: coverage.idProductoNavigation.categoria,
-                    )),
-                ],
-              ),
-              const SizedBox(height: 24.0),
-              Text(
-                localization.description,
-                style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
-              ),
-              const SizedBox(height: 11.0),
-              Text(
-                coverage.idProductoNavigation.descripcion,
-                style: AppStyles.coverageCardCategoryTextStyle
-                    .copyWith(fontSize: 18),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              FilledButton(
-                onPressed: () {},
-                child: Text(localization.near_centers),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: FilledButton(
+                  onPressed: () {},
+                  child: Text(localization.near_centers),
+                ),
               ),
             ],
           ),
-        )),
+        ),
       ),
     );
   }
+
 }

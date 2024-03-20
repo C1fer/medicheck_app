@@ -58,7 +58,7 @@ String? validateResetTokenInput(String? input, BuildContext context) {
 }
 
 String? validateEmptyInput(String? input, BuildContext context){
-  if (input == null){
+  if (input == null || input == ''){
     return AppLocalizations.of(context).empty_value_constraint;
   }
   return null;

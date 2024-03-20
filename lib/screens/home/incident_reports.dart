@@ -12,6 +12,7 @@ import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../styles/app_colors.dart';
+import '../../styles/app_styles.dart';
 
 class IncidentReports extends StatefulWidget {
   const IncidentReports({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class IncidentReports extends StatefulWidget {
 
 class _IncidentReportsState extends State<IncidentReports> {
   IncidenteResponse? reports;
-  incidentStatus? statusFilter;
+  String incidentStatus = 'ABIERTO';
   itemsViewMode viewMode = itemsViewMode.LIST;
 
   @override
@@ -37,7 +38,7 @@ class _IncidentReportsState extends State<IncidentReports> {
       if (mounted) {
         final int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
         final IncidenteResponse? response =
-            await ApiService.getIncidentReports(userID);
+            await ApiService.getIncidentReports(userID, incidentStatus);
         setState(() => reports = response);
       }
     } catch (ex) {
@@ -45,10 +46,9 @@ class _IncidentReportsState extends State<IncidentReports> {
     }
   }
 
-  Future<void> onStatusDropdownChanged(String? val) async {
-    incidentStatus newStatus = incidentStatus.values
-        .firstWhere((element) => element.toString() == val);
-    setState(() => statusFilter = newStatus);
+  Future<void> onStatusDropdownChanged(String? newVal) async {
+    setState(() => incidentStatus = newVal!);
+    _getReports();
   }
 
   Future<void> onPressedNewIncidentButton() async {
@@ -60,32 +60,35 @@ class _IncidentReportsState extends State<IncidentReports> {
     final locale = AppLocalizations.of(context);
     return Scaffold(
       appBar: CustomAppBar(
-        title: locale.affiliated_centers,
+        title: locale.incident_reports,
       ),
       body: SafeArea(
         child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                /*Row(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // CustomDropdownButton(
-                    //   value: statusFilter.toString(),
-                    //   onChanged: (String? val) => onStatusDropdownChanged(val),
-                    //   entries: incidentStatus.values
-                    //       .map((element) => DropdownMenuItem(
-                    //             value: element.toString(),
-                    //             child: Text(element.toString()),
-                    //           ))
-                    //       .toList(),
-                    //   isNullable: true,
-                    // ),
-                    ViewModeButton(
-                      value: viewMode,
-                      onTap: (newMode) => setState(() => viewMode = newMode),
-                    )
+                    Expanded(
+                      flex: 6,
+                      child: CustomDropdownButton(
+                        optionsBorderRadius: 24.0,
+                        value: incidentStatus,
+                        onChanged: (String? val) => onStatusDropdownChanged(val),
+                        entries: Constants.incidentStatuses
+                            .map((element) => DropdownMenuItem(
+                                  value: element,
+                                  child: Text(element),
+                                ))
+                            .toList(),
+                        isExpanded: true,
+                      ),
+                    ),
                   ],
-                ),*/
+                ),
+                SizedBox(height: 20,),
                 if (reports != null && reports!.data.isNotEmpty)
                   Expanded(
                       child: viewMode == itemsViewMode.LIST
@@ -96,7 +99,11 @@ class _IncidentReportsState extends State<IncidentReports> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: FloatingActionButton(
-                    onPressed: () {}, //disable new incicent dialog
+                    onPressed: () async => await showCustomDialog(context,
+                        NewIncidentDialog(onSubmit: () async {
+                      _getReports;
+                      Navigator.pop(context);
+                    })), //disable new incicent dialog
                     backgroundColor: AppColors.jadeGreen,
                     child: const Icon(
                       Icons.add,

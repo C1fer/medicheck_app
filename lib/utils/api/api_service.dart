@@ -421,9 +421,10 @@ class ApiService {
     return false;
   }
 
-  static Future<IncidenteResponse?> getIncidentReports(int userID) async {
+  static Future<IncidenteResponse?> getIncidentReports(int userID, String state) async {
     Map<String, dynamic> queryParams = {
       'idUsuario': userID.toString(),
+      'estado': state
     };
 
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint)

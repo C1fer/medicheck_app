@@ -30,9 +30,8 @@ class NewIncidentDialog extends StatefulWidget {
 class _NewIncidentDialogState extends State<NewIncidentDialog> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
-  // final _establishmentController = TextEditingController();
-  // final _productController = TextEditingController();
-  final _searchDebouncer = Debouncer();
+  final _productController = TextEditingController();
+  final _establishmentController = TextEditingController();
 
   Establecimiento? selectedEstablishment;
   Producto? selectedProduct;
@@ -54,7 +53,9 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
   }
 
   void onSubmitPressed() {
-    validateForm(_formKey) == true ? print("ok") : print("no");
+    if (validateForm(_formKey)) {
+      createIncident();
+    }
   }
 
   @override
@@ -86,6 +87,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                   .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
           TypeAheadField<Establecimiento>(
+              controller: _establishmentController,
               builder: (context, controller, focusNode) => TextFormField(
                   controller: controller,
                   focusNode: focusNode,
@@ -93,11 +95,15 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                   validator: (value) => validateEmptyInput(value, context)),
               itemBuilder: (context, establishment) => ListTile(
                     title: Text(establishment.nombre),
-                    subtitle: Text(establishment.categoria!, style: AppStyles.subSmallTextStyle,),
+                    subtitle: Text(
+                      establishment.categoria!,
+                      style: AppStyles.subSmallTextStyle,
+                    ),
                   ),
               onSelected: (Establecimiento establishment) {
                 setState(() {
                   selectedEstablishment = establishment;
+                  _establishmentController.text = establishment.nombre;
                 });
               },
               suggestionsCallback: (keyword) async {
@@ -117,17 +123,23 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                   .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
           TypeAheadField<Cobertura>(
+              controller: _productController,
               builder: (context, controller, focusNode) => TextFormField(
                     controller: controller,
                     focusNode: focusNode,
-                    decoration: AppDecorations.formTextFieldDecoration.copyWith(),
+                    decoration:
+                        AppDecorations.formTextFieldDecoration.copyWith(),
                     validator: (value) => validateEmptyInput(value, context),
                   ),
               itemBuilder: (context, coverage) => ListTile(
                     title: Text(coverage.idProductoNavigation.nombre),
                   ),
               onSelected: (Cobertura coverage) {
-                setState(() => selectedProduct = coverage.idProductoNavigation);
+                setState(() {
+                  selectedProduct = coverage.idProductoNavigation;
+                  _productController.text =
+                      coverage.idProductoNavigation.nombre;
+                });
               },
               suggestionsCallback: (keyword) async {
                 CoberturaResponse? responseData;

@@ -101,5 +101,8 @@
   "empty_value_constraint": "El campo no puede ser válido",
   "incorrect_current_pwd": "Contraseña actual no válida",
   "product": "Producto",
-  "establishment": "Establecimiento"
+  "establishment": "Establecimiento",
+  "incident_reports": "Reporte de incidentes",
+  "incident": "Incidente",
+  "incident_status": "Estado de incidentes"
 }
