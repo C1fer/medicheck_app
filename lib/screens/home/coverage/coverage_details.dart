@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicheck/models/cobertura.dart';
-import 'package:medicheck/models/extensions/string_apis.dart';
-import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
-import 'package:medicheck/models/notifiers/user_info_notifier.dart';
-import 'package:medicheck/utils/api/api_service.dart';
-import 'package:medicheck/widgets/cards/feature_card.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../models/cobertura.dart';
+import '../../../models/extensions/string_apis.dart';
+import '../../../models/notifiers/saved_products_notifier.dart';
+import '../../../models/notifiers/user_info_notifier.dart';
+import '../../../utils/api/api_service.dart';
+import '../../../widgets/cards/feature_card.dart';
 import '../../../models/enums.dart';
 import '../../../models/producto.dart';
+import '../../../models/responses/producto_response.dart';
 import '../../../widgets/misc/custom_appbar.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../../styles/app_colors.dart';
 import '../../../styles/app_styles.dart';
 
 class CoverageDetailView extends StatefulWidget {
@@ -55,10 +56,9 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       setState(() => isSaved = savedProductProvider.isProductInList(productID));
     } else {
       int? userID = context.read<UserInfoModel>().currentUserID;
-      List<Producto> response =
-          await ApiService.getSavedProductsbyUserID(userID!);
-      if (response.isNotEmpty) {
-        savedProductProvider.addSavedProducts(response);
+      final ProductoResponse? response = await ApiService.getSavedProducts(userID: userID!);
+      if (response != null) {
+        savedProductProvider.addSavedProducts(response.data);
         setState(
             () => isSaved = savedProductProvider.isProductInList(productID));
       }

@@ -9,19 +9,16 @@ class SavedProductModel extends ChangeNotifier{
 
   void addSavedProduct(Producto newProduct){
     _savedProducts.add(newProduct);
-    printAll();
     notifyListeners();
   }
 
   void addSavedProducts(List<Producto> newProducts){
     _savedProducts.addAll(newProducts);
-    printAll();
     notifyListeners();
   }
 
   void deleteSavedProduct(Producto product){
     _savedProducts.removeWhere((element) => element.idProducto == product.idProducto);
-    printAll();
     notifyListeners();
   }
 
@@ -33,15 +30,9 @@ class SavedProductModel extends ChangeNotifier{
   void replaceItems(List<Producto> newProducts){
     _savedProducts.clear();
     savedProducts.addAll(newProducts);
-    printAll();
     notifyListeners();
   }
 
-  void printAll(){
-    for (Producto x in _savedProducts){
-      print(x.nombre);
-    };
-  }
 
   bool isProductInList(int productID){
     try{

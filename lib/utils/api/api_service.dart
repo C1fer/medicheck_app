@@ -4,6 +4,7 @@ import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/establecimiento.dart';
 import 'package:medicheck/models/responses/plan_response.dart';
 import 'package:medicheck/models/responses/incidente_response.dart';
+import 'package:medicheck/models/responses/producto_response.dart';
 import 'dart:convert';
 import '../../models/responses/establecimiento_response.dart';
 import '../../models/plan.dart';
@@ -32,7 +33,8 @@ class ApiService {
     return null;
   }
 
-  static Map<String, dynamic> filterQueryParameters(Map<String, dynamic> params) {
+  static Map<String, dynamic> filterQueryParameters(
+      Map<String, dynamic> params) {
     params.removeWhere((key, value) => value == null);
     params.updateAll((key, value) => value.toString());
     return params;
@@ -210,56 +212,18 @@ class ApiService {
     return null;
   }
 
-  static Future<List<Producto>> getSavedProductsbyUserID(int userID) async {
-    var url = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiConstants.savedProductsUserEndpoint}/$userID');
-    String? accessToken = await JWTService.readJWT();
-
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => Producto.fromJson(data)).toList();
-      }
-    } catch (except) {
-      print('Error retrieving coverages: $except');
-    }
-    return <Producto>[];
-  }
-
-  static Future<List<Cobertura>> getCoveragesbyUserID(String userID) async {
-    var url = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiConstants.coveragesUserEndpoint}/$userID');
-    String? accessToken = await JWTService.readJWT();
-
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        return responseData.map((data) => Cobertura.fromJson(data)).toList();
-      }
-    } catch (except) {
-      print('Error retrieving coverages: $except');
-    }
-    return <Cobertura>[];
-  }
-
-  static Future<CoberturaResponse?> getCoveragebyPlanProduct(
-      int planID, int productID) async {
-    Map<String, dynamic> reqParams = {
-      "idPlan": planID.toString(),
-      "idProducto": productID.toString()
+  static Future<ProductoResponse?> getSavedProducts(
+      {int? userID, int? pageIndex, int? pageSize}) async {
+    final Map<String, dynamic> queryParams = {
+      "idUsuario": userID,
+      "pageIndex": pageIndex,
+      "pageSize": pageSize
     };
 
     var url =
-        Uri.parse(ApiConstants.baseUrl + ApiConstants.coveragesSearchEndpoint)
-            .replace(queryParameters: reqParams);
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint)
+            .replace(queryParameters: filterQueryParameters(queryParams));
+
     String? accessToken = await JWTService.readJWT();
 
     try {
@@ -268,8 +232,8 @@ class ApiService {
         'Authorization': 'Bearer $accessToken'
       }).timeout(defaultTimeout);
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        return CoberturaResponse.fromJson(responseData);
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return ProductoResponse.fromJson(responseData);
       }
     } catch (except) {
       print('Error retrieving coverages: $except');
@@ -279,6 +243,7 @@ class ApiService {
 
   static Future<CoberturaResponse?> getCoveragesAdvanced(
       {int? planID,
+      int? productID,
       String? name,
       String? desc,
       String? type,
@@ -291,8 +256,9 @@ class ApiService {
       'descripcion': desc,
       'tipo': type,
       'categoria': category,
-      'idPlan': planID?.toString(),
-      'pageIndex': pageIndex?.toString(),
+      'idPlan': planID,
+      'idProducto': productID,
+      'pageIndex': pageIndex,
       'orderField': orderField,
       'orderDirection': orderDirection,
     };

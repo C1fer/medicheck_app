@@ -3,6 +3,7 @@ import 'package:medicheck/models/cobertura.dart';
 import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
+import 'package:medicheck/models/responses/producto_response.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
 import 'package:medicheck/widgets/coverages_list_view.dart';
 import 'package:provider/provider.dart';
@@ -32,14 +33,36 @@ class _SavedProductsState extends State<SavedProducts> {
   String? type;
 
   Future<void> _fetchSavedProducts(int userID) async {
-    try {
-      final savedProductsProvider = context.read<SavedProductModel>();
-      List<Producto> savedProducts =
-          await ApiService.getSavedProductsbyUserID(userID);
-      savedProductsProvider.replaceItems(savedProducts);
-    } catch (ex) {
-      print("Error fetching saved products $ex");
+    final savedProductsProvider = context.read<SavedProductModel>();
+    ProductoResponse? response =
+        await ApiService.getSavedProducts(userID: userID, pageSize: 1000);
+    if (response != null) {
+      savedProductsProvider.replaceItems(response.data);
     }
+  }
+
+  Future<Cobertura?> _fetchCoverageByProductPlan(
+      int planID, int productID) async {
+    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
+        planID: planID, productID: productID);
+    if (response != null && response.data.isNotEmpty) {
+      return response.data.first;
+    }
+
+    return null;
+  }
+
+  Future<void> fetchProductCoverages(List<Producto> savedProducts) async {
+    List<Cobertura> coverages = [];
+    int planID = context.read<PlanModel>().selectedPlanID!;
+    for (Producto product in savedProducts) {
+      Cobertura? productCoverage =
+          await _fetchCoverageByProductPlan(planID, product.idProducto);
+      if (productCoverage != null) {
+        coverages.add(productCoverage);
+      }
+    }
+   setState(() => productCoverages = coverages);
   }
 
   Future<void> _fetchData() async {
@@ -51,40 +74,10 @@ class _SavedProductsState extends State<SavedProducts> {
     }
   }
 
-  Future<Cobertura?> _fetchCoverageByProductPlan(
-      int planID, int productID) async {
-    try {
-      if (mounted) {
-        CoberturaResponse? response =
-            await ApiService.getCoveragebyPlanProduct(planID, productID);
-        if (response != null) {
-          return response.data.first;
-        }
-      }
-    } catch (ex) {
-      print(ex);
-    }
-    return null;
-  }
-
-  Future<void> fetchProductCoverages(List<Producto> savedProducts) async {
-    List<Cobertura> coverages = [];
-    for (Producto product in savedProducts) {
-      Cobertura? productCoverage = await _fetchCoverageByProductPlan(
-          context.read<PlanModel>().selectedPlanID!, product.idProducto);
-      if (productCoverage != null) {
-        coverages.add(productCoverage);
-      }
-    }
-    setState(() => productCoverages = coverages);
-  }
-
-  Future<void> filterProducts() async {}
-
   @override
   void initState() {
-    super.initState();
     _fetchData();
+    super.initState();
   }
 
   @override
@@ -99,64 +92,38 @@ class _SavedProductsState extends State<SavedProducts> {
         child: SafeArea(
           child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Consumer<SavedProductModel>(
-                builder: (context, saved, _) => Column(
-                  mainAxisAlignment: productCoverages.isEmpty
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.start,
-                  children: [
-                    productCoverages.isEmpty
-                        ? Center(child: Text('No Saved Products to Show'))
-                        : ExistentSaveProductsLayout(context)
-                  ],
-                ),
+              child: Column(
+                mainAxisAlignment: productCoverages.isEmpty
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
+                children: [
+                  productCoverages.isEmpty
+                      ? Center(child: Text(locale.no_results_shown))
+                      : SavedProductsGridView(context)
+                ],
               )),
         ),
       ),
     );
   }
 
-  Widget ExistentSaveProductsLayout(BuildContext context) {
-    return Column(
-      children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 15.0),
-        //   child: SearchBarWithFilter(
-        //       searchController: _savedProductContoller,
-        //       hintText: 'Search',
-        //       onChanged: (String? val) => filterProducts(),
-        //       filterDialog: ProductFilterDialog(
-        //           typeValue: type,
-        //           categoryValue: category,
-        //           onCategoryChanged: (String? val) =>
-        //               setState(() => category = val),
-        //           onTypeChanged: (String? val) => setState(() => type = val),
-        //           onButtonPressed: () async {
-        //             filterProducts();
-        //             Navigator.pop(context);
-        //           })),
-        // ),
-        // SizedBox(height: 16.0),
-        Consumer<SavedProductModel>(
-          builder: (context, savedProvider, _) => GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Example: 2 columns
-              crossAxisSpacing: 8, // Add spacing between columns
-              mainAxisSpacing: 8, // Add spacing between rows
-            ),
-            itemCount: productCoverages.length,
-            itemBuilder: (context, idx) => CoverageCard(
-              coverage: productCoverages[idx],
-              onTap: () async {
-                await Navigator.pushNamed(context, CoverageDetailView.id,
-                    arguments: productCoverages[idx]);
-                _fetchData();
-              },
-            ),
-            shrinkWrap: true,
-          ),
-        ),
-      ],
+  Widget SavedProductsGridView(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // Example: 2 columns
+        crossAxisSpacing: 8, // Add spacing between columns
+        mainAxisSpacing: 8, // Add spacing between rows
+      ),
+      itemCount: productCoverages.length,
+      itemBuilder: (context, idx) => CoverageCard(
+        coverage: productCoverages[idx],
+        onTap: () async {
+          await Navigator.pushNamed(context, CoverageDetailView.id,
+              arguments: productCoverages[idx]);
+          _fetchData();
+        },
+      ),
+      shrinkWrap: true,
     );
   }
 }
