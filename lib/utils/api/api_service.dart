@@ -13,6 +13,7 @@ import 'api_constants.dart';
 import '../jwt_service.dart';
 
 class ApiService {
+  // General methods
   static final Duration defaultTimeout = Duration(seconds: 5);
   static final Map<String, String> noAuthHeaders = {
     'Content-Type': 'application/json'
@@ -51,6 +52,7 @@ class ApiService {
     return false;
   }
 
+  // User Methods
   static Future<Map<String, dynamic>?> userLogin(
       String docNumber, String docType, String pwd) async {
     // Define API Endpoint
@@ -188,7 +190,8 @@ class ApiService {
       "orderDirection": orderDirection
     };
 
-    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
+    var url = Uri.parse(
+            '${ApiConstants.baseUrl}${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
         .replace(queryParameters: filterQueryParameters(querParams));
     String? accessToken = await JWTService.readJWT();
 
@@ -451,15 +454,26 @@ class ApiService {
   }
 
   static Future<IncidenteResponse?> getIncidentReports(
-      int userID, String state) async {
+      {int? userID,
+      String? status,
+      int? pageIndex,
+      int? pageSize,
+      String? keyword,
+      String? orderField,
+      String? orderDirection}) async {
     Map<String, dynamic> queryParams = {
-      'idUsuario': userID.toString(),
-      'estado': state
+      'idUsuario': userID,
+      'estado': status,
+      'pageIndex': pageIndex,
+      'pageSize': pageSize,
+      'search': keyword,
+      'orderField': orderField,
+      'orderDirection': orderDirection,
     };
 
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint)
-            .replace(queryParameters: queryParams);
+            .replace(queryParameters: filterQueryParameters(queryParams));
 
     String? accessToken = await JWTService.readJWT();
     try {

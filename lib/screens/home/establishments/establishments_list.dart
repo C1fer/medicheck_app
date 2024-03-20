@@ -38,26 +38,22 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
   }
 
   void _getEstablishments() async {
-    try {
-      if (mounted) {
-        final EstablecimientoResponse? response =
-            await ApiService.getEstablishments(
-                arsID: context.read<PlanModel>().selectedPlanID,
-                keyword: _establishmentsController.text,
-                type: establishmentType,
-                pageIndex: _establishmentsPaginationController.nextPageKey);
+    if (mounted) {
+      final EstablecimientoResponse? response =
+          await ApiService.getEstablishments(
+              arsID: context.read<PlanModel>().selectedPlanID,
+              keyword: _establishmentsController.text,
+              type: establishmentType,
+              pageIndex: _establishmentsPaginationController.nextPageKey);
 
-        if (response != null) {
-          if (response.hasNextPage) {
-            _establishmentsPaginationController.appendPage(
-                response.data, response.pageNumber + 1);
-          } else {
-            _establishmentsPaginationController.appendLastPage(response.data);
-          }
+      if (response != null) {
+        if (response.hasNextPage) {
+          _establishmentsPaginationController.appendPage(
+              response.data, response.pageNumber + 1);
+        } else {
+          _establishmentsPaginationController.appendLastPage(response.data);
         }
       }
-    } catch (ex) {
-      print(ex);
     }
   }
 
