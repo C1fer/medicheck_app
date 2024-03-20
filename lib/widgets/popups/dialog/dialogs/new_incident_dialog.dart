@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:medicheck/models/cobertura_response.dart';
@@ -8,7 +9,6 @@ import 'package:medicheck/styles/app_decorations.dart';
 import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/utils/input_validation/validation_logic.dart';
 import 'package:medicheck/widgets/inputs/custom_form_field.dart';
-import 'package:medicheck/widgets/inputs/text_field.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../models/cobertura.dart';
@@ -68,7 +68,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
         children: [
           Center(
               child: Text(
-            locale.filter_options,
+            locale.new_incident,
             style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
           )),
           const SizedBox(height: 16.0),
@@ -78,7 +78,13 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                 .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
-          CustomTextField(controller: _descriptionController),
+          CustomInputField(
+            controller: _descriptionController,
+            inputFormatters: [LengthLimitingTextInputFormatter(255)],
+            validator: (String? val) => validateEmptyInput(val, context),
+            hintText: locale.type_here,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -91,8 +97,16 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
               builder: (context, controller, focusNode) => TextFormField(
                   controller: controller,
                   focusNode: focusNode,
-                  decoration: AppDecorations.formTextFieldDecoration,
+                  decoration: AppDecorations.formTextFieldDecoration
+                      .copyWith(hintText: locale.type_here),
                   validator: (value) => validateEmptyInput(value, context)),
+              emptyBuilder: (context) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    locale.no_results_shown,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  )),
               itemBuilder: (context, establishment) => ListTile(
                     title: Text(establishment.nombre),
                     subtitle: Text(
@@ -107,9 +121,9 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                 });
               },
               suggestionsCallback: (keyword) async {
-                int planID = context.read<PlanModel>().selectedPlanID!;
                 EstablecimientoResponse? responseData;
                 if (keyword != "") {
+                  int planID = context.read<PlanModel>().selectedPlanID!;
                   responseData = await ApiService.getEstablishments(
                       arsID: planID, keyword: keyword);
                 }
@@ -127,10 +141,17 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
               builder: (context, controller, focusNode) => TextFormField(
                     controller: controller,
                     focusNode: focusNode,
-                    decoration:
-                        AppDecorations.formTextFieldDecoration.copyWith(),
+                    decoration: AppDecorations.formTextFieldDecoration
+                        .copyWith(hintText: locale.type_here),
                     validator: (value) => validateEmptyInput(value, context),
                   ),
+              emptyBuilder: (context) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    locale.no_results_shown,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  )),
               itemBuilder: (context, coverage) => ListTile(
                     title: Text(coverage.idProductoNavigation.nombre),
                   ),
@@ -155,7 +176,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
           SizedBox(
             width: double.infinity,
             child: FilledButton(
-                onPressed: onSubmitPressed, child: const Text('OK')),
+                onPressed: onSubmitPressed, child: Text(locale.send)),
           )
         ],
       ),

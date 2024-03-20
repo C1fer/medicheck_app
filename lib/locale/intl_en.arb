@@ -103,5 +103,7 @@
   "establishment": "Establishment",
   "incident_reports": "Incident Reports",
   "incident": "Incident",
-  "incident_status": "Incident status"
+  "incident_status": "Incident status",
+  "new_incident": "New Incident",
+  "send": "Send"
 }

@@ -104,5 +104,7 @@
   "establishment": "Establecimiento",
   "incident_reports": "Reporte de incidentes",
   "incident": "Incidente",
-  "incident_status": "Estado de incidentes"
+  "incident_status": "Estado de incidentes",
+  "new_incident": "New Incident",
+  "send": "Send"
 }

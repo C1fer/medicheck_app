@@ -9,7 +9,7 @@ class AppDecorations {
       ));
 
   static final formTextFieldDecoration = InputDecoration(
-    floatingLabelBehavior: FloatingLabelBehavior.auto,
+
     labelStyle: const TextStyle(color: AppColors.lightGray),
     fillColor: AppColors.whiteGray,
       hintStyle: const TextStyle(color: AppColors.lightGray, fontWeight: FontWeight.normal),

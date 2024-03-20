@@ -57,7 +57,6 @@ class _IncidentReportsState extends State<IncidentReports> {
           } else {
             _incidentsPaginationController.appendLastPage(response.data);
           }
-          print(_incidentsPaginationController.itemList);
         }
       } catch (except) {
         _incidentsPaginationController.error = except;
@@ -73,7 +72,10 @@ class _IncidentReportsState extends State<IncidentReports> {
   }
 
   Future<void> onPressedNewIncidentButton() async {
-    showCustomDialog(context, NewIncidentDialog(onSubmit: () async {}));
+    await showCustomDialog(context, NewIncidentDialog(onSubmit: () async {
+      _incidentsPaginationController.refresh();
+      Navigator.pop(context);
+    }), dismissible: true);
   }
 
   @override
@@ -130,11 +132,7 @@ class _IncidentReportsState extends State<IncidentReports> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: FloatingActionButton(
-                    onPressed: () async => await showCustomDialog(context,
-                        NewIncidentDialog(onSubmit: () async {
-                      _getReports;
-                      Navigator.pop(context);
-                    })),
+                    onPressed: onPressedNewIncidentButton,
                     backgroundColor: AppColors.jadeGreen,
                     child: const Icon(
                       Icons.add,

@@ -17,7 +17,8 @@ class CustomInputField extends StatefulWidget {
       this.decoration,
       this.obscureText = false,
       this.suffixIcon,
-      this.maxLines = 1})
+      this.maxLines = 1,
+      this.floatingLabelBehavior})
       : super(key: key);
 
   final TextEditingController controller;
@@ -29,6 +30,7 @@ class CustomInputField extends StatefulWidget {
   final AutovalidateMode? autoValidateMode;
   final TextInputType? keyboardType;
   final int? maxLength;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   final int? maxLines;
   final InputDecoration? decoration;
@@ -52,6 +54,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
       validator: widget.validator,
       decoration: widget.decoration ??
           AppDecorations.formTextFieldDecoration.copyWith(
+              floatingLabelBehavior:
+                  widget.floatingLabelBehavior ?? FloatingLabelBehavior.auto,
               hintText: widget.hintText,
               prefixIcon: widget.prefixIcon != null
                   ? Padding(
