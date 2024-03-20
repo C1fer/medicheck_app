@@ -42,7 +42,7 @@ class AppStyles {
 
   static const coverageCardCategoryTextStyle = TextStyle(
     color: AppColors.deepLightGray,
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
   );
 

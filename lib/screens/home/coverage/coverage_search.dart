@@ -35,7 +35,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
           name: _coverageController.text,
           type: _typeVal,
           category: _categoryVal,
-          pageIndex: _coveragesPagingController.nextPageKey!);
+          pageIndex: _coveragesPagingController.nextPageKey ?? 1);
 
       if (foundCoverages != null) {
         if (foundCoverages.hasNextPage) {
@@ -50,17 +50,16 @@ class _CoverageSearchState extends State<CoverageSearch> {
 
   @override
   void initState() {
-    super.initState();
     _coveragesPagingController.addPageRequestListener((pageKey) => searchProductCoverages());
     searchProductCoverages();
-
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _coveragesPagingController.dispose();
     _coverageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -96,8 +95,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                 height: 40.0,
               ),
               Expanded(
-                  child: _coveragesPagingController.itemList != null &&
-                          _coveragesPagingController.itemList!.isNotEmpty
+                  child: _coveragesPagingController.itemList != null
                       ? PagedListView.separated(
                           pagingController: _coveragesPagingController,
                           builderDelegate: PagedChildBuilderDelegate<Cobertura>(

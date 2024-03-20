@@ -31,10 +31,14 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
 
   @override
   void initState() {
+    _establishmentsPaginationController.addPageRequestListener((pageKey) => _getEstablishments());
     super.initState();
-    _establishmentsPaginationController
-        .addPageRequestListener((pageKey) => _getEstablishments());
-    _getEstablishments();
+  }
+
+  @override
+  void dispose() {
+    _establishmentsPaginationController.dispose();
+    super.dispose();
   }
 
   void _getEstablishments() async {
@@ -44,7 +48,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
               arsID: context.read<PlanModel>().selectedPlanID,
               keyword: _establishmentsController.text,
               type: establishmentType,
-              pageIndex: _establishmentsPaginationController.nextPageKey);
+              pageIndex: _establishmentsPaginationController.nextPageKey ?? _establishmentsPaginationController.firstPageKey);
 
       if (response != null) {
         if (response.hasNextPage) {
@@ -80,7 +84,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                       onTypeChanged: (String? newVal) =>
                           setState(() => establishmentType = newVal),
                       onButtonPressed: () async {
-                        _getEstablishments();
+                        _establishmentsPaginationController.refresh();
                         Navigator.pop(context);
                       },
                     ),
@@ -88,9 +92,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                 ),
                 const SizedBox(height: 16.0),
                 Expanded(
-                    child: _establishmentsPaginationController != null &&
-                            _establishmentsPaginationController
-                                .itemList!.isNotEmpty
+                    child: _establishmentsPaginationController != null
                         ? PagedListView.separated(
                             pagingController:
                                 _establishmentsPaginationController,

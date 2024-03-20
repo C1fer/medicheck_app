@@ -32,9 +32,9 @@ class ApiService {
     return null;
   }
 
-  static Map<String, dynamic> filterQueryParameters(
-      Map<String, dynamic> params) {
+  static Map<String, dynamic> filterQueryParameters(Map<String, dynamic> params) {
     params.removeWhere((key, value) => value == null);
+    params.updateAll((key, value) => value.toString());
     return params;
   }
 

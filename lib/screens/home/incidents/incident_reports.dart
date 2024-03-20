@@ -24,13 +24,20 @@ class IncidentReports extends StatefulWidget {
 
 class _IncidentReportsState extends State<IncidentReports> {
   String incidentStatus = 'ABIERTO';
-  final _incidentsPaginationController =
-      PagingController<int, Incidente>(firstPageKey: 1);
+  final PagingController<int, Incidente> _incidentsPaginationController =
+      PagingController(firstPageKey: 1);
 
   @override
   void initState() {
+    _incidentsPaginationController
+        .addPageRequestListener((pageKey) => _getReports());
     super.initState();
-    _getReports();
+  }
+
+  @override
+  void dispose() {
+    _incidentsPaginationController.dispose();
+    super.dispose();
   }
 
   Future<void> _getReports() async {
@@ -53,8 +60,10 @@ class _IncidentReportsState extends State<IncidentReports> {
   }
 
   Future<void> onStatusDropdownChanged(String? newVal) async {
-    setState(() => incidentStatus = newVal!);
-    _getReports();
+    if (incidentStatus != newVal) {
+      setState(() => incidentStatus = newVal!);
+
+    }
   }
 
   Future<void> onPressedNewIncidentButton() async {
@@ -99,8 +108,7 @@ class _IncidentReportsState extends State<IncidentReports> {
                   height: 20,
                 ),
                 Expanded(
-                    child: _incidentsPaginationController.itemList != null &&
-                            _incidentsPaginationController.itemList!.isNotEmpty
+                    child: _incidentsPaginationController.itemList != null
                         ? PagedListView.separated(
                             pagingController: _incidentsPaginationController,
                             builderDelegate:
