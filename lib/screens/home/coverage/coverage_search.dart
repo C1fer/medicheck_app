@@ -3,11 +3,13 @@ import 'package:medicheck/models/cobertura_response.dart';
 import 'package:medicheck/widgets/misc/search/search_row.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/product_filter_dialog.dart';
 import 'package:provider/provider.dart';
+import '../../../models/cobertura.dart';
 import '../../../models/notifiers/plan_notifier.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/cards/coverage_card_sm.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../utils/api/api_service.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class CoverageSearch extends StatefulWidget {
   const CoverageSearch({super.key});
@@ -19,34 +21,49 @@ class CoverageSearch extends StatefulWidget {
 
 class _CoverageSearchState extends State<CoverageSearch> {
   final _coverageController = TextEditingController();
+  final PagingController<int, Cobertura> _coveragesPagingController =
+      PagingController(firstPageKey: 1);
+
   String? _typeVal;
   String? _categoryVal;
-
   CoberturaResponse? coveragesData;
 
-  @override
-  void dispose() {
-    super.dispose();
-    _coverageController.dispose();
+  Future<void> searchProductCoverages() async {
+    if (mounted) {
+      int? planID = context.read<PlanModel>().selectedPlanID;
+      CoberturaResponse? foundCoverages = await ApiService.getCoveragesAdvanced(
+          planID: planID,
+          name: _coverageController.text,
+          type: _typeVal,
+          category: _categoryVal,
+          pageIndex: _coveragesPagingController.nextPageKey!);
+
+      if (foundCoverages != null) {
+        if (foundCoverages.hasNextPage) {
+          _coveragesPagingController.appendPage(
+              foundCoverages.data, foundCoverages.pageNumber + 1);
+        } else {
+          _coveragesPagingController.appendLastPage(foundCoverages.data);
+        }
+      }
+
+      setState(() => coveragesData = foundCoverages);
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _searchProductCoverages();
+    _coveragesPagingController.addPageRequestListener((pageKey) => searchProductCoverages());
+    searchProductCoverages();
+
   }
 
-  Future<void> _searchProductCoverages() async {
-    int? planID = context.read<PlanModel>().selectedPlanID;
-    if (mounted) {
-      CoberturaResponse? foundCoverages = await ApiService.getCoveragesAdvanced(
-          planID!,
-          name: _coverageController.text,
-          type: _typeVal,
-          category: _categoryVal);
-
-      setState(() => coveragesData = foundCoverages);
-    }
+  @override
+  void dispose() {
+    super.dispose();
+    _coveragesPagingController.dispose();
+    _coverageController.dispose();
   }
 
   @override
@@ -65,7 +82,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                 child: SearchBarWithFilter(
                     searchController: _coverageController,
                     hintText: locale.type_here,
-                    onChanged: (String? val) => _searchProductCoverages(),
+                    onChanged: (String? val) => searchProductCoverages(),
                     filterDialog: ProductFilterDialog(
                         typeValue: _typeVal,
                         categoryValue: _categoryVal,
@@ -74,7 +91,7 @@ class _CoverageSearchState extends State<CoverageSearch> {
                         onTypeChanged: (String? val) =>
                             setState(() => _typeVal = val),
                         onButtonPressed: () async {
-                          _searchProductCoverages();
+                          searchProductCoverages();
                           Navigator.pop(context);
                         })),
               ),
@@ -82,13 +99,15 @@ class _CoverageSearchState extends State<CoverageSearch> {
                 height: 40.0,
               ),
               Expanded(
-                  child: coveragesData != null && coveragesData!.data.isNotEmpty
-                      ? ListView.separated(
-                          itemBuilder: (context, index) => CoverageCardSmall(
-                              coverage: coveragesData!.data[index]),
+                  child: _coveragesPagingController.itemList != null &&
+                          _coveragesPagingController.itemList!.isNotEmpty
+                      ? PagedListView.separated(
+                          pagingController: _coveragesPagingController,
+                          builderDelegate: PagedChildBuilderDelegate<Cobertura>(
+                              itemBuilder: (context, item, index) =>
+                                  CoverageCardSmall(coverage: item)),
                           separatorBuilder: (context, index) =>
                               const SizedBox(height: 40),
-                          itemCount: coveragesData!.data.length,
                           scrollDirection: Axis.vertical,
                         )
                       : Center(child: Text(locale.no_results_shown))),

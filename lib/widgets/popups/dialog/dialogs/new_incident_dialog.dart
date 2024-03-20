@@ -145,7 +145,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                 CoberturaResponse? responseData;
                 if (keyword != '') {
                   responseData = await ApiService.getCoveragesAdvanced(
-                    context.read<PlanModel>().selectedPlanID!,
+                    planID: context.read<PlanModel>().selectedPlanID!,
                     name: keyword,
                   );
                 }

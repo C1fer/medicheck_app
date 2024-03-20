@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
 
   Future<void> _fetchCoverages() async {
     int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
-    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(selectedPlanID);
+    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(planID: selectedPlanID);
     setState(() => planCoverages = response);
   }
 

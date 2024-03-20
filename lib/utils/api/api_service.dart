@@ -30,6 +30,11 @@ class ApiService {
     }
     return null;
   }
+  
+  static Map<String,dynamic> filterQueryParameters(Map<String, dynamic> params){
+    params.removeWhere((key, value) => value == null);
+    return params;
+  }
 
   static Future<bool> checkHealth() async {
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.health);
@@ -255,19 +260,22 @@ class ApiService {
     return null;
   }
 
-  static Future<CoberturaResponse?> getCoveragesAdvanced(int selectedPlanID,
-      {String? name, String? desc, String? type, String? category}) async {
+  static Future<CoberturaResponse?> getCoveragesAdvanced(
+      {int? planID, String? name, String? desc, String? type, String? category, int? pageIndex, String? orderField, String? orderDirection}) async {
     Map<String, dynamic> queryParams = {
       'nombre': name,
       'descripcion': desc,
       'tipo': type,
       'categoria': category,
-      'idPlan': selectedPlanID.toString(),
+      'idPlan': planID?.toString(),
+      'pageIndex': pageIndex?.toString(),
+      'orderField': orderField,
+      'orderDirection': orderDirection,
     };
 
     var url = Uri.parse(
             '${ApiConstants.baseUrl}${ApiConstants.coveragesSearchEndpoint}')
-        .replace(queryParameters: queryParams);
+        .replace(queryParameters: filterQueryParameters(queryParams));
     String? accessToken = await JWTService.readJWT();
 
     try {
