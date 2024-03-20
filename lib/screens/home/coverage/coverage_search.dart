@@ -29,21 +29,25 @@ class _CoverageSearchState extends State<CoverageSearch> {
 
   Future<void> searchProductCoverages() async {
     if (mounted) {
+      debugPrint("in");
       int? planID = context.read<PlanModel>().selectedPlanID;
-      CoberturaResponse? foundCoverages = await ApiService.getCoveragesAdvanced(
+      CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
           planID: planID,
           name: _coverageController.text,
           type: _typeVal,
           category: _categoryVal,
-          pageIndex: _coveragesPagingController.nextPageKey ?? 1);
+          pageIndex: _coveragesPagingController.nextPageKey ??
+              _coveragesPagingController.firstPageKey);
 
-      if (foundCoverages != null) {
-        if (foundCoverages.hasNextPage) {
+      if (response != null) {
+        if (response.hasNextPage) {
           _coveragesPagingController.appendPage(
-              foundCoverages.data, foundCoverages.pageNumber + 1);
+              response.data, response.pageNumber + 1);
         } else {
-          _coveragesPagingController.appendLastPage(foundCoverages.data);
+          _coveragesPagingController.appendLastPage(response.data);
         }
+        _coveragesPagingController.itemList!.forEach((Cobertura element) =>
+            debugPrint(element.idProductoNavigation.nombre));
       }
     }
   }
@@ -51,7 +55,6 @@ class _CoverageSearchState extends State<CoverageSearch> {
   @override
   void initState() {
     _coveragesPagingController.addPageRequestListener((pageKey) => searchProductCoverages());
-    searchProductCoverages();
     super.initState();
   }
 
@@ -78,7 +81,8 @@ class _CoverageSearchState extends State<CoverageSearch> {
                 child: SearchBarWithFilter(
                     searchController: _coverageController,
                     hintText: locale.type_here,
-                    onChanged: (String? val) => searchProductCoverages(),
+                    onChanged: (String? val) =>
+                        _coveragesPagingController.refresh(),
                     filterDialog: ProductFilterDialog(
                         typeValue: _typeVal,
                         categoryValue: _categoryVal,
@@ -95,17 +99,17 @@ class _CoverageSearchState extends State<CoverageSearch> {
                 height: 40.0,
               ),
               Expanded(
-                  child: _coveragesPagingController.itemList != null
-                      ? PagedListView.separated(
-                          pagingController: _coveragesPagingController,
-                          builderDelegate: PagedChildBuilderDelegate<Cobertura>(
-                              itemBuilder: (context, item, index) =>
-                                  CoverageCardSmall(coverage: item)),
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 40),
-                          scrollDirection: Axis.vertical,
-                        )
-                      : Center(child: Text(locale.no_results_shown))),
+                  child: PagedListView.separated(
+                pagingController: _coveragesPagingController,
+                builderDelegate: PagedChildBuilderDelegate<Cobertura>(
+                    itemBuilder: (context, item, index) =>
+                        CoverageCardSmall(coverage: item),
+                    noItemsFoundIndicatorBuilder: (context) =>
+                        Center(child: Text(locale.no_results_shown))),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 40),
+                scrollDirection: Axis.vertical,
+              )),
             ],
           ),
         ),

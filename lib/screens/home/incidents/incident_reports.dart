@@ -42,19 +42,25 @@ class _IncidentReportsState extends State<IncidentReports> {
 
   Future<void> _getReports() async {
     if (mounted) {
-      final int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
-      final IncidenteResponse? response = await ApiService.getIncidentReports(
-          userID: userID,
-          status: incidentStatus,
-          pageIndex: _incidentsPaginationController.nextPageKey);
+      try {
+        final int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
+        final IncidenteResponse? response = await ApiService.getIncidentReports(
+            userID: userID,
+            status: incidentStatus,
+            pageIndex: _incidentsPaginationController.nextPageKey ??
+                _incidentsPaginationController.firstPageKey);
 
-      if (response != null) {
-        if (response.hasNextPage) {
-          _incidentsPaginationController.appendPage(
-              response.data, response.pageNumber + 1);
-        } else {
-          _incidentsPaginationController.appendLastPage(response.data);
+        if (response != null) {
+          if (response.hasNextPage) {
+            _incidentsPaginationController.appendPage(
+                response.data, response.pageNumber + 1);
+          } else {
+            _incidentsPaginationController.appendLastPage(response.data);
+          }
+          print(_incidentsPaginationController.itemList);
         }
+      } catch (except) {
+        _incidentsPaginationController.error = except;
       }
     }
   }
@@ -62,7 +68,7 @@ class _IncidentReportsState extends State<IncidentReports> {
   Future<void> onStatusDropdownChanged(String? newVal) async {
     if (incidentStatus != newVal) {
       setState(() => incidentStatus = newVal!);
-
+      _incidentsPaginationController.refresh();
     }
   }
 
@@ -108,21 +114,19 @@ class _IncidentReportsState extends State<IncidentReports> {
                   height: 20,
                 ),
                 Expanded(
-                    child: _incidentsPaginationController.itemList != null
-                        ? PagedListView.separated(
-                            pagingController: _incidentsPaginationController,
-                            builderDelegate:
-                                PagedChildBuilderDelegate<Incidente>(
-                              itemBuilder: (context, item, index) =>
-                                  IncidentCard(
-                                incident: item,
-                                onTap: () {},
-                              ),
-                            ),
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 10),
-                          )
-                        : Center(child: Text(locale.no_results_shown))),
+                    child: PagedListView.separated(
+                  pagingController: _incidentsPaginationController,
+                  builderDelegate: PagedChildBuilderDelegate<Incidente>(
+                    itemBuilder: (context, item, index) => IncidentCard(
+                      incident: item,
+                      onTap: () {},
+                    ),
+                    noItemsFoundIndicatorBuilder: (context) =>
+                        Center(child: Text(locale.no_results_shown)),
+                  ),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
+                )),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: FloatingActionButton(

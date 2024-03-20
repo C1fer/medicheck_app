@@ -31,7 +31,8 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
 
   @override
   void initState() {
-    _establishmentsPaginationController.addPageRequestListener((pageKey) => _getEstablishments());
+    _establishmentsPaginationController
+        .addPageRequestListener((pageKey) => _getEstablishments());
     super.initState();
   }
 
@@ -48,7 +49,8 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
               arsID: context.read<PlanModel>().selectedPlanID,
               keyword: _establishmentsController.text,
               type: establishmentType,
-              pageIndex: _establishmentsPaginationController.nextPageKey ?? _establishmentsPaginationController.firstPageKey);
+              pageIndex: _establishmentsPaginationController.nextPageKey ??
+                  _establishmentsPaginationController.firstPageKey);
 
       if (response != null) {
         if (response.hasNextPage) {
@@ -92,20 +94,17 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                 ),
                 const SizedBox(height: 16.0),
                 Expanded(
-                    child: _establishmentsPaginationController != null
-                        ? PagedListView.separated(
-                            pagingController:
-                                _establishmentsPaginationController,
-                            builderDelegate:
-                                PagedChildBuilderDelegate<Establecimiento>(
-                                    itemBuilder: (context, item, index) =>
-                                        EstablishmentCard(
-                                          establecimiento: item,
-                                        )),
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: 10),
-                          )
-                        : Center(child: Text(locale.no_results_shown)))
+                    child: PagedListView.separated(
+                  pagingController: _establishmentsPaginationController,
+                  builderDelegate: PagedChildBuilderDelegate<Establecimiento>(
+                      itemBuilder: (context, item, index) => EstablishmentCard(
+                            establecimiento: item,
+                          ),
+                      noItemsFoundIndicatorBuilder: (context) =>
+                          Center(child: Text(locale.no_results_shown))),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 10),
+                ))
               ],
             )),
       ),
