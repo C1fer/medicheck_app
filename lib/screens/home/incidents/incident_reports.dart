@@ -5,6 +5,7 @@ import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:medicheck/models/incidente.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/models/responses/incidente_response.dart';
+import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/cards/incident_card.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/new_incident_dialog.dart';
@@ -96,14 +97,14 @@ class _IncidentReportsState extends State<IncidentReports> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
-                      flex: 6,
                       child: CustomDropdownButton(
                         optionsBorderRadius: 24.0,
                         value: incidentStatus,
                         onChanged: (String? val) =>
                             onStatusDropdownChanged(val),
                         entries: Constants.incidentStatuses
-                            .map((element) => DropdownMenuItem(
+                            .map((element
+                            ) => DropdownMenuItem(
                                   value: element,
                                   child: Text(element.contains("")
                                       ? element

@@ -72,23 +72,6 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
             style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
           )),
           const SizedBox(height: 16.0),
-          Text(
-            locale.description,
-            style: AppStyles.headingTextStyle
-                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 4),
-          CustomInputField(
-            controller: _descriptionController,
-            inputFormatters: [LengthLimitingTextInputFormatter(255)],
-            validator: (String? val) => validateEmptyInput(val, context),
-            hintText: locale.type_here,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            maxLines: null,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
           Text(locale.establishment,
               style: AppStyles.headingTextStyle
                   .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
@@ -173,6 +156,23 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                 }
                 return responseData?.data ?? [];
               }),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            locale.description,
+            style: AppStyles.headingTextStyle
+                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 4),
+          CustomInputField(
+            controller: _descriptionController,
+            inputFormatters: [LengthLimitingTextInputFormatter(255)],
+            validator: (String? val) => validateEmptyInput(val, context),
+            hintText: locale.type_here,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            maxLines: null,
+          ),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,

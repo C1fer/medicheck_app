@@ -29,7 +29,6 @@ class _CoverageSearchState extends State<CoverageSearch> {
 
   Future<void> searchProductCoverages() async {
     if (mounted) {
-      debugPrint("in");
       int? planID = context.read<PlanModel>().selectedPlanID;
       CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
           planID: planID,
@@ -46,8 +45,6 @@ class _CoverageSearchState extends State<CoverageSearch> {
         } else {
           _coveragesPagingController.appendLastPage(response.data);
         }
-        _coveragesPagingController.itemList!.forEach((Cobertura element) =>
-            debugPrint(element.idProductoNavigation.nombre));
       }
     }
   }
