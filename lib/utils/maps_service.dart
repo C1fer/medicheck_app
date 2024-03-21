@@ -1,13 +1,13 @@
 import 'dart:convert';
-
-import '../models/place.dart';
-import '../models/place.dart';
 import 'package:http/http.dart' as http;
 
-class PlaceService {
+import '../models/place.dart';
+
+class PlacesApiService {
   static const apiKey = "AIzaSyBF4HkTwIaYTIXubPpfRc2v7vKOMRgs3pw ";
   static const baseUrl = "https://places.googleapis.com/v1";
-  static const searchNearbyEndpoint = "/places:searchNearby";
+  static const nearbySearchEndPoint = "/places:searchNearby";
+  static const mediaEndpoint = "/:placeUri/media";
   static const defaultTimeout = Duration(seconds: 5);
 
   static Future<List<GooglePlace>> nearbySearch(
@@ -48,25 +48,35 @@ class PlaceService {
       "X-Goog-FieldMask": returnFields.join(",")
     };
 
-    final url = Uri.parse(baseUrl + searchNearbyEndpoint);
+    final url = Uri.parse(baseUrl + nearbySearchEndPoint);
     try {
       var response = await http
           .post(url, body: json.encode(requestBody), headers: requestHeaders)
           .timeout(defaultTimeout);
       if (response.statusCode == 200) {
-        final Map<String,dynamic> responseData = json.decode(response.body);
-        var x = responseData["places"].map((e) => GooglePlace.fromJson(e)).toList();
-        return x;
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final List<dynamic> places = responseData["places"];
+        return places.map((e) => GooglePlace.fromJson(e)).toList();
       }
     } catch (except) {
       print("Error fetching nearby places: $except");
     }
     return <GooglePlace>[];
   }
+
+  static Uri? getPlacePhotoUri(
+      GooglePlace place, int maxHeightPx, int maxWidthPx) {
+    if (place.photoUri != null) {
+      Map<String, String> queryParams = {
+        "key": apiKey,
+        "maxHeightPx": maxHeightPx.toString(),
+        "maxWidthPx": maxWidthPx.toString()
+      };
+
+      return Uri.parse(baseUrl + mediaEndpoint.replaceAll(":placeUri", place.photoUri!))
+          .replace(queryParameters: queryParams);
+    }
+    return null;
+  }
 }
 
-void main() async {
-  var response =
-      await PlaceService.nearbySearch(18.474125, -69.975324, "pharmacy", "en");
-  print(response);
-}
