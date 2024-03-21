@@ -1,4 +1,5 @@
 class GooglePlace {
+  String id;
   String name;
   String? phoneNumber;
   String formattedAddress;
@@ -9,9 +10,12 @@ class GooglePlace {
   String? websiteUri;
   bool? openNow;
   List<String>? workingHoursDescription;
+  double lat;
+  double lon;
 
   GooglePlace(
-      {required this.name,
+      {required this.id,
+      required this.name,
       this.phoneNumber,
       required this.formattedAddress,
       required this.shortFormattedAddress,
@@ -20,9 +24,12 @@ class GooglePlace {
       this.photoUri,
       this.websiteUri,
       this.openNow,
-      this.workingHoursDescription});
+      this.workingHoursDescription,
+      required this.lat,
+      required this.lon});
 
   factory GooglePlace.fromJson(Map<String, dynamic> json) => GooglePlace(
+      id: json["id"],
       name: json["displayName"]["text"],
       phoneNumber: json["internationalPhoneNumber"],
       formattedAddress: json["formattedAddress"],
@@ -37,5 +44,8 @@ class GooglePlace {
       workingHoursDescription: json["currentOpeningHours"] != null
           ? List<String>.from(
               json["currentOpeningHours"]["weekdayDescriptions"])
-          : null);
+          : null,
+      lat: json["location"]["latitude"],
+      lon: json["location"]["longitude"]
+  );
 }

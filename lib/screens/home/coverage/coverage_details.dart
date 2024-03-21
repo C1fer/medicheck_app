@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:medicheck/screens/home/coverage/nearby_centers.dart';
+import 'package:medicheck/utils/location_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -56,7 +59,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       setState(() => isSaved = savedProductProvider.isProductInList(productID));
     } else {
       int? userID = context.read<UserInfoModel>().currentUserID;
-      final ProductoResponse? response = await ApiService.getSavedProducts(userID: userID!);
+      final ProductoResponse? response =
+          await ApiService.getSavedProducts(userID: userID!);
       if (response != null) {
         savedProductProvider.addSavedProducts(response.data);
         setState(
@@ -96,8 +100,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                           width: 120,
                           height: 120,
                           child: SvgPicture.asset(
-                            Constants
-                                .productTypeIcons[coverage.idProductoNavigation.tipo]!,
+                            Constants.productTypeIcons[
+                                coverage.idProductoNavigation.tipo]!,
                             fit: BoxFit.fitHeight,
                           ),
                         ),
@@ -128,7 +132,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                                     Text(
                                       '${coverage.porcentaje}% ${localization.coverage_percentage}',
                                       style: AppStyles.actionTextStyle.copyWith(
-                                          fontSize: 26, fontWeight: FontWeight.w600),
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                   ],
                                 ),
@@ -137,14 +142,16 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                           ),
                           if (isSaved != null)
                             GestureDetector(
-                              onTap: () => _saveProduct(coverage.idProductoNavigation),
+                              onTap: () =>
+                                  _saveProduct(coverage.idProductoNavigation),
                               child: Container(
                                 height: 40,
                                 width: 40,
                                 child: isSaved!
-                                    ? SvgPicture.asset('assets/icons/heart-full.svg')
+                                    ? SvgPicture.asset(
+                                        'assets/icons/heart-full.svg')
                                     : SvgPicture.asset(
-                                    'assets/icons/heart-outlined.svg'),
+                                        'assets/icons/heart-outlined.svg'),
                               ),
                             )
                         ],
@@ -154,26 +161,31 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                       ),
                       Text(
                         localization.details,
-                        style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
+                        style:
+                            AppStyles.sectionTextStyle.copyWith(fontSize: 20),
                       ),
                       const SizedBox(height: 10.0),
                       Row(
                         children: [
-                          FeatureCard(msg: coverage.idProductoNavigation.tipo.toSentenceCase()),
+                          FeatureCard(
+                              msg: coverage.idProductoNavigation.tipo
+                                  .toSentenceCase()),
                           const SizedBox(
                             width: 20,
                           ),
                           if (coverage.idProductoNavigation.tipo !=
                               coverage.idProductoNavigation.categoria)
                             (FeatureCard(
-                              msg: coverage.idProductoNavigation.categoria.toSentenceCase(),
+                              msg: coverage.idProductoNavigation.categoria
+                                  .toSentenceCase(),
                             )),
                         ],
                       ),
                       const SizedBox(height: 24.0),
                       Text(
                         localization.description,
-                        style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
+                        style:
+                            AppStyles.sectionTextStyle.copyWith(fontSize: 20),
                       ),
                       const SizedBox(height: 11.0),
                       Text(
@@ -191,7 +203,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: () =>
+                      Navigator.pushNamed(context, NearbyCenters.id),
                   child: Text(localization.near_centers),
                 ),
               ),
@@ -201,5 +214,4 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       ),
     );
   }
-
 }

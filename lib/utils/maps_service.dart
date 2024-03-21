@@ -11,8 +11,8 @@ class PlacesApiService {
   static const defaultTimeout = Duration(seconds: 5);
 
   static Future<List<GooglePlace>> nearbySearch(
-      double lat, double lon, String placeType, String langCode,
-      {double? areaRadius, int? maxResultCount, String? rankPreference}) async {
+      double lat, double lon, String langCode,
+      {double? areaRadius, int? maxResultCount, String? rankPreference, List<String>? placeTypes}) async {
     // Fields requested in header
     List<String> returnFields = [
       'places.nationalPhoneNumber',
@@ -24,7 +24,20 @@ class PlacesApiService {
       'places.primaryType',
       'places.shortFormattedAddress',
       'places.photos',
-      'places.websiteUri'
+      'places.websiteUri',
+      'places.location',
+      'places.id'
+    ];
+
+    List<String> primaryTypes = [
+      "dental_clinic",
+      "dentist",
+      "doctor",
+      "drugstore",
+      "hospital",
+      "medical_lab",
+      "pharmacy",
+      "physiotherapist"
     ];
 
     Map<String, dynamic> locationRestriction = {
@@ -35,7 +48,7 @@ class PlacesApiService {
     };
 
     Map<String, dynamic> requestBody = {
-      "includedTypes": placeType,
+      "includedTypes": primaryTypes.toList(),
       "maxResultCount": maxResultCount ?? 10,
       "languageCode": langCode,
       "rankPreference": rankPreference ?? "DISTANCE",
@@ -64,7 +77,7 @@ class PlacesApiService {
     return <GooglePlace>[];
   }
 
-  static Uri? getPlacePhotoUri(
+  static String? getPlacePhotoUri(
       GooglePlace place, int maxHeightPx, int maxWidthPx) {
     if (place.photoUri != null) {
       Map<String, String> queryParams = {
@@ -73,10 +86,10 @@ class PlacesApiService {
         "maxWidthPx": maxWidthPx.toString()
       };
 
-      return Uri.parse(baseUrl + mediaEndpoint.replaceAll(":placeUri", place.photoUri!))
-          .replace(queryParameters: queryParams);
+      return Uri.parse(
+              baseUrl + mediaEndpoint.replaceAll(":placeUri", place.photoUri!))
+          .replace(queryParameters: queryParams).toString();
     }
     return null;
   }
 }
-
