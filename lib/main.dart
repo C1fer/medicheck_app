@@ -5,6 +5,7 @@ import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
 import 'package:medicheck/screens/home/coverage/coverage_search.dart';
+import 'package:medicheck/screens/home/coverage/nearby_centers.dart';
 import 'package:medicheck/screens/home/coverage/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
 import 'package:medicheck/screens/home/incidents/incident_reports.dart';
@@ -22,18 +23,20 @@ import 'screens/start/onboarding.dart';
 import 'screens/home/home.dart';
 import 'styles/app_styles.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-      MultiProvider(providers: [
+    MultiProvider(
+      providers: [
         ChangeNotifierProvider(create: (context) => LocaleModel()),
         ChangeNotifierProvider(create: (context) => UserInfoModel()),
         ChangeNotifierProvider(create: (context) => SavedProductModel()),
         ChangeNotifierProvider(create: (context) => PlanModel())
       ],
-        child: MyApp(),
-      ),
+      child: MyApp(),
+    ),
   );
 }
 
@@ -75,7 +78,8 @@ class MyApp extends StatelessWidget {
                   ResetTokenInput.id: (context) => const ResetTokenInput(),
                   NewPasswordInput.id: (context) => const NewPasswordInput(),
                   ChangePassword.id: (context) => const ChangePassword(),
-                  IncidentReports.id: (context)  => const IncidentReports()
+                  IncidentReports.id: (context) => const IncidentReports(),
+                  NearbyCenters.id: (context) => const NearbyCenters()
                 },
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
