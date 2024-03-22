@@ -33,15 +33,13 @@ class PlaceCard extends StatelessWidget {
             SizedBox(
                 width: 100,
                 height: 100,
-                /*child: placePhotoURL != null
+                child: placePhotoURL != null
                     ? CachedNetworkImage(
                         imageUrl: placePhotoURL!,
                         placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
+                            const CircularProgressIndicator(color: AppColors.jadeGreen,),
                       )
-                    : SvgPicture.asset('assets/icons/hospital-colored.svg')*/
-              child: SvgPicture.asset('assets/icons/hospital-colored.svg'),
-    ),
+                    : SvgPicture.asset('assets/icons/hospital-colored.svg')),
             const SizedBox(
               width: 32,
             ),
@@ -71,12 +69,14 @@ class PlaceCard extends StatelessWidget {
                       const SizedBox(
                         width: 4,
                       ),
-                      Text(
-                        place.shortFormattedAddress,
-                        style: AppStyles.subSmallTextStyle.copyWith(
-                          color: AppColors.jadeGreen,
+                      Expanded(
+                        child: Text(
+                          place.shortFormattedAddress,
+                          style: AppStyles.subSmallTextStyle.copyWith(
+                            color: AppColors.jadeGreen,
+                          ),
+                          maxLines: null,
                         ),
-                        maxLines: null,
                       )
                     ],
                   ),
@@ -104,7 +104,7 @@ class PlaceCard extends StatelessWidget {
                           ],
                         ),
                       ],
-                    ),// Phone Number
+                    ), // Phone Number
                   if (place.openNow != null)
                     Column(
                       children: [
