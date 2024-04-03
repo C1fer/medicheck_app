@@ -22,4 +22,5 @@ class ApiConstants{
   static String resetPasswordEndpoint = "/otp-reset-password";
   static String incidentsReportEndpoint = "/reportesincidentes/";
   static String changePasswordEndpoint = "/usuarios/cambiarclave";
+  static String recentQueriesEndpoint = "/consultasrecientes";
 }
