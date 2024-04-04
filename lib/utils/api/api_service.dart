@@ -522,4 +522,32 @@ class ApiService {
     }
     return null;
   }
+
+  static Future<bool> postRecentQuery(int userId, int coverageId) async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.recentQueriesEndpoint);
+    String? accessToken = await JWTService.readJWT();
+
+    Map<String, int> requestBody = {
+      'idUsuario': userId,
+      'idCobertura': coverageId
+    };
+
+    try {
+      var response = await http.post(
+        url,
+        body: json.encode(requestBody),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken'
+        }
+      ).timeout(defaultTimeout);
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+    } catch(e) {
+      print('Post recent query request error: $e');
+    }
+    return false;
+  }
 }
