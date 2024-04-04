@@ -33,8 +33,7 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    Provider.of<PlanModel>(context, listen: false).addListener(_fetchCoverages);
+    Provider.of<PlanModel>(context, listen: false).addListener(_fetchRecentQueries);
     _fetchData();
   }
 
@@ -61,6 +60,21 @@ class _HomeState extends State<Home> {
     if (planProvider.plans.isEmpty) {
       await _fetchUserPlans(userProvider.currentUser!.idUsuario);
     }
+  }
+
+  Future<void> _fetchRecentQueries() async {
+    int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
+    final userProvider = context.read<UserInfoModel>();
+
+    int? userId = userProvider.currentUser?.idUsuario;
+    
+    print('plan id: ${selectedPlanID}, usuario id: ${userId}');
+
+    CoberturaResponse? response =
+    await ApiService.getRecentQueries(userId: userId, planId: selectedPlanID);
+    setState(() => planCoverages = response);
+
+    print(response);
   }
 
   @override

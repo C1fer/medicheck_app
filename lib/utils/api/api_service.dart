@@ -490,4 +490,64 @@ class ApiService {
     }
     return false;
   }
+
+  static Future<CoberturaResponse?> getRecentQueries({
+        int? userId,
+        int? planId,
+        int? pageIndex,
+        String? orderField}) async {
+    Map<String, dynamic> queryParams = {
+      'idUsuario': userId,
+      'idPlan': planId,
+      'pageIndex': pageIndex,
+      'orderField': orderField
+    };
+
+    var url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.recentQueriesEndpoint}')
+        .replace(queryParameters: filterQueryParameters(queryParams));
+    String? accessToken = await JWTService.readJWT();
+
+    try {
+      var response = await http.get(url, headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      }).timeout(defaultTimeout);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return CoberturaResponse.fromJson(responseData);
+      }
+    } catch (except) {
+      print('Exception: ${except.toString()}');
+    }
+    return null;
+  }
+
+  static Future<bool> postRecentQuery(int userId, int coverageId) async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.recentQueriesEndpoint);
+    String? accessToken = await JWTService.readJWT();
+
+    Map<String, int> requestBody = {
+      'idUsuario': userId,
+      'idCobertura': coverageId
+    };
+
+    try {
+      var response = await http.post(
+        url,
+        body: json.encode(requestBody),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken'
+        }
+      ).timeout(defaultTimeout);
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+    } catch(e) {
+      print('Post recent query request error: $e');
+    }
+    return false;
+  }
 }
