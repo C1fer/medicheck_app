@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicheck/models/notifiers/localeNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -33,7 +34,8 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<PlanModel>(context, listen: false).addListener(_fetchRecentQueries);
+    Provider.of<PlanModel>(context, listen: false)
+        .addListener(_fetchRecentQueries);
     _fetchData();
   }
 
@@ -67,11 +69,11 @@ class _HomeState extends State<Home> {
     final userProvider = context.read<UserInfoModel>();
 
     int? userId = userProvider.currentUser?.idUsuario;
-    
+
     print('plan id: ${selectedPlanID}, usuario id: ${userId}');
 
-    CoberturaResponse? response =
-    await ApiService.getRecentQueries(userId: userId, planId: selectedPlanID);
+    CoberturaResponse? response = await ApiService.getRecentQueries(
+        userId: userId, planId: selectedPlanID);
     setState(() => planCoverages = response);
 
     print(response);
@@ -86,6 +88,7 @@ class _HomeState extends State<Home> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -155,6 +158,10 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 24.0,
                 ),
+                CTABanner(),
+                SizedBox(
+                  height: 35.0,
+                ),
                 Text(
                   AppLocalizations.of(context).recent_coverages,
                   style: AppStyles.sectionTextStyle,
@@ -182,6 +189,42 @@ class _HomeState extends State<Home> {
           ),
         ),
       )),
+    );
+  }
+
+  Widget CTABanner() {
+    //final locale = context.read<LocaleModel>();
+    return Container(
+      constraints: BoxConstraints(maxHeight: 170),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: AppColors.lightJade),
+      child: Padding(
+        padding: EdgeInsets.only(left: 26, top: 20, right: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text("En MediCheck cuidamos tu salud", style: AppStyles.sectionTextStyle,),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24.0),
+                    child: FilledButton(onPressed: null, child: Text("Leer más")),
+                  )
+                ],
+              ),
+            ),
+            Expanded(child: SvgPicture.asset('assets/icons/question-circle.svg', color: Colors.black.withOpacity(0.15),),)
+          ],
+        ),
+      ),
     );
   }
 
