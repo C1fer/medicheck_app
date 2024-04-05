@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
+import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
@@ -33,7 +34,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => LocaleModel()),
         ChangeNotifierProvider(create: (context) => UserInfoModel()),
         ChangeNotifierProvider(create: (context) => SavedProductModel()),
-        ChangeNotifierProvider(create: (context) => PlanModel())
+        ChangeNotifierProvider(create: (context) => PlanModel()),
+        ChangeNotifierProvider(create: (context) => ViewedCoverageModel())
       ],
       child: MyApp(),
     ),

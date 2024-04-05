@@ -1,22 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicheck/models/extensions/string_apis.dart';
+import 'package:provider/provider.dart';
+
+import '../../models/extensions/string_apis.dart';
 import '../../models/cobertura.dart';
+import '../../models/notifiers/recent_query_notifier.dart';
+import '../../models/notifiers/user_info_notifier.dart';
+import '../../screens/home/coverage/coverage_details.dart';
 import '../../styles/app_styles.dart';
+import '../../utils/api/api_service.dart';
 import '../../widgets/cards/feature_card.dart';
 import '../../models/enums.dart';
-import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 class CoverageCard extends StatelessWidget {
-  const CoverageCard({super.key, required this.coverage, required this.onTap});
+  const CoverageCard({super.key, required this.coverage, this.onTap});
 
   final Cobertura coverage;
-  final void Function() onTap;
+  final void Function()? onTap;
+
+  Future<void> onSelected(
+      BuildContext context, Cobertura selectedCoverage) async {
+    int userId = context.read<UserInfoModel>().currentUser!.idUsuario;
+    bool response =
+        await ApiService.postRecentQuery(userId, selectedCoverage.idCobertura);
+
+    if (response) {
+      // Update selected coverage global state
+      await context.read<ViewedCoverageModel>().set(selectedCoverage);
+      // Navigate to details screen
+      Navigator.pushNamed(context, CoverageDetailView.id,
+          arguments: selectedCoverage);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () async => onTap ?? onSelected(context, coverage),
       child: Container(
         height: 173,
         width: 118,
@@ -35,7 +55,10 @@ class CoverageCard extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 12),
               width: 54,
               height: 54,
-              child: SvgPicture.asset(Constants.productTypeIcons[coverage.idProductoNavigation.tipo]!, fit: BoxFit.fitHeight,),
+              child: SvgPicture.asset(
+                Constants.productTypeIcons[coverage.idProductoNavigation.tipo]!,
+                fit: BoxFit.fitHeight,
+              ),
             ),
             const SizedBox(height: 16.0),
             Flexible(
@@ -54,8 +77,11 @@ class CoverageCard extends StatelessWidget {
               style: AppStyles.coverageCardCategoryTextStyle,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
-              child: FeatureCard(msg: '${coverage.porcentaje}%',),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
+              child: FeatureCard(
+                msg: '${coverage.porcentaje}%',
+              ),
             )
           ],
         ),

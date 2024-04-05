@@ -16,13 +16,14 @@ class LocaleModel extends ChangeNotifier {
 Locale setInitLocale() {
   final osLocale = Locale(Intl.shortLocale(Intl.getCurrentLocale())); // Get OS locale
 
+  // Check if system locale is supported
   Locale? osLocaleSupported = AppLocalizations.supportedLocales
       .firstWhere((locale) => osLocale.languageCode == locale.languageCode);
 
   if (osLocaleSupported != null) {
     return osLocale; // Use system locale if supported
   } else {
-    //  Use fallback locale if system locale is unsupported
+    //  Use fallback locale if unsupported
     Locale fallbackLocale = AppLocalizations.supportedLocales.first;
     return fallbackLocale;
   }

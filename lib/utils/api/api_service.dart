@@ -33,10 +33,9 @@ class ApiService {
     return null;
   }
 
-  static Map<String, dynamic> filterQueryParameters(
-      Map<String, dynamic> params) {
-    params.removeWhere((key, value) => value == null);
-    params.updateAll((key, value) => value.toString());
+  static Map<String, dynamic> filterQueryParameters(Map<String, dynamic> params) {
+    params.removeWhere((key, value) => value == null); // Delete kv pairs with null values
+    params.updateAll((key, value) => value.toString()); // Parse all values as str
     return params;
   }
 
@@ -524,25 +523,25 @@ class ApiService {
   }
 
   static Future<bool> postRecentQuery(int userId, int coverageId) async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.recentQueriesEndpoint);
-    String? accessToken = await JWTService.readJWT();
-
-    Map<String, int> requestBody = {
+    Map<String, dynamic> queryParams = {
       'idUsuario': userId,
       'idCobertura': coverageId
     };
 
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.recentQueriesEndpoint).replace(queryParameters: filterQueryParameters(queryParams));
+    String? accessToken = await JWTService.readJWT();
+
     try {
       var response = await http.post(
         url,
-        body: json.encode(requestBody),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken'
         }
       ).timeout(defaultTimeout);
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 201 || response.statusCode == 204) {
+        // Coverage added or updated successfully
         return true;
       }
     } catch(e) {

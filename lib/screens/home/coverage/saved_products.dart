@@ -27,7 +27,7 @@ class SavedProducts extends StatefulWidget {
 }
 
 class _SavedProductsState extends State<SavedProducts> {
-  final _savedProductContoller = TextEditingController();
+
   List<Cobertura> productCoverages = [];
   String? category;
   String? type;

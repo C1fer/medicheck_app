@@ -58,8 +58,8 @@
   "coverage": "Coverage",
   "medical_centers": "Centers",
   "favourites": "Favorites",
-  "new_coverages": "New Products",
-  "recent_coverages": "Recent Queries",
+  "recently_added": "New coverages",
+  "recent_viewed": "Recently viewed",
   "view_all": "View all",
 
   "affiliated_centers": "Affiliated Centers",

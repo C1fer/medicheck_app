@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
+import 'package:provider/provider.dart';
 import '../../models/cobertura.dart';
 import '../../models/enums.dart';
+import '../../models/notifiers/recent_query_notifier.dart';
+import '../../models/notifiers/user_info_notifier.dart';
 import '../../styles/app_styles.dart';
+import '../../utils/api/api_service.dart';
 import '../../widgets/cards/feature_card.dart';
 import '../../utils/cached_coverages.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CoverageCardSmall extends StatelessWidget {
-  const CoverageCardSmall({super.key, required this.coverage});
+  const CoverageCardSmall({super.key, required this.coverage, this.onTap});
 
   final Cobertura coverage;
+  final void Function()? onTap;
+
+  Future<void> onSelected(BuildContext context, Cobertura selectedCoverage) async {
+    int userId = context.read<UserInfoModel>().currentUser!.idUsuario;
+    bool response = await ApiService.postRecentQuery(userId, selectedCoverage.idCobertura);
+
+    if (response) {
+      // Update selected coverage global state
+      await context.read<ViewedCoverageModel>().set(selectedCoverage);
+      // Navigate to details screen
+      Navigator.pushNamed(context, CoverageDetailView.id,
+          arguments: selectedCoverage);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        CachedCoveragesService.add(coverage);
-        Navigator.pushNamed(context, CoverageDetailView.id,
-            arguments: coverage);
-      },
+      onTap: () => onTap ?? onSelected(context, coverage),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
