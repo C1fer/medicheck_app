@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../models/place.dart';
+import '../models/google_place.dart';
 
 class PlacesApiService {
   static const apiKey = "AIzaSyBF4HkTwIaYTIXubPpfRc2v7vKOMRgs3pw ";

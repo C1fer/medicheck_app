@@ -26,7 +26,8 @@ class GooglePlace {
       this.openNow,
       this.workingHoursDescription,
       required this.lat,
-      required this.lon});
+      required this.lon}
+      );
 
   factory GooglePlace.fromJson(Map<String, dynamic> json) => GooglePlace(
       id: json["id"],
