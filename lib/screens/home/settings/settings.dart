@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/settings/change_pw.dart';
@@ -32,8 +33,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var selectedLocale = Localizations.localeOf(context).toString();
     final locale = AppLocalizations.of(context);
+    List<Plan> userPlans = context.read<PlanModel>().plans;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -44,105 +45,33 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                UserInfo(context),
+                UserInfo(locale),
                 const SizedBox(
                   height: 15,
                 ),
-                SettingCard(
-                    content: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Plan',
-                      style: AppStyles.settingTextStyle,
+                if (userPlans.length > 1)
+                  Column(children: [
+                    PlanSelect(locale),
+                    const SizedBox(
+                      height: 15,
                     ),
-                    Consumer<PlanModel>(
-                        builder: (context, planModel, _) =>
-                            planModel.plans.length > 1
-                                ? DropdownButton(
-                                    borderRadius: BorderRadius.circular(24.0),
-                                    value: planModel.selectedPlanID.toString(),
-                                    onChanged: (String? newPlanID) => planModel
-                                        .updateSelectedPlan(newPlanID!),
-                                    items: planModel.plans
-                                        .map((Plan plan) => DropdownMenuItem(
-                                              value: plan.idPlan.toString(),
-                                              child: Text(plan.descripcion),
-                                            ))
-                                        .toList())
-                                : Text(
-                                    planModel.selectedPlan!.descripcion,
-                                    style: AppStyles.settingTextStyle
-                                        .copyWith(fontWeight: FontWeight.w500),
-                                  ))
-                  ],
-                )),
-                const SizedBox(
-                  height: 15,
-                ),
-                SettingCard(
-                  content: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(locale.change_lang,
-                          style: AppStyles.settingTextStyle),
-                      Consumer<LocaleModel>(
-                        builder: (context, localeModel, child) =>
-                            DropdownButton(
-                          borderRadius: BorderRadius.circular(24.0),
-                          value: selectedLocale,
-                          items: [
-                            DropdownMenuItem(
-                              value: "en",
-                              child: Text('🇺🇸 ${locale.english}'),
-                            ),
-                            DropdownMenuItem(
-                              value: "es",
-                              child: Text('🇪🇸 ${locale.spanish}'),
-                            ),
-                          ],
-                          onChanged: (String? value) {
-                            if (value != null) {
-                              localeModel.set(Locale(value));
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                  ]),
+                LangSelect(locale),
                 const SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
-                    onTap: () =>
-                        Navigator.pushNamed(context, ChangePassword.id),
-                    child: SettingCard(
-                      content: Text(
-                        locale.change_pwd,
-                        style: AppStyles.settingTextStyle,
-                      ),
-                    )),
+                PwdChange(locale),
                 const SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
-                    onTap: () => userLogOut(),
-                    child: SettingCard(
-                      content: Text(
-                        locale.log_out,
-                        style: AppStyles.settingTextStyle
-                            .copyWith(color: Colors.red),
-                      ),
-                    )),
+                LogOut(locale)
               ],
             )),
       ),
     );
   }
 
-  Widget UserInfo(BuildContext context) {
-    final locale = AppLocalizations.of(context);
+  Widget UserInfo(AppLocalizations locale) {
     return SettingCard(
         content: Consumer<UserInfoModel>(
       builder: (context, userModel, _) => Column(
@@ -156,24 +85,26 @@ class _SettingsPageState extends State<SettingsPage> {
             style: AppStyles.subSmallTextStyle,
           ),
           const SizedBox(
-            height: 25,
+            height: 24,
           ),
           Consumer<PlanModel>(
               builder: (context, planModel, _) => Row(
                     children: [
+                      // Expanded(
+                      //   child: _InfoSection(
+                      //       userModel.currentUser!.tipoDocumento == "NSS"
+                      //           ? locale.ssn_abbrv
+                      //           : locale.national_id_card_abbrv,
+                      //       userModel.currentUser!.noDocumento!),
+                      // ),
+                      // SizedBox(width: 10,),
                       Expanded(
                         child: _InfoSection(
-                            userModel.currentUser!.tipoDocumento == "NSS"
-                                ? locale.ssn_abbrv
-                                : locale.national_id_card_abbrv,
-                            userModel.currentUser!.noDocumento!),
+                            locale.insurer,
+                            planModel
+                                .selectedPlan!.idAseguradoraNavigation!.nombre),
                       ),
-                      _SectionSeparator(),
-                      Expanded(
-                        child: _InfoSection(locale.insurer,
-                            planModel.selectedPlan!.idAseguradoraNavigation!.nombre),
-                      ),
-                      _SectionSeparator(),
+                      SizedBox(width: 10),
                       Expanded(
                         child: _InfoSection(
                             locale.plan, planModel.selectedPlan!.descripcion),
@@ -183,6 +114,91 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
     ));
+  }
+
+  Widget PlanSelect(AppLocalizations locale) {
+    return SettingCard(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              locale.plan,
+              style: AppStyles.settingTextStyle,
+            ),
+            Consumer<PlanModel>(
+                builder: (context, planModel, _) => planModel.plans.length > 1
+                    ? DropdownButton(
+                    borderRadius: BorderRadius.circular(24.0),
+                    value: planModel.selectedPlanID.toString(),
+                    onChanged: (String? newPlanID) =>
+                        planModel.updateSelectedPlan(newPlanID!),
+                    items: planModel.plans
+                        .map((Plan plan) => DropdownMenuItem(
+                      value: plan.idPlan.toString(),
+                      child: Text(plan.descripcion),
+                    ))
+                        .toList())
+                    : Text(
+                  planModel.selectedPlan!.descripcion,
+                  style: AppStyles.settingTextStyle
+                      .copyWith(fontWeight: FontWeight.w500),
+                ))
+          ],
+        ));
+  }
+
+  Widget LangSelect(AppLocalizations locale) {
+    return SettingCard(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(locale.change_lang.toProperCase(), style: AppStyles.settingTextStyle),
+          Consumer<LocaleModel>(
+            builder: (context, localeModel, child) => DropdownButton(
+              borderRadius: BorderRadius.circular(24.0),
+              value: localeModel.locale.languageCode,
+              items: [
+                DropdownMenuItem(
+                  value: "en",
+                  child: Text('🇺🇸 ${locale.english}'),
+                ),
+                DropdownMenuItem(
+                  value: "es",
+                  child: Text('🇪🇸 ${locale.spanish}'),
+                ),
+              ],
+              onChanged: (String? value) {
+                if (value != null) {
+                  localeModel.set(Locale(value));
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget PwdChange(AppLocalizations locale) {
+    return GestureDetector(
+        onTap: () => Navigator.pushNamed(context, ChangePassword.id),
+        child: SettingCard(
+          content: Text(
+            locale.change_pwd.toProperCase(),
+            style: AppStyles.settingTextStyle,
+          ),
+        ));
+  }
+
+  Widget LogOut(AppLocalizations locale) {
+    return GestureDetector(
+        onTap: () => userLogOut(),
+        child: SettingCard(
+          content: Text(
+            locale.log_out.toProperCase(),
+            style: AppStyles.settingTextStyle.copyWith(color: Colors.red),
+          ),
+        ));
   }
 
   Widget _SectionSeparator() {
