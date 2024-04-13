@@ -107,7 +107,7 @@ class _ProductSearchState extends State<ProductSearch> {
                     noItemsFoundIndicatorBuilder: (context) =>
                         Center(child: Text(locale.no_results_shown))),
                 separatorBuilder: (context, index) =>
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
                 scrollDirection: Axis.vertical,
               )),
             ],

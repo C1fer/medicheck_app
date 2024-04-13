@@ -36,7 +36,7 @@ class ProductCardSmall extends StatelessWidget {
       onTap: () => onTap ?? onSelected(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             flex: 9,
@@ -64,7 +64,7 @@ class ProductCardSmall extends StatelessWidget {
                       height: 4.0,
                     ),
                     Text(
-                      product.idTipoProductoNavigation.nombre.toProperCase(),
+                      product.idTipoProductoNavigation!.nombre.toProperCase(),
                       style: AppStyles.subSmallTextStyle.copyWith(fontSize: 12.0),
                       overflow: TextOverflow.ellipsis,
                     ),

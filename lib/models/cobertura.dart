@@ -14,7 +14,6 @@ class Cobertura {
   bool? nivelAtencion3;
   double? coberturaTope;
   double? cuotaAfiliadoTope;
-  GrupoCobertura idGrupoNavigation;
   SubGrupoCobertura idSubGrupoNavigation;
   Plan? idPlanNavigation;
   Producto idProductoNavigation;
@@ -30,28 +29,32 @@ class Cobertura {
     required this.nivelAtencion3,
     required this.coberturaTope,
     required this.cuotaAfiliadoTope,
-    required this.idGrupoNavigation,
     required this.idSubGrupoNavigation,
     required this.idPlanNavigation,
     required this.idProductoNavigation,
   });
 
-  factory Cobertura.fromJson(Map<String, dynamic> json) => Cobertura(
-        idCobertura: json["idCobertura"],
-        porcentaje: json["porcentaje"],
-        fechaVencimiento: DateTime.parse(json["fechaVencimiento"]),
-        fechaRegistro: DateTime.parse(json["fechaRegistro"]),
-        isPDSS: json["isPdss"],
-        nivelAtencion1: json["nivelAtencion1"],
-        nivelAtencion2: json["nivelAtencion2"],
-        nivelAtencion3: json["nivelAtencion3"],
-        coberturaTope: json["coberturaTope"],
-        cuotaAfiliadoTope: json["cuotaAfiliadoTope"],
-        idGrupoNavigation: json["idGrupoNavigation"],
-        idSubGrupoNavigation: json["idSubGrupoNavigation"],
-        idPlanNavigation: json["idPlanNavigation"] != null
-            ? Plan.fromJson(json["idPlanNavigation"])
-            : null,
-        idProductoNavigation: Producto.fromJson(json["idProductoNavigation"]),
-      );
+  factory Cobertura.fromJson(Map<String, dynamic> json) {
+    print('POOF: ${json["idCobertura"]}');
+    return Cobertura(
+      idCobertura: json["idCobertura"],
+      porcentaje: json["porcentaje"],
+      fechaVencimiento: json["fechaVencimiento"] != null
+          ? DateTime.parse(json["fechaVencimiento"])
+          : null,
+      fechaRegistro: DateTime.parse(json["fechaRegistro"]),
+      isPDSS: json["isPdss"],
+      nivelAtencion1: json["nivelAtencion1"],
+      nivelAtencion2: json["nivelAtencion2"],
+      nivelAtencion3: json["nivelAtencion3"],
+      coberturaTope: json["coberturaTope"],
+      cuotaAfiliadoTope: json["cuotaAfiliadoTope"],
+      idSubGrupoNavigation:
+          SubGrupoCobertura.fromJson(json["idGrupoSubgrupoNavigation"]),
+      idPlanNavigation: json["idPlanNavigation"] != null
+          ? Plan.fromJson(json["idPlanNavigation"])
+          : null,
+      idProductoNavigation: Producto.fromJson(json["idProductoNavigation"]),
+    );
+  }
 }

@@ -255,6 +255,7 @@ class ApiService {
       String? desc,
       String? type,
       int? pageIndex,
+      int? pageSize,
       String? orderField,
       String? orderDirection}) async {
     Map<String, dynamic> queryParams = filterQueryParameters({
@@ -266,6 +267,7 @@ class ApiService {
       'idSubgrupo': subGroupID,
       'idProducto': productID,
       'pageIndex': pageIndex,
+      'pageSize': pageSize,
       'orderField': orderField,
       'orderDirection': orderDirection,
     });

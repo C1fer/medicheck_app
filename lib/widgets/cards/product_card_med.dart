@@ -70,7 +70,7 @@ class ProductCard extends StatelessWidget {
               height: 4.0,
             ),
             Text(
-              product.idTipoProductoNavigation.nombre.toProperCase(),
+              product.idTipoProductoNavigation!.nombre.toProperCase(),
               style: AppStyles.coverageCardCategoryTextStyle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
