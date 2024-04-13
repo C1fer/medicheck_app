@@ -109,6 +109,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: _InfoSection(
                             locale.plan, planModel.selectedPlan!.descripcion),
                       ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: _InfoSection(
+                            locale.plan_modality, planModel.selectedPlan!.idRegimenNavigation.descripcion.toSentenceCase()),
+                      ),
                     ],
                   ))
         ],

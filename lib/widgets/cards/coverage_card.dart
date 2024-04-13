@@ -24,7 +24,7 @@ class CoverageCard extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 12),
+                margin: const EdgeInsets.only(left: 12),
                 width: 36,
                 height: 36,
                 child: SvgPicture.asset(
@@ -32,6 +32,7 @@ class CoverageCard extends StatelessWidget {
                   fit: BoxFit.fitHeight,
                 ),
               ),
+              SizedBox(width: 12,),
               Expanded(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

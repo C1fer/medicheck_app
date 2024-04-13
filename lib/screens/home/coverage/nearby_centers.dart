@@ -32,7 +32,7 @@ class _NearbyCentersState extends State<NearbyCenters> {
       Position location = await GeolocationService.getCurrentPosition();
       String localeLangCode = context.read<LocaleModel>().locale.languageCode;
       final places = await PlacesApiService.nearbySearch(
-          18.474125, -69.975324, localeLangCode);
+        18.4880088, -69.9650699, localeLangCode);
       return places;
     } catch (ex) {
       return Future.error("Error fetching places");

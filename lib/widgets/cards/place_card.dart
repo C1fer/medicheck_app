@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:medicheck/widgets/cards/feature_card.dart';
 import '../../models/google_place.dart';
 import '../../styles/app_styles.dart';
@@ -48,7 +49,7 @@ class PlaceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    place.name,
+                    place.name.toProperCase(),
                     style: AppStyles.sectionTextStyle,
                   ),
                   const SizedBox(

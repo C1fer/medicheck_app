@@ -109,24 +109,22 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
         title: localization.coverage_details,
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 8,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(
-                      height: 50,
-                    ),
                     Center(
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 12),
-                        width: 120,
-                        height: 120,
+                        width: 100,
+                        height: 100,
                         child: SvgPicture.asset(
                           'assets/icons/pill.svg',
                           fit: BoxFit.fitHeight,
@@ -134,7 +132,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                       ),
                     ),
                     const SizedBox(
-                      height: 75.0,
+                      height: 35.0,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -189,18 +187,17 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                localization.coverage,
+                                "Coberturas del producto",
                                 style: AppStyles.sectionTextStyle
                                     .copyWith(fontSize: 20),
 
                               ),
-                              const SizedBox(height: 8,),
-                              GestureDetector(
+                              const SizedBox(height: 8),
+                              SingleChildScrollView(
                                 child: CoveragesListView(
                                   context,
                                   productCoverages!.data,
                                 ),
-                                onTap: () {},
                               ),
                             ],
                           )
@@ -208,16 +205,17 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: 12.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: FilledButton(
-                onPressed: () => Navigator.pushNamed(context, NearbyCenters.id),
-                child: Text(localization.near_centers),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: FilledButton(
+                    onPressed: () => Navigator.pushNamed(context, NearbyCenters.id),
+                    child: Text(localization.near_centers),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -229,7 +227,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
         coverage: coverages[index],
       ),
       separatorBuilder: (context, index) => const SizedBox(height: 6.0),
-      itemCount: coverages.length >= 3 ? 4 : coverages.length,
+      itemCount: coverages.length >= 6 ? 6 : coverages.length,
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
     );
