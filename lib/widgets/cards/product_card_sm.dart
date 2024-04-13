@@ -1,40 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicheck/screens/home/coverage/coverage_details.dart';
+import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:provider/provider.dart';
-import '../../models/cobertura.dart';
-import '../../models/enums.dart';
+
+import '../../models/producto.dart';
 import '../../models/notifiers/recent_query_notifier.dart';
 import '../../models/notifiers/user_info_notifier.dart';
+import '../../screens/home/coverage/coverage_details.dart';
 import '../../styles/app_styles.dart';
 import '../../utils/api/api_service.dart';
-import '../../widgets/cards/feature_card.dart';
-import '../../utils/cached_coverages.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../models/enums.dart';
+import 'feature_card.dart';
 
-class CoverageCardSmall extends StatelessWidget {
-  const CoverageCardSmall({super.key, required this.coverage, this.onTap});
+class ProductCardSmall extends StatelessWidget {
+  const ProductCardSmall({super.key, required this.product, this.onTap});
 
-  final Cobertura coverage;
+  final Producto product;
   final void Function()? onTap;
 
-  Future<void> onSelected(BuildContext context, Cobertura selectedCoverage) async {
+  Future<void> onSelected(BuildContext context) async {
     int userId = context.read<UserInfoModel>().currentUser!.idUsuario;
-    bool response = await ApiService.postRecentQuery(userId, selectedCoverage.idCobertura);
+    Navigator.pushNamed(context, CoverageDetailView.id,
+        arguments: product);
 
+    bool response = await ApiService.postRecentQuery(userId, product.idProducto);
     if (response) {
       // Update selected coverage global state
-      await context.read<ViewedCoverageModel>().set(selectedCoverage);
-      // Navigate to details screen
-      Navigator.pushNamed(context, CoverageDetailView.id,
-          arguments: selectedCoverage);
-    }
-  }
+      await context.read<ViewedCoverageModel>().set(product);
+
+    }}
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap ?? onSelected(context, coverage),
+      onTap: () => onTap ?? onSelected(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,23 +47,24 @@ class CoverageCardSmall extends StatelessWidget {
                   width: 36,
                   height: 36,
                   child: SvgPicture.asset(
-                    Constants.productTypeIcons[coverage.idProductoNavigation.tipo]!,
+                    'assets/icons/pill.svg',
                     fit: BoxFit.fitHeight,
                   ),
                 ),
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(
-                      coverage.idProductoNavigation.nombre,
+                      product.nombre.toProperCase(),
+                      maxLines: 2,
                       style: AppStyles.coverageCardHeadingTextStyle
-                          .copyWith(fontSize: 16.0),
+                          .copyWith(fontSize: 14.0),
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(
                       height: 4.0,
                     ),
                     Text(
-                      coverage.idProductoNavigation.descripcion,
+                      product.idTipoProductoNavigation.nombre.toProperCase(),
                       style: AppStyles.subSmallTextStyle.copyWith(fontSize: 12.0),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -73,23 +73,23 @@ class CoverageCardSmall extends StatelessWidget {
               ],
             ),
           ),
+          /*Expanded( flex: 3, child:  Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 4.0, vertical: 4.0),
+            child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
+          ),)*/
           Expanded(
             flex: 3,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  AppLocalizations.of(context).coverage,
-                  style: AppStyles.coverageCardCategoryTextStyle
-                      .copyWith(fontSize: 12.0),
-                ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 4.0, vertical: 4.0),
-                    child: FeatureCard(msg: '${coverage.porcentaje} %'),
+                    child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
                   ),
                 )
               ],

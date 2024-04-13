@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/notifiers/localeNotifier.dart';
 import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
+import 'package:medicheck/models/responses/producto_response.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/responses/cobertura_response.dart';
 import '../../models/notifiers/user_info_notifier.dart';
 import '../../models/responses/plan_response.dart';
-import '../../screens/home/coverage/coverage_search.dart';
+import '../../screens/home/coverage/product_search.dart';
 import '../../screens/home/coverage/saved_products.dart';
 import '../../screens/home/establishments/establishments_list.dart';
 import '../../screens/home/incidents/incident_reports.dart';
@@ -18,7 +19,7 @@ import '../../styles/app_colors.dart';
 import '../../utils/api/api_service.dart';
 import '../../models/notifiers/plan_notifier.dart';
 import '../../widgets/cards/menu_action_card.dart';
-import '../../widgets/coverages_list_view.dart';
+import '../../widgets/products_list_view.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -29,14 +30,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  CoberturaResponse? recentlyAddedCoverages;
-  CoberturaResponse? recentlyViewedCoverages;
+  ProductoResponse? recentlyAddedProducts;
+  ProductoResponse? recentlyViewedProducts;
 
   @override
   void initState() {
     // Define listeners for plan and recently viewed coverage
-    Provider.of<PlanModel>(context, listen: false)
-        .addListener(_fetchData);
+    Provider.of<PlanModel>(context, listen: false).addListener(_fetchData);
     Provider.of<ViewedCoverageModel>(context, listen: false)
         .addListener(_fetchData);
 
@@ -56,20 +56,19 @@ class _HomeState extends State<Home> {
     return false;
   }
 
-  // Get recently added coverages
-  Future<void> _fetchNewCoverages(int selectedPlanID) async {
-    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
-        planID: selectedPlanID,
-        orderField: "fecha_registro",
-        orderDirection: "desc");
-    setState(() => recentlyAddedCoverages = response);
+  // Get user search history
+  Future<void> _fetchRecentQueries(int userID) async {
+    ProductoResponse? response =
+        await ApiService.getRecentQueries(userId: userID);
+    setState(() => recentlyViewedProducts = response);
   }
 
-  // Get user search history
-  Future<void> _fetchRecentQueries(int selectedPlanID, int userID) async {
-    CoberturaResponse? response = await ApiService.getRecentQueries(
-        userId: userID, planId: selectedPlanID);
-    setState(() => recentlyViewedCoverages = response);
+  Future<void> _fetchNewProducts(int selectedPlanID) async {
+    ProductoResponse? response = await ApiService.getProductsAdvanced(
+        planID: selectedPlanID,
+        orderField: "id_producto",
+        orderDirection: "desc");
+    setState(() => recentlyAddedProducts = response);
   }
 
   // Fetch to be executed on initState
@@ -79,11 +78,11 @@ class _HomeState extends State<Home> {
     if (userID != null) {
       final planProvider = context.read<PlanModel>();
       if (planProvider.plans.isEmpty) {
-        bool response = await _fetchUserPlans(userID);
+        await _fetchUserPlans(userID);
       }
       int selectedPlanID = planProvider.selectedPlanID!;
-      await _fetchNewCoverages(selectedPlanID);
-      await _fetchRecentQueries(selectedPlanID, userID);
+      await _fetchNewProducts(selectedPlanID);
+      await _fetchRecentQueries(userID);
     }
   }
 
@@ -132,7 +131,7 @@ class _HomeState extends State<Home> {
                   height: 24.0,
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, CoverageSearch.id),
+                  onTap: () => Navigator.pushNamed(context, ProductSearch.id),
                   child: PlaceHolderSearchBar(),
                 ),
                 const SizedBox(
@@ -170,8 +169,8 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 35.0,
                 ),
-                if (recentlyViewedCoverages != null &&
-                    recentlyViewedCoverages!.data.isNotEmpty)
+                if (recentlyViewedProducts != null &&
+                    recentlyViewedProducts!.data.isNotEmpty)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -181,9 +180,9 @@ class _HomeState extends State<Home> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: CoveragesListView(
-                            coverages: recentlyViewedCoverages?.data != null
-                                ? recentlyViewedCoverages!.data
+                        child: ProductsListView(
+                            products: recentlyViewedProducts?.data != null
+                                ? recentlyViewedProducts!.data
                                 : []),
                       ),
                     ],
@@ -194,9 +193,9 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                  child: CoveragesListView(
-                      coverages: recentlyAddedCoverages?.data != null
-                          ? recentlyAddedCoverages!.data
+                  child: ProductsListView(
+                      products: recentlyAddedProducts?.data != null
+                          ? recentlyAddedProducts!.data
                           : []),
                 ),
               ],

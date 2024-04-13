@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/models/cobertura.dart';
-import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/models/responses/producto_response.dart';
-import 'package:medicheck/widgets/cards/coverage_card.dart';
-import 'package:medicheck/widgets/coverages_list_view.dart';
+import 'package:medicheck/widgets/cards/product_card_med.dart';
 import 'package:provider/provider.dart';
-import '../../../models/notifiers/plan_notifier.dart';
 import '../../../models/producto.dart';
-import '../../../models/usuario.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../widgets/misc/data_loading_indicator.dart';
 
-import '../../../widgets/misc/search/search_row.dart';
-import '../../../widgets/popups/dialog/dialogs/product_filter_dialog.dart';
-import 'coverage_details.dart';
 
 class SavedProducts extends StatefulWidget {
   const SavedProducts({super.key});
@@ -27,63 +20,30 @@ class SavedProducts extends StatefulWidget {
 }
 
 class _SavedProductsState extends State<SavedProducts> {
-
-  List<Cobertura> productCoverages = [];
-  String? category;
-  String? type;
-
-  Future<void> _fetchSavedProducts(int userID) async {
-    final savedProductsProvider = context.read<SavedProductModel>();
-    ProductoResponse? response =
-        await ApiService.getSavedProducts(userID: userID, pageSize: 1000);
-    if (response != null) {
-      savedProductsProvider.replaceItems(response.data);
-    }
-  }
-
-  Future<Cobertura?> _fetchCoverageByProductPlan(
-      int planID, int productID) async {
-    CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
-        planID: planID, productID: productID);
-    if (response != null && response.data.isNotEmpty) {
-      return response.data.first;
-    }
-
-    return null;
-  }
-
-  Future<void> fetchProductCoverages(List<Producto> savedProducts) async {
-    List<Cobertura> coverages = [];
-    int planID = context.read<PlanModel>().selectedPlanID!;
-    for (Producto product in savedProducts) {
-      Cobertura? productCoverage =
-          await _fetchCoverageByProductPlan(planID, product.idProducto);
-      if (productCoverage != null) {
-        coverages.add(productCoverage);
-      }
-    }
-   setState(() => productCoverages = coverages);
-  }
-
-  Future<void> _fetchData() async {
-    if (mounted) {
-      final userProvider = context.read<UserInfoModel>();
-      final savedProductsProvider = context.read<SavedProductModel>();
-      await _fetchSavedProducts(userProvider.currentUser!.idUsuario);
-      await fetchProductCoverages(savedProductsProvider.savedProducts);
-    }
-  }
-
   @override
   void initState() {
     _fetchData();
     super.initState();
   }
 
+  Future<void> _fetchSavedProducts(int userID) async {
+    ProductoResponse? response = await ApiService.getSavedProducts(userID: userID, pageSize: 1000);
+    if (response != null) {
+      final savedProductsProvider = context.read<SavedProductModel>();
+      savedProductsProvider.replaceItems(response.data);
+    }
+  }
+
+  Future<void> _fetchData() async {
+    if (mounted) {
+      final userID = context.read<UserInfoModel>().currentUserID!;
+      await _fetchSavedProducts(userID);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
-
     return Scaffold(
       appBar: CustomAppBar(
         title: locale.saved_products,
@@ -92,36 +52,32 @@ class _SavedProductsState extends State<SavedProducts> {
         child: SafeArea(
           child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: productCoverages.isEmpty
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
-                children: [
-                  productCoverages.isEmpty
-                      ? Center(child: Text(locale.no_results_shown))
-                      : SavedProductsGridView(context)
-                ],
-              )),
+              child: Consumer<SavedProductModel>(
+                  builder: (context, planModel, _) => Column(
+                        mainAxisAlignment: planModel.savedProducts.isEmpty
+                            ? MainAxisAlignment.center
+                            : MainAxisAlignment.start,
+                        children: [
+                          planModel.savedProducts.isEmpty
+                              ? const DataLoadingIndicator()
+                              : SavedProductsGridView(context, planModel.savedProducts)
+                        ],
+                      ))),
         ),
       ),
     );
   }
 
-  Widget SavedProductsGridView(BuildContext context) {
+  Widget SavedProductsGridView(BuildContext context, List<Producto> products) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // Example: 2 columns
         crossAxisSpacing: 8, // Add spacing between columns
         mainAxisSpacing: 8, // Add spacing between rows
       ),
-      itemCount: productCoverages.length,
-      itemBuilder: (context, idx) => CoverageCard(
-        coverage: productCoverages[idx],
-        onTap: () async {
-          await Navigator.pushNamed(context, CoverageDetailView.id,
-              arguments: productCoverages[idx]);
-          _fetchData();
-        },
+      itemCount: products.length,
+      itemBuilder: (context, idx) => ProductCard(
+        product: products[idx],
       ),
       shrinkWrap: true,
     );

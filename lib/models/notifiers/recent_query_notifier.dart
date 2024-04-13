@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/models/cobertura.dart';
+import '../../models/producto.dart';
 
 class ViewedCoverageModel extends ChangeNotifier{
-  Cobertura? recentCoverage;
+  Producto? recentProduct;
 
-  Cobertura? get viewedCoverage  => recentCoverage;
+  Producto? get viewedProduct  => recentProduct;
 
-  int? get viewedCoverageID  => recentCoverage?.idCobertura;
+  int? get viewedProductID  => recentProduct?.idProducto;
 
-  Future<void> set(Cobertura selectedCoverage) async {
-    recentCoverage = selectedCoverage;
+  Future<void> set(Producto selectedProduct) async {
+    recentProduct = selectedProduct;
     notifyListeners();
   }
 }

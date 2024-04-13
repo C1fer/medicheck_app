@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import '../models/cobertura.dart';
+import '../models/producto.dart';
+import 'cards/product_card_med.dart';
 
-import 'cards/coverage_card.dart';
-
-class CoveragesListView extends StatelessWidget {
-  const CoveragesListView({
+class ProductsListView extends StatelessWidget {
+  const ProductsListView({
     super.key,
-    required this.coverages, this.scrollDirection = Axis.horizontal,
+    required this.products, this.scrollDirection = Axis.horizontal,
   });
 
-  final List<Cobertura> coverages;
+  final List<Producto> products;
   final Axis scrollDirection;
 
 
@@ -18,11 +17,11 @@ class CoveragesListView extends StatelessWidget {
     return SizedBox(
       height: 200,
       child: ListView.separated(
-        itemBuilder: (context, index) => CoverageCard(
-          coverage: coverages[index],
+        itemBuilder: (context, index) => ProductCard(
+          product: products[index],
         ),
         separatorBuilder: (context, index) => const SizedBox(width: 16.0),
-        itemCount: coverages.length,
+        itemCount: products.length,
         scrollDirection: scrollDirection,
         shrinkWrap: true,
       ),

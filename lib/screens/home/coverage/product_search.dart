@@ -1,66 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:medicheck/models/producto.dart';
 import 'package:medicheck/models/responses/cobertura_response.dart';
+import 'package:medicheck/models/responses/producto_response.dart';
+import 'package:medicheck/widgets/cards/product_card_sm.dart';
 import 'package:medicheck/widgets/misc/search/search_row.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/product_filter_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../models/cobertura.dart';
 import '../../../models/notifiers/plan_notifier.dart';
 import '../../../widgets/misc/custom_appbar.dart';
-import '../../../widgets/cards/coverage_card_sm.dart';
+import '../../../widgets/cards/product_card_med.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../utils/api/api_service.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'dart:convert';
 
-class CoverageSearch extends StatefulWidget {
-  const CoverageSearch({super.key});
-  static const String id = "coverage_search";
+class ProductSearch extends StatefulWidget {
+  const ProductSearch({super.key});
+  static const String id = "product_search";
 
   @override
-  State<CoverageSearch> createState() => _CoverageSearchState();
+  State<ProductSearch> createState() => _ProductSearchState();
 }
 
-class _CoverageSearchState extends State<CoverageSearch> {
-  final _coverageController = TextEditingController();
-  final PagingController<int, Cobertura> _coveragesPagingController =
-      PagingController(firstPageKey: 1);
+class _ProductSearchState extends State<ProductSearch> {
+  final _productController = TextEditingController();
+  final PagingController<int, Producto> _productsPagingController = PagingController(firstPageKey: 1);
 
-  String? _typeVal;
-  String? _categoryVal;
-
-  Future<void> searchProductCoverages() async {
-    if (mounted) {
-      int? planID = context.read<PlanModel>().selectedPlanID;
-      CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
-          planID: planID,
-          name: _coverageController.text,
-          type: _typeVal,
-          category: _categoryVal,
-          pageIndex: _coveragesPagingController.nextPageKey ??
-              _coveragesPagingController.firstPageKey);
-
-      if (response != null) {
-        if (response.hasNextPage) {
-          _coveragesPagingController.appendPage(
-              response.data, response.pageNumber + 1);
-        } else {
-          _coveragesPagingController.appendLastPage(response.data);
-        }
-      }
-    }
-  }
+  String? _typeID;
+  String _category = "ALL";
 
   @override
   void initState() {
-    _coveragesPagingController.addPageRequestListener((pageKey) => searchProductCoverages());
+    _productsPagingController.addPageRequestListener((pageKey) => searchProducts());
     super.initState();
   }
 
   @override
   void dispose() {
-    _coveragesPagingController.dispose();
-    _coverageController.dispose();
+    _productsPagingController.dispose();
+    _productController.dispose();
     super.dispose();
   }
+  Future<void> searchProducts() async {
+    if (mounted) {
+      int planID = context.read<PlanModel>().selectedPlanID!;
+      ProductoResponse? response = await ApiService.getProductsAdvanced(
+          name: _productController.text,
+          filterCategory: _category,
+          planID: planID,
+          typeID: _typeID != null ? int.parse(_typeID!) : null,
+          pageIndex: _productsPagingController.nextPageKey ??
+              _productsPagingController.firstPageKey);
+
+      if (response != null) {
+        if (response.hasNextPage) {
+          _productsPagingController.appendPage(
+              response.data, response.pageNumber + 1);
+        } else {
+          _productsPagingController.appendLastPage(response.data);
+        }
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,19 +79,19 @@ class _CoverageSearchState extends State<CoverageSearch> {
               Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: SearchBarWithFilter(
-                    searchController: _coverageController,
+                    searchController: _productController,
                     hintText: locale.type_here,
                     onChanged: (String? val) =>
-                        _coveragesPagingController.refresh(),
+                        _productsPagingController.refresh(),
                     filterDialog: ProductFilterDialog(
-                        typeValue: _typeVal,
-                        categoryValue: _categoryVal,
+                        typeID: _typeID,
+                        categoryValue: _category,
                         onCategoryChanged: (String? val) =>
-                            setState(() => _categoryVal = val),
+                            setState(() => _category = val!),
                         onTypeChanged: (String? val) =>
-                            setState(() => _typeVal = val),
+                            setState(() => _typeID = val),
                         onButtonPressed: () async {
-                          searchProductCoverages();
+                          searchProducts();
                           Navigator.pop(context);
                         })),
               ),
@@ -97,10 +100,10 @@ class _CoverageSearchState extends State<CoverageSearch> {
               ),
               Expanded(
                   child: PagedListView.separated(
-                pagingController: _coveragesPagingController,
-                builderDelegate: PagedChildBuilderDelegate<Cobertura>(
+                pagingController: _productsPagingController,
+                builderDelegate: PagedChildBuilderDelegate<Producto>(
                     itemBuilder: (context, item, index) =>
-                        CoverageCardSmall(coverage: item),
+                        ProductCardSmall(product: item),
                     noItemsFoundIndicatorBuilder: (context) =>
                         Center(child: Text(locale.no_results_shown))),
                 separatorBuilder: (context, index) =>

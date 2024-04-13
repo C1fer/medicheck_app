@@ -22,7 +22,7 @@ class ProductoResponse {
 
   factory ProductoResponse.fromJson(Map<String, dynamic> json) {
     return ProductoResponse(
-      data: (json['data'] as List).map((item) => Producto.fromJson(item["idProductoNavigation"])).toList(),
+      data: (json['data'] as List).map((item) => Producto.fromJson(item)).toList(),
       pageNumber: json['pageNumber'],
       pageSize: json['pageSize'],
       totalItems: json['totalItems'],

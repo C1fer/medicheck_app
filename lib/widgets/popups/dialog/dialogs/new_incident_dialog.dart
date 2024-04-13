@@ -5,6 +5,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/establecimiento.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
+import 'package:medicheck/models/responses/producto_response.dart';
 import 'package:medicheck/styles/app_decorations.dart';
 import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/utils/input_validation/validation_logic.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../models/cobertura.dart';
 import '../../../../models/debouncer.dart';
+import '../../../../models/plan.dart';
 import '../../../../models/responses/establecimiento_response.dart';
 import '../../../../models/notifiers/plan_notifier.dart';
 import '../../../../models/producto.dart';
@@ -61,6 +63,8 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
+    Plan currenPlan = context.read<PlanModel>().selectedPlan!;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -107,9 +111,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
               suggestionsCallback: (keyword) async {
                 EstablecimientoResponse? responseData;
                 if (keyword != "") {
-                  int planID = context.read<PlanModel>().selectedPlanID!;
-                  responseData = await ApiService.getEstablishments(
-                      arsID: planID, keyword: keyword);
+                  responseData = await ApiService.getEstablishments(arsID:currenPlan.idAseguradoraNavigation.idAseguradora, keyword: keyword);
                 }
                 return responseData?.data ?? [];
               }),
@@ -120,7 +122,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
               style: AppStyles.headingTextStyle
                   .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          TypeAheadField<Cobertura>(
+          TypeAheadField<Producto>(
               controller: _productController,
               builder: (context, controller, focusNode) => TextFormField(
                     controller: controller,
@@ -136,23 +138,19 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleMedium,
                   )),
-              itemBuilder: (context, coverage) => ListTile(
-                    title: Text(coverage.idProductoNavigation.nombre),
+              itemBuilder: (context, product) => ListTile(
+                    title: Text(product.nombre),
                   ),
-              onSelected: (Cobertura coverage) {
+              onSelected: (Producto product) {
                 setState(() {
-                  selectedProduct = coverage.idProductoNavigation;
-                  _productController.text =
-                      coverage.idProductoNavigation.nombre;
+                  selectedProduct = product;
+                  _productController.text = product.nombre;
                 });
               },
               suggestionsCallback: (keyword) async {
-                CoberturaResponse? responseData;
+                ProductoResponse? responseData;
                 if (keyword != '') {
-                  responseData = await ApiService.getCoveragesAdvanced(
-                    planID: context.read<PlanModel>().selectedPlanID!,
-                    name: keyword,
-                  );
+                  responseData = await ApiService.getProductsAdvanced(planID: currenPlan.idPlan, name: keyword);
                 }
                 return responseData?.data ?? [];
               }),

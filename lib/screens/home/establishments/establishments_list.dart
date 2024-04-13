@@ -46,7 +46,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
     if (mounted) {
       final EstablecimientoResponse? response =
           await ApiService.getEstablishments(
-              arsID: context.read<PlanModel>().selectedPlanID,
+              arsID: context.read<PlanModel>().selectedPlan!.idAseguradoraNavigation.idAseguradora,
               keyword: _establishmentsController.text,
               type: establishmentType,
               pageIndex: _establishmentsPaginationController.nextPageKey ??

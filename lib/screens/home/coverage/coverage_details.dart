@@ -71,8 +71,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final coverage = ModalRoute.of(context)!.settings.arguments as Cobertura;
-    _isProductSaved(coverage.idProducto);
+    final product = ModalRoute.of(context)!.settings.arguments as Producto;
+    _isProductSaved(product.idProducto);
     final localization = AppLocalizations.of(context);
     return Scaffold(
       appBar: CustomAppBar(
@@ -100,8 +100,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                           width: 120,
                           height: 120,
                           child: SvgPicture.asset(
-                            Constants.productTypeIcons[
-                                coverage.idProductoNavigation.tipo]!,
+                           'assets/icons/pill.svg',
                             fit: BoxFit.fitHeight,
                           ),
                         ),
@@ -119,23 +118,17 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  coverage.idProductoNavigation.nombre,
+                                  product.nombre,
                                   style: AppStyles.sectionTextStyle
                                       .copyWith(fontSize: 30.0),
                                 ),
                                 const SizedBox(
                                   height: 6.0,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${coverage.porcentaje}% ${localization.coverage_percentage}',
-                                      style: AppStyles.actionTextStyle.copyWith(
-                                          fontSize: 26,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
+                                Text(
+                                  product.idTipoProductoNavigation.nombre,
+                                  style: AppStyles.actionTextStyle
+                                      .copyWith(fontSize: 26.0),
                                 ),
                               ],
                             ),
@@ -143,7 +136,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                           if (isSaved != null)
                             GestureDetector(
                               onTap: () =>
-                                  _saveProduct(coverage.idProductoNavigation),
+                                  _saveProduct(product),
                               child: Container(
                                 height: 40,
                                 width: 40,
@@ -165,22 +158,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                             AppStyles.sectionTextStyle.copyWith(fontSize: 20),
                       ),
                       const SizedBox(height: 10.0),
-                      Row(
-                        children: [
-                          FeatureCard(
-                              msg: coverage.idProductoNavigation.tipo
-                                  .toSentenceCase()),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          if (coverage.idProductoNavigation.tipo !=
-                              coverage.idProductoNavigation.categoria)
-                            (FeatureCard(
-                              msg: coverage.idProductoNavigation.categoria
-                                  .toSentenceCase(),
-                            )),
-                        ],
-                      ),
+                      //TODO Coverages List View
                       const SizedBox(height: 24.0),
                       Text(
                         localization.description,
@@ -188,14 +166,6 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                             AppStyles.sectionTextStyle.copyWith(fontSize: 20),
                       ),
                       const SizedBox(height: 11.0),
-                      Text(
-                        coverage.idProductoNavigation.descripcion,
-                        style: AppStyles.coverageCardCategoryTextStyle
-                            .copyWith(fontSize: 18),
-                      ),
-                      // const SizedBox(
-                      //   height: 50,
-                      // ),
                     ],
                   ),
                 ),

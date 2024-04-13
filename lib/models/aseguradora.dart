@@ -1,9 +1,3 @@
-import 'dart:convert';
-
-Aseguradora aseguradoraFromJson(String str) => Aseguradora.fromJson(json.decode(str));
-
-String aseguradoraToJson(Aseguradora data) => json.encode(data.toJson());
-
 class Aseguradora {
   int idAseguradora;
   String nombre;
@@ -12,8 +6,6 @@ class Aseguradora {
   String? correo;
   String? sitioWeb;
   DateTime fechaRegistro;
-  List<dynamic> establecimientoAseguradoras;
-  List<dynamic> planes;
 
   Aseguradora({
     required this.idAseguradora,
@@ -23,31 +15,16 @@ class Aseguradora {
     required this.correo,
     required this.sitioWeb,
     required this.fechaRegistro,
-    required this.establecimientoAseguradoras,
-    required this.planes,
   });
 
   factory Aseguradora.fromJson(Map<String, dynamic> json) => Aseguradora(
-    idAseguradora: json["idAseguradora"],
-    nombre: json["nombre"],
-    direccion: json["direccion"],
-    telefono: json["telefono"],
-    correo: json["correo"],
-    sitioWeb: json["sitioWeb"],
-    fechaRegistro: DateTime.parse(json["fechaRegistro"]),
-    establecimientoAseguradoras: json["establecimientoAseguradoras"] != null ? List<dynamic>.from(json["establecimientoAseguradoras"].map((x) => x)) : [],
-    planes: json["planes"] != null ? List<dynamic>.from(json["planes"].map((x) => x)) : [],
-  );
+        idAseguradora: json["idAseguradora"],
+        nombre: json["nombre"],
+        direccion: json["direccion"],
+        telefono: json["telefono"],
+        correo: json["correo"],
+        sitioWeb: json["sitioWeb"],
+        fechaRegistro: DateTime.parse(json["fechaRegistro"]),
+      );
 
-  Map<String, dynamic> toJson() => {
-    "idAseguradora": idAseguradora,
-    "nombre": nombre,
-    "direccion": direccion,
-    "telefono": telefono,
-    "correo": correo,
-    "sitioWeb": sitioWeb,
-    "fechaRegistro": fechaRegistro.toIso8601String(),
-    "establecimientoAseguradoras": List<dynamic>.from(establecimientoAseguradoras.map((x) => x)),
-    "planes": List<dynamic>.from(planes.map((x) => x)),
-  };
 }

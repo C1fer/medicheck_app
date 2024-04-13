@@ -105,5 +105,7 @@
   "incident": "Incident",
   "incident_status": "Incident status",
   "new_incident": "New Incident",
-  "send": "Send"
+  "send": "Send",
+  "pdss": "Basic Health Plan",
+  "all_products": "All Products"
 }
