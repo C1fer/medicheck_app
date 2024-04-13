@@ -75,8 +75,8 @@ class CoverageCard extends StatelessWidget {
                       horizontal: 4.0, vertical: 4.0),
                   child: Consumer<PlanModel>(
                       builder: (context, planModel, _) => FeatureCard(
-                          msg: planModel.selectedPlan!.idRegimenNavigation.descripcion ==
-                                  "SUBSIDIADO"
+                          msg: planModel.selectedPlan!.idRegimenNavigation
+                                      .descripcion == "SUBSIDIADO"
                               ? "100 %"
                               : '${coverage.porcentaje} %')),
                 ),

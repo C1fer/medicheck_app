@@ -229,7 +229,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
         coverage: coverages[index],
       ),
       separatorBuilder: (context, index) => const SizedBox(height: 6.0),
-      itemCount: coverages.length >= 4 ? 4 : coverages.length,
+      itemCount: coverages.length >= 3 ? 4 : coverages.length,
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
     );

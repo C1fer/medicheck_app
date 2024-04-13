@@ -5,7 +5,7 @@ import 'cobertura_subgrupo.dart';
 
 class Cobertura {
   int idCobertura;
-  int porcentaje;
+  int? porcentaje;
   DateTime? fechaVencimiento;
   DateTime fechaRegistro;
   bool isPDSS;

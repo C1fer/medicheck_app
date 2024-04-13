@@ -1,4 +1,4 @@
-enum MessageType { WARNING, INFO, ERROR, SUCCESS }
+ enum MessageType { WARNING, INFO, ERROR, SUCCESS }
 
 class Constants {
   static const List<String> productCategories = [

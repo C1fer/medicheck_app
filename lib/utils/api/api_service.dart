@@ -380,8 +380,7 @@ class ApiService {
 
   static Future<bool> postSavedProduct(int userID, int productID) async {
     // Define API Endpoint
-    var url =
-        Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint);
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint);
 
     //Map body arguments
     Map<String, int> requestBody = {
