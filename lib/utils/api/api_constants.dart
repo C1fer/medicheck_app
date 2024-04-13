@@ -23,4 +23,8 @@ class ApiConstants{
   static String incidentsReportEndpoint = "/reportesincidentes/";
   static String changePasswordEndpoint = "/usuarios/cambiarclave";
   static String recentQueriesEndpoint = "/consultasrecientes";
+  static String coverageTypeEndpoint = "/tipocobertura";
+  static String coverageGroupsEndpoint = "/grupos";
+  static String coverageSubGroupsEndpoint = "/subgrupos";
+  static String productSearchEndpoint = "/productos/busquedaavanzada";
 }

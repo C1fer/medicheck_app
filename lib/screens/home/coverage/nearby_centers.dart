@@ -6,7 +6,7 @@ import 'package:medicheck/models/notifiers/localeNotifier.dart';
 import 'package:medicheck/styles/app_colors.dart';
 import 'package:medicheck/widgets/cards/place_card.dart';
 import 'package:provider/provider.dart';
-import '../../../models/place.dart';
+import '../../../models/google_place.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/location_service.dart';
 import '../../../utils/maps_service.dart';

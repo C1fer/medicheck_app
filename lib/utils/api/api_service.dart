@@ -1,25 +1,28 @@
 import 'package:http/http.dart' as http;
-import 'package:medicheck/models/cobertura.dart';
+import 'dart:convert';
+
+import 'api_constants.dart';
+import '../jwt_service.dart';
+import 'package:medicheck/models/cobertura_grupo.dart';
+import 'package:medicheck/models/cobertura_subgrupo.dart';
 import 'package:medicheck/models/responses/cobertura_response.dart';
-import 'package:medicheck/models/establecimiento.dart';
 import 'package:medicheck/models/responses/plan_response.dart';
 import 'package:medicheck/models/responses/incidente_response.dart';
 import 'package:medicheck/models/responses/producto_response.dart';
-import 'dart:convert';
+import 'package:medicheck/models/tipo_producto.dart';
 import '../../models/responses/establecimiento_response.dart';
-import '../../models/plan.dart';
-import '../../models/producto.dart';
 import '../../models/usuario.dart';
-import 'api_constants.dart';
-import '../jwt_service.dart';
+
+
 
 class ApiService {
   // General methods
-  static final Duration defaultTimeout = Duration(seconds: 5);
+  static const Duration defaultTimeout = Duration(seconds: 5);
   static final Map<String, String> noAuthHeaders = {
     'Content-Type': 'application/json'
   };
 
+  // Get request headers with jwt
   static Future<Map<String, String>?> getAuthHeaders() async {
     String? accessToken = await JWTService.readJWT();
 
@@ -33,10 +36,15 @@ class ApiService {
     return null;
   }
 
+  // Sanitize query parameters from request
   static Map<String, dynamic> filterQueryParameters(
       Map<String, dynamic> params) {
-    params.removeWhere((key, value) => value == null);
-    params.updateAll((key, value) => value.toString());
+    params.removeWhere((key, value) =>
+        value == null ||
+        value is String &&
+            value.isEmpty); // Delete kv pairs with null values or empty strings
+    params
+        .updateAll((key, value) => value.toString()); // Parse all values as str
     return params;
   }
 
@@ -81,7 +89,7 @@ class ApiService {
         return json.decode(response.body);
       }
     } catch (e) {
-      print('Request error: $e');
+      print('User Login error: $e');
     }
     return null;
   }
@@ -115,7 +123,7 @@ class ApiService {
         return json.decode(response.body);
       }
     } catch (e) {
-      print('Request error: $e');
+      print('User signup error: $e');
     }
     return null;
   }
@@ -124,7 +132,6 @@ class ApiService {
       int userID, String currentPwd, String newPwd) async {
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.changePasswordEndpoint);
-    String? accessToken = await JWTService.readJWT();
 
     //Map body arguments
     Map<String, dynamic> requestBody = {
@@ -133,21 +140,20 @@ class ApiService {
       'nuevaClave': newPwd
     };
 
-    try {
-      var response = await http
-          .put(url,
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer $accessToken'
-              },
-              body: json.encode(requestBody))
-          .timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        return true;
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .put(url, headers: requestHeaders, body: json.encode(requestBody))
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          return true;
+        }
+        return false;
+      } catch (except) {
+        print('Error changing password: $except');
       }
-      return false;
-    } catch (except) {
-      print('Error changing password: $except');
       return null;
     }
   }
@@ -171,7 +177,6 @@ class ApiService {
         print('Error retrieving user: $except');
       }
     }
-
     return null;
   }
 
@@ -183,117 +188,120 @@ class ApiService {
       int? pageSize,
       String? orderField,
       String? orderDirection}) async {
-    Map<String, dynamic> querParams = {
+    Map<String, dynamic> querParams = filterQueryParameters({
       "tipo": type,
       "search": keyword,
       "pageIndex": pageIndex,
       "pageSize": pageSize,
       "orderField": orderField,
       "orderDirection": orderDirection
-    };
+    });
 
-    var url = Uri.parse(
-            '${ApiConstants.baseUrl}${ApiConstants.establishmentsInsurerEndpoint}/$arsID')
-        .replace(queryParameters: filterQueryParameters(querParams));
-    String? accessToken = await JWTService.readJWT();
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.establishmentsInsurerEndpoint + '/$arsID')
+        .replace(queryParameters: querParams);
 
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return EstablecimientoResponse.fromJson(responseData);
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return EstablecimientoResponse.fromJson(responseData);
+        }
+      } catch (except) {
+        print('Error retrieving establishments: $except');
       }
-    } catch (except) {
-      print('Error retrieving establishments: $except');
     }
     return null;
   }
 
   static Future<ProductoResponse?> getSavedProducts(
       {int? userID, int? pageIndex, int? pageSize}) async {
-    final Map<String, dynamic> queryParams = {
-      "idUsuario": userID,
-      "pageIndex": pageIndex,
-      "pageSize": pageSize
-    };
+    final Map<String, dynamic> queryParams = filterQueryParameters(
+        {"idUsuario": userID, "pageIndex": pageIndex, "pageSize": pageSize});
 
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint)
-            .replace(queryParameters: filterQueryParameters(queryParams));
+            .replace(queryParameters: queryParams);
 
-    String? accessToken = await JWTService.readJWT();
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
 
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return ProductoResponse.fromJson(responseData);
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return ProductoResponse.fromJson(responseData);
+        }
+      } catch (except) {
+        print('Error retrieving saved coverages: $except');
       }
-    } catch (except) {
-      print('Error retrieving coverages: $except');
     }
+
     return null;
   }
 
-  static Future<CoberturaResponse?> getCoveragesAdvanced(
-      {int? planID,
-      int? productID,
+  static Future<CoberturaResponse?> getCoveragesAdvanced(int planID,
+      {int? productID,
+      int? userID,
+      int? groupID,
+      int? subGroupID,
       String? name,
       String? desc,
       String? type,
-      String? category,
       int? pageIndex,
+      int? pageSize,
       String? orderField,
       String? orderDirection}) async {
-    Map<String, dynamic> queryParams = {
+    Map<String, dynamic> queryParams = filterQueryParameters({
       'nombre': name,
-      'descripcion': desc,
       'tipo': type,
-      'categoria': category,
       'idPlan': planID,
+      'idUsuario': userID,
+      'idGrupo': groupID,
+      'idSubgrupo': subGroupID,
       'idProducto': productID,
       'pageIndex': pageIndex,
+      'pageSize': pageSize,
       'orderField': orderField,
       'orderDirection': orderDirection,
-    };
+    });
 
-    var url = Uri.parse(
-            '${ApiConstants.baseUrl}${ApiConstants.coveragesSearchEndpoint}')
-        .replace(queryParameters: filterQueryParameters(queryParams));
-    String? accessToken = await JWTService.readJWT();
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.coveragesSearchEndpoint)
+            .replace(queryParameters: queryParams);
 
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return CoberturaResponse.fromJson(responseData);
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return CoberturaResponse.fromJson(responseData);
+        }
+      } catch (except) {
+        print(except);
       }
-    } catch (except) {
-      print(except);
     }
     return null;
   }
 
   static Future<bool> sendResetToken(String email) async {
-    var url =
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.sendTokenEndpoint}')
-            .replace(queryParameters: {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.sendTokenEndpoint)
+        .replace(queryParameters: {
       'emailAddress': email,
     });
 
     try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-      }).timeout(defaultTimeout);
+      var response =
+          await http.get(url, headers: noAuthHeaders).timeout(defaultTimeout);
       if (response.statusCode == 202) return true;
     } catch (except) {
       print('Error generating token $except');
@@ -309,9 +317,8 @@ class ApiService {
             .replace(queryParameters: reqParams);
 
     try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-      }).timeout(defaultTimeout);
+      var response =
+          await http.get(url, headers: noAuthHeaders).timeout(defaultTimeout);
       if (response.statusCode == 200) return true;
     } catch (except) {
       print('Error validating token $except');
@@ -347,25 +354,27 @@ class ApiService {
   }
 
   static Future<PlanResponse?> getPlansbyUserID(int userID) async {
-    Map<String, dynamic> querParams = {'idUsuario': userID.toString()};
+    Map<String, dynamic> querParams =
+        filterQueryParameters({'idUsuario': userID});
 
     var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.planEndpoint)
         .replace(queryParameters: querParams);
-    String? accessToken = await JWTService.readJWT();
 
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        var x = PlanResponse.fromJson(responseData);
-        return x;
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return PlanResponse.fromJson(responseData);
+        }
+      } catch (except) {
+        print('Error retrieving plans: $except');
       }
-    } catch (except) {
-      print('Error retrieving plans: $except');
     }
+
     return null;
   }
 
@@ -373,7 +382,6 @@ class ApiService {
     // Define API Endpoint
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.savedProductsEndpoint);
-    String? accessToken = await JWTService.readJWT();
 
     //Map body arguments
     Map<String, int> requestBody = {
@@ -381,21 +389,23 @@ class ApiService {
       'idProducto': productID
     };
 
-    try {
-      var response = await http.post(
-        url,
-        body: json.encode(requestBody),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken'
-        },
-      ).timeout(defaultTimeout);
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .post(
+              url,
+              body: json.encode(requestBody),
+              headers: requestHeaders,
+            )
+            .timeout(defaultTimeout);
 
-      if (response.statusCode == 201) {
-        return true;
+        if (response.statusCode == 201) {
+          return true;
+        }
+      } catch (e) {
+        print('Error posting saved product: $e');
       }
-    } catch (e) {
-      print('Request error: $e');
     }
     return false;
   }
@@ -403,18 +413,19 @@ class ApiService {
   static Future<bool> deleteSavedProduct(int userID, int productID) async {
     var url = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.savedProductsUserEndpoint}/$userID${ApiConstants.productEndpoint}/$productID');
-    String? accessToken = await JWTService.readJWT();
 
-    try {
-      var response = await http.delete(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 204) {
-        return true;
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .delete(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 204) {
+          return true;
+        }
+      } catch (except) {
+        print('Error retrieving plans: $except');
       }
-    } catch (except) {
-      print('Error retrieving plans: $except');
     }
     return false;
   }
@@ -427,7 +438,7 @@ class ApiService {
       String? keyword,
       String? orderField,
       String? orderDirection}) async {
-    Map<String, dynamic> queryParams = {
+    Map<String, dynamic> queryParams = filterQueryParameters({
       'idUsuario': userID,
       'estado': status,
       'pageIndex': pageIndex,
@@ -435,24 +446,25 @@ class ApiService {
       'search': keyword,
       'orderField': orderField,
       'orderDirection': orderDirection,
-    };
+    });
 
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint)
-            .replace(queryParameters: filterQueryParameters(queryParams));
+            .replace(queryParameters: queryParams);
 
-    String? accessToken = await JWTService.readJWT();
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return IncidenteResponse.fromJson(responseData);
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return IncidenteResponse.fromJson(responseData);
+        }
+      } catch (except) {
+        print("Error fetching incidents: $except");
       }
-    } catch (except) {
-      print(except);
     }
     return null;
   }
@@ -461,7 +473,6 @@ class ApiService {
       int establishmentID, int productID, String description) async {
     var url =
         Uri.parse(ApiConstants.baseUrl + ApiConstants.incidentsReportEndpoint);
-    String? accessToken = await JWTService.readJWT();
 
     //Map body arguments
     Map<String, dynamic> requestBody = {
@@ -473,81 +484,196 @@ class ApiService {
       "estado": "ABIERTO"
     };
 
-    try {
-      var response = await http
-          .post(url,
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer $accessToken'
-              },
-              body: json.encode(requestBody))
-          .timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        return true;
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .post(url, headers: requestHeaders, body: json.encode(requestBody))
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          return true;
+        }
+      } catch (except) {
+        print('Error creating incident report: $except');
       }
-    } catch (except) {
-      print('Error creating incident report: $except');
     }
+
     return false;
   }
 
-  static Future<CoberturaResponse?> getRecentQueries({
-        int? userId,
-        int? planId,
-        int? pageIndex,
-        String? orderField}) async {
-    Map<String, dynamic> queryParams = {
+  static Future<ProductoResponse?> getRecentQueries(
+      {int? userId, int? planId, int? pageIndex, String? orderField}) async {
+    Map<String, dynamic> queryParams = filterQueryParameters({
       'idUsuario': userId,
-      'idPlan': planId,
       'pageIndex': pageIndex,
       'orderField': orderField
-    };
+    });
 
-    var url = Uri.parse(
-        '${ApiConstants.baseUrl}${ApiConstants.recentQueriesEndpoint}')
-        .replace(queryParameters: filterQueryParameters(queryParams));
-    String? accessToken = await JWTService.readJWT();
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.recentQueriesEndpoint)
+            .replace(queryParameters: queryParams);
 
-    try {
-      var response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      }).timeout(defaultTimeout);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        return CoberturaResponse.fromJson(responseData);
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return ProductoResponse.fromJson(responseData);
+        }
+      } catch (except) {
+        print('Exception: ${except.toString()}');
       }
-    } catch (except) {
-      print('Exception: ${except.toString()}');
     }
     return null;
   }
 
-  static Future<bool> postRecentQuery(int userId, int coverageId) async {
-    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.recentQueriesEndpoint);
-    String? accessToken = await JWTService.readJWT();
+  static Future<bool> postRecentQuery(int userId, int productId) async {
+    Map<String, dynamic> queryParams =
+        filterQueryParameters({'idUsuario': userId, 'idProducto': productId});
 
-    Map<String, int> requestBody = {
-      'idUsuario': userId,
-      'idCobertura': coverageId
-    };
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.recentQueriesEndpoint)
+            .replace(queryParameters: filterQueryParameters(queryParams));
 
-    try {
-      var response = await http.post(
-        url,
-        body: json.encode(requestBody),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $accessToken'
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .post(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+
+        if (response.statusCode == 201 || response.statusCode == 204) {
+          // Coverage added or updated successfully
+          return true;
         }
-      ).timeout(defaultTimeout);
-
-      if (response.statusCode == 201) {
-        return true;
+      } catch (e) {
+        print('Post recent query request error: $e');
       }
-    } catch(e) {
-      print('Post recent query request error: $e');
     }
     return false;
+  }
+
+  static Future<List<GrupoCobertura>> getCoverageGroups() async {
+    var url =
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.coverageGroupsEndpoint);
+
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final List responseData = json.decode(response.body) as List;
+          return responseData.map((e) => GrupoCobertura.fromJson(e)).toList();
+        }
+      } catch (except) {
+        print('Error fetching coverage groups: ${except}');
+      }
+    }
+    return <GrupoCobertura>[];
+  }
+
+  static Future<List<SubGrupoCobertura>> getCoverageSubGroups(
+      int groupID) async {
+    var url = Uri.parse(ApiConstants.baseUrl +
+        ApiConstants.coverageSubGroupsEndpoint +
+        '/$groupID');
+
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final List responseData = json.decode(response.body) as List;
+          return responseData
+              .map((e) => SubGrupoCobertura.fromJson(e))
+              .toList();
+        }
+      } catch (except) {
+        print('Error fetching coverage subgroups: ${except}');
+      }
+    }
+    return <SubGrupoCobertura>[];
+  }
+
+  static Future<List<TipoProducto>> getProductType() async {
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.coverageTypeEndpoint);
+
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final List responseData = json.decode(response.body) as List;
+          return responseData.map((e) => TipoProducto.fromJson(e)).toList();
+        }
+      } catch (except) {
+        print('Error fetching product types: ${except}');
+      }
+    }
+    return <TipoProducto>[];
+  }
+
+  static Future<ProductoResponse?> getProductsAdvanced(
+      {String? name,
+      String? filterCategory,
+      int? planID,
+      int? typeID,
+      int? pageIndex,
+      String? orderField,
+      String? orderDirection}) async {
+    // Set filter for product category
+    bool? _searchPDSSOnly;
+    switch (filterCategory) {
+      case "PDSS":
+        _searchPDSSOnly = true;
+      case "COMP":
+        _searchPDSSOnly = false;
+      default:
+        _searchPDSSOnly = null;
+    }
+
+    Map<String, dynamic> queryParams = filterQueryParameters({
+      'nombre': name,
+      'soloComplementario': _searchPDSSOnly,
+      'idPlan': planID,
+      'idTipo': typeID,
+      'pageIndex': pageIndex,
+      'orderField': orderField,
+      'orderDirection': orderDirection,
+    });
+
+    var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.productSearchEndpoint)
+            .replace(queryParameters: queryParams);
+
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          return ProductoResponse.fromJson(responseData);
+        }
+      } catch (except) {
+        print(except);
+      }
+    }
+    return null;
   }
 }

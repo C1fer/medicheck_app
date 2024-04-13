@@ -59,8 +59,8 @@
   "coverage": "Cobertura",
   "medical_centers": "Centros",
   "favourites": "Favoritos",
-  "new_coverages": "Nuevos Productos",
-  "recent_coverages": "Consultas recientes",
+  "recently_added": "Nuevas coberturas",
+  "recent_viewed": "Consultas recientes",
   "view_all": "Ver todo",
 
   "affiliated_centers": "Centros afiliados",
@@ -106,5 +106,7 @@
   "incident": "Incidente",
   "incident_status": "Estado de incidentes",
   "new_incident": "New Incident",
-  "send": "Send"
+  "send": "Send",
+  "pdss": "Plan Básico de Salud",
+  "all_products": "All Products"
 }

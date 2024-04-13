@@ -1,19 +1,19 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:medicheck/models/enums.dart';
-import 'package:medicheck/screens/home/home.dart';
-import 'package:medicheck/screens/welcome/welcome.dart';
-import 'package:medicheck/utils/cached_coverages.dart';
-import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter/material.dart';
+import '../../models/enums.dart';
+import '../../screens/home/home.dart';
+import '../../screens/welcome/welcome.dart';
+import '../../widgets/popups/snackbar/show_snackbar.dart';
 import '../../models/notifiers/user_info_notifier.dart';
 import '../../utils/api/api_service.dart';
 import 'onboarding.dart';
-import 'package:medicheck/widgets/logo/full_logo.dart';
-import 'package:medicheck/styles/app_colors.dart';
+import '../../widgets/logo/full_logo.dart';
+import '../../styles/app_colors.dart';
 import '../../utils/jwt_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});

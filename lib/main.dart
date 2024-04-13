@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
+import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
-import 'package:medicheck/screens/home/coverage/coverage_search.dart';
+import 'package:medicheck/screens/home/coverage/product_search.dart';
 import 'package:medicheck/screens/home/coverage/nearby_centers.dart';
 import 'package:medicheck/screens/home/coverage/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
@@ -33,7 +34,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => LocaleModel()),
         ChangeNotifierProvider(create: (context) => UserInfoModel()),
         ChangeNotifierProvider(create: (context) => SavedProductModel()),
-        ChangeNotifierProvider(create: (context) => PlanModel())
+        ChangeNotifierProvider(create: (context) => PlanModel()),
+        ChangeNotifierProvider(create: (context) => ViewedCoverageModel())
       ],
       child: MyApp(),
     ),
@@ -70,7 +72,7 @@ class MyApp extends StatelessWidget {
                   Home.id: (context) => const Home(),
                   EstablishmentsList.id: (context) =>
                       const EstablishmentsList(),
-                  CoverageSearch.id: (context) => const CoverageSearch(),
+                  ProductSearch.id: (context) => const ProductSearch(),
                   CoverageDetailView.id: (context) =>
                       const CoverageDetailView(),
                   SavedProducts.id: (context) => const SavedProducts(),

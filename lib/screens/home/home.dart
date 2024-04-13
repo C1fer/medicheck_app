@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicheck/models/notifiers/localeNotifier.dart';
+import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
+import 'package:medicheck/models/responses/producto_response.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/responses/cobertura_response.dart';
 import '../../models/notifiers/user_info_notifier.dart';
 import '../../models/responses/plan_response.dart';
-import '../../screens/home/coverage/coverage_search.dart';
+import '../../screens/home/coverage/product_search.dart';
 import '../../screens/home/coverage/saved_products.dart';
 import '../../screens/home/establishments/establishments_list.dart';
 import '../../screens/home/incidents/incident_reports.dart';
@@ -16,7 +19,7 @@ import '../../styles/app_colors.dart';
 import '../../utils/api/api_service.dart';
 import '../../models/notifiers/plan_notifier.dart';
 import '../../widgets/cards/menu_action_card.dart';
-import '../../widgets/coverages_list_view.dart';
+import '../../widgets/products_list_view.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -27,54 +30,60 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  CoberturaResponse? planCoverages;
+  ProductoResponse? recentlyAddedProducts;
+  ProductoResponse? recentlyViewedProducts;
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
-    Provider.of<PlanModel>(context, listen: false).addListener(_fetchRecentQueries);
+    // Define listeners for plan and recently viewed coverage
+    Provider.of<PlanModel>(context, listen: false).addListener(_fetchData);
+    Provider.of<ViewedCoverageModel>(context, listen: false)
+        .addListener(_fetchData);
+
     _fetchData();
+    super.initState();
   }
 
-  Future<void> _fetchUserPlans(int userID) async {
+  // Get affiliate plans
+  Future<bool> _fetchUserPlans(int userID) async {
     final PlanResponse? response = await ApiService.getPlansbyUserID(userID);
 
     if (response != null) {
       final planProvider = context.read<PlanModel>();
       await planProvider.addPlans(response.data);
+      return true;
     }
+    return false;
   }
 
-  Future<void> _fetchCoverages() async {
-    int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
-    CoberturaResponse? response =
-        await ApiService.getCoveragesAdvanced(planID: selectedPlanID);
-    setState(() => planCoverages = response);
+  // Get user search history
+  Future<void> _fetchRecentQueries(int userID) async {
+    ProductoResponse? response =
+        await ApiService.getRecentQueries(userId: userID);
+    setState(() => recentlyViewedProducts = response);
   }
 
+  Future<void> _fetchNewProducts(int selectedPlanID) async {
+    ProductoResponse? response = await ApiService.getProductsAdvanced(
+        planID: selectedPlanID,
+        orderField: "id_producto",
+        orderDirection: "desc");
+    setState(() => recentlyAddedProducts = response);
+  }
+
+  // Fetch to be executed on initState
   Future<void> _fetchData() async {
-    final userProvider = context.read<UserInfoModel>();
-    final planProvider = context.read<PlanModel>();
+    int? userID = context.read<UserInfoModel>().currentUserID;
 
-    if (planProvider.plans.isEmpty) {
-      await _fetchUserPlans(userProvider.currentUser!.idUsuario);
+    if (userID != null) {
+      final planProvider = context.read<PlanModel>();
+      if (planProvider.plans.isEmpty) {
+        await _fetchUserPlans(userID);
+      }
+      int selectedPlanID = planProvider.selectedPlanID!;
+      await _fetchNewProducts(selectedPlanID);
+      await _fetchRecentQueries(userID);
     }
-  }
-
-  Future<void> _fetchRecentQueries() async {
-    int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
-    final userProvider = context.read<UserInfoModel>();
-
-    int? userId = userProvider.currentUser?.idUsuario;
-    
-    print('plan id: ${selectedPlanID}, usuario id: ${userId}');
-
-    CoberturaResponse? response =
-    await ApiService.getRecentQueries(userId: userId, planId: selectedPlanID);
-    setState(() => planCoverages = response);
-
-    print(response);
   }
 
   @override
@@ -86,6 +95,7 @@ class _HomeState extends State<Home> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -121,7 +131,7 @@ class _HomeState extends State<Home> {
                   height: 24.0,
                 ),
                 GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, CoverageSearch.id),
+                  onTap: () => Navigator.pushNamed(context, ProductSearch.id),
                   child: PlaceHolderSearchBar(),
                 ),
                 const SizedBox(
@@ -155,26 +165,37 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 24.0,
                 ),
-                Text(
-                  AppLocalizations.of(context).recent_coverages,
-                  style: AppStyles.sectionTextStyle,
+                CTABanner(),
+                const SizedBox(
+                  height: 35.0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: CoveragesListView(
-                      coverages: planCoverages?.data != null
-                          ? planCoverages!.data
-                          : []),
-                ),
+                if (recentlyViewedProducts != null &&
+                    recentlyViewedProducts!.data.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).recent_viewed,
+                        style: AppStyles.sectionTextStyle,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        child: ProductsListView(
+                            products: recentlyViewedProducts?.data != null
+                                ? recentlyViewedProducts!.data
+                                : []),
+                      ),
+                    ],
+                  ),
                 Text(
-                  AppLocalizations.of(context).new_coverages,
+                  AppLocalizations.of(context).recently_added,
                   style: AppStyles.sectionTextStyle,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                  child: CoveragesListView(
-                      coverages: planCoverages?.data != null
-                          ? planCoverages!.data
+                  child: ProductsListView(
+                      products: recentlyAddedProducts?.data != null
+                          ? recentlyAddedProducts!.data
                           : []),
                 ),
               ],
@@ -182,6 +203,51 @@ class _HomeState extends State<Home> {
           ),
         ),
       )),
+    );
+  }
+
+  Widget CTABanner() {
+    //final locale = context.read<LocaleModel>();
+    return Container(
+      constraints: BoxConstraints(maxHeight: 170),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: AppColors.lightJade),
+      child: Padding(
+        padding: EdgeInsets.only(left: 26, top: 20, right: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    "En MediCheck cuidamos tu salud",
+                    style: AppStyles.sectionTextStyle,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 24.0),
+                    child:
+                        FilledButton(onPressed: null, child: Text("Leer más")),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              child: SvgPicture.asset(
+                'assets/icons/question-circle.svg',
+                color: Colors.black.withOpacity(0.15),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
