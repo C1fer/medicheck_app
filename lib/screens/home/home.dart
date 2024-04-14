@@ -225,7 +225,7 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "En MediCheck cuidamos tu salud",
+                    "Apoderate de tu salud con MediCheck",
                     style: AppStyles.sectionTextStyle,
                   ),
                   SizedBox(

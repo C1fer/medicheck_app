@@ -11,7 +11,7 @@ class Incidente {
   DateTime fechaRegistro;
 
   Establecimiento establecimientoNavigation;
-  Plan planNavigation;
+  Plan? planNavigation;
   Producto productoNavigation;
   Usuario? usuarioNavigation;
 
@@ -34,7 +34,7 @@ class Incidente {
           fechaIncidente: json["fechaIncidente"],
           fechaRegistro: DateTime.parse(json["fechaRegistro"]),
           establecimientoNavigation: Establecimiento.fromJson(json["idEstablecimientoNavigation"]),
-          planNavigation: Plan.fromJson(json["idPlanNavigation"]),
+          planNavigation: null,
           productoNavigation: Producto.fromJson(json["idProductoNavigation"] ),
           usuarioNavigation: null);
 }
