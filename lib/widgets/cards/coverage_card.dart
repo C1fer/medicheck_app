@@ -17,7 +17,7 @@ class CoverageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           flex: 9,
@@ -32,14 +32,14 @@ class CoverageCard extends StatelessWidget {
                   fit: BoxFit.fitHeight,
                 ),
               ),
-              SizedBox(width: 12,),
+              const SizedBox(width: 12,),
               Expanded(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                           coverage.idSubGrupoNavigation.idGrupoNavigation.nombre
-                              .toProperCase(),
+                              .toProperCaseData(),
                           style: AppStyles.coverageCardHeadingTextStyle
                               .copyWith(fontSize: 14.0),
                           overflow: TextOverflow.ellipsis,
@@ -48,7 +48,7 @@ class CoverageCard extends StatelessWidget {
                         height: 4.0,
                       ),
                       Text(
-                        coverage.idSubGrupoNavigation.nombre.toProperCase(),
+                        coverage.idSubGrupoNavigation.nombre.toProperCaseData(),
                         style: AppStyles.subSmallTextStyle
                             .copyWith(fontSize: 12.0),
                         overflow: TextOverflow.ellipsis,

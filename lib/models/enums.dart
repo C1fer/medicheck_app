@@ -55,7 +55,8 @@ class Constants {
     "sin",
     "entre",
     "y",
-    "o"
+    "o",
+    "en"
   ];
 }
 

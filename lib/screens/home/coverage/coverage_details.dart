@@ -103,16 +103,15 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context);
+    final locale = AppLocalizations.of(context);
     return Scaffold(
       appBar: CustomAppBar(
-        title: localization.coverage_details,
+        title: locale.coverage_details,
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
@@ -120,103 +119,118 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 12),
-                        width: 100,
-                        height: 100,
-                        child: SvgPicture.asset(
-                          'assets/icons/pill.svg',
-                          fit: BoxFit.fitHeight,
-                        ),
-                      ),
-                    ),
+                    ProductIcon(),
                     const SizedBox(
                       height: 35.0,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 9,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.nombre.toProperCase(),
-                                style: AppStyles.sectionTextStyle
-                                    .copyWith(fontSize: 24.0),
-                              ),
-                              const SizedBox(
-                                height: 6,
-                              ),
-                              FeatureCard(
-                                  msg: product.idTipoProductoNavigation!.nombre
-                                      .toProperCase()),
-                              /*Text(
-                                product.idTipoProductoNavigation.nombre.toProperCase(),
-                                style: AppStyles.actionTextStyle
-                                    .copyWith(fontSize: 20.0, fontWeight: FontWeight.w600),),*/
-                            ],
-                          ),
-                        ),
-                        if (isSaved != null)
-                          GestureDetector(
-                            onTap: () => _saveProduct(product),
-                            child: Container(
-                              height: 40,
-                              width: 40,
-                              child: isSaved!
-                                  ? SvgPicture.asset(
-                                      'assets/icons/heart-full.svg')
-                                  : SvgPicture.asset(
-                                      'assets/icons/heart-outlined.svg'),
-                            ),
-                          )
-                      ],
-                    ),
+                    ProductDetails(context),
                     const SizedBox(
-                      height: 24.0,
+                      height: 14.0,
                     ),
                     const SizedBox(height: 10.0),
                     productCoverages != null &&
                             productCoverages!.data.isNotEmpty
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Coberturas del producto",
-                                style: AppStyles.sectionTextStyle
-                                    .copyWith(fontSize: 20),
-
-                              ),
-                              const SizedBox(height: 8),
-                              SingleChildScrollView(
-                                child: CoveragesListView(
-                                  context,
-                                  productCoverages!.data,
-                                ),
-                              ),
-                            ],
-                          )
+                        ? ProductCoverages(context, locale)
                         : const Center(child: DataLoadingIndicator())
                   ],
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: FilledButton(
-                    onPressed: () => Navigator.pushNamed(context, NearbyCenters.id),
-                    child: Text(localization.near_centers),
-                  ),
-                ),
+              const SizedBox(
+                height: 12,
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pushNamed(context, NearbyCenters.id),
+                child: Text(locale.near_centers),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget ProductIcon() {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12),
+        width: 100,
+        height: 100,
+        child: SvgPicture.asset(
+          'assets/icons/pill.svg',
+          fit: BoxFit.fitHeight,
+        ),
+      ),
+    );
+  }
+
+  Widget ProductDetails(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                product.nombre.toProperCaseData(),
+                style: AppStyles.sectionTextStyle.copyWith(fontSize: 24.0),
+              ),
+              const SizedBox(
+                height: 6,
+              ),
+              FeatureCard(
+                  msg: product.idTipoProductoNavigation!.nombre
+                      .toProperCaseData()),
+            ],
+          ),
+        ),
+        if (isSaved != null)
+          GestureDetector(
+            onTap: () => _saveProduct(product),
+            child: SizedBox(
+              height: 40,
+              width: 40,
+              child: isSaved!
+                  ? SvgPicture.asset('assets/icons/heart-full.svg')
+                  : SvgPicture.asset('assets/icons/heart-outlined.svg'),
+            ),
+          )
+      ],
+    );
+  }
+
+  Widget ProductCoverages(BuildContext context, AppLocalizations locale) {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                locale.product_coverages,
+                style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
+              ),
+              GestureDetector(
+                child: Text(
+                  locale.view_all,
+                  style: AppStyles.actionTextStyle
+                      .copyWith(fontWeight: FontWeight.w600),
+                ),
+              )
+            ],
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: CoveragesListView(
+              context,
+              productCoverages!.data,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -226,8 +240,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       itemBuilder: (context, index) => CoverageCard(
         coverage: coverages[index],
       ),
-      separatorBuilder: (context, index) => const SizedBox(height: 6.0),
-      itemCount: coverages.length >= 6 ? 6 : coverages.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 10.0),
+      itemCount: coverages.length >= 8 ? 8 : coverages.length,
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
     );

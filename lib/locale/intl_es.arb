@@ -109,5 +109,6 @@
   "send": "Send",
   "pdss": "Plan Básico de Salud",
   "all_products": "All Products",
-  "plan_modality" : "Regimen"
+  "plan_modality" : "Regimen",
+  "product_coverages": "Coberturas del producto"
 }

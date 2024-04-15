@@ -108,5 +108,6 @@
   "send": "Send",
   "pdss": "Basic Health Plan",
   "all_products": "All Products",
-  "plan_modality" : "Modality"
+  "plan_modality" : "Modality",
+  "product_coverages": "Product Coverages"
 }
