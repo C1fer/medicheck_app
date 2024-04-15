@@ -30,64 +30,71 @@ class EstablishmentCard extends StatelessWidget {
               height: 72,
               child: SvgPicture.asset('assets/icons/hospital-colored.svg')),
           const SizedBox(
-            width: 72.0,
+            width: 30.0,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                establecimiento.nombre,
-                style: AppStyles.sectionTextStyle,
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              Text(
-                  establecimiento.categoria!
-                      .replaceAll('_', ' ')
-                      .toProperCase(),
-                  style: AppStyles.subSmallTextStyle),
-              const SizedBox(
-                width: 4,
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.phone,
-                    size: 14.0,
-                    color: AppColors.jadeGreen,
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    establecimiento.telefono ?? '',
-                    style: AppStyles.subSmallTextStyle
-                        .copyWith(color: AppColors.jadeGreen),
-                  )
-                ],
-              ),
-              const SizedBox(
-                width: 4,
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.location_on,
-                    size: 14.0,
-                    color: AppColors.jadeGreen,
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    establecimiento.direccion?? '',
-                    style: AppStyles.subSmallTextStyle
-                        .copyWith(color: AppColors.jadeGreen),
-                  )
-                ],
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  establecimiento.nombre.toProperCaseData(),
+                  style: AppStyles.sectionTextStyle,
+                ),
+                Text(
+                    establecimiento.categoria!
+                        .replaceUnderScores()
+                        .toProperCase(),
+                    style: AppStyles.subSmallTextStyle),
+                const SizedBox(
+                  height: 4,
+                ),
+                if (establecimiento.telefono != null)
+                    Column(
+                        children: establecimiento.telefono!
+                            .split(", ")
+                            .map((String phoneNo) => Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.phone,
+                                      size: 14.0,
+                                      color: AppColors.jadeGreen,
+                                    ),
+                                    const SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      phoneNo,
+                                      style: AppStyles.subSmallTextStyle
+                                          .copyWith(color: AppColors.jadeGreen),
+                                    ),
+                                  ],
+                                ))
+                            .toList()),
+                const SizedBox(
+                  height: 4,
+                ),
+                if (establecimiento.direccion != null)
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                          size: 14.0,
+                          color: AppColors.jadeGreen,
+                        ),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        Expanded(
+                          child: Text(
+                            establecimiento.direccion!.toProperCaseData(),
+                            style: AppStyles.subSmallTextStyle
+                                .copyWith(color: AppColors.jadeGreen),
+                          ),
+                        )
+                      ],
+                    ),
+              ],
+            ),
           )
         ],
       ),

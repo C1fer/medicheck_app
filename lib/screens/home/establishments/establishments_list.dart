@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:medicheck/models/responses/establecimiento_response.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
+import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/estabilshment_filter_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../widgets/misc/custom_appbar.dart';
@@ -25,14 +26,16 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
   final _establishmentsPaginationController =
       PagingController<int, Establecimiento>(firstPageKey: 1);
 
-  EstablecimientoResponse? establishments;
+  bool isLoading = true;
 
+  EstablecimientoResponse? establishments;
   String? establishmentType;
 
   @override
   void initState() {
     _establishmentsPaginationController
         .addPageRequestListener((pageKey) => _getEstablishments());
+    _getEstablishments();
     super.initState();
   }
 
@@ -43,10 +46,17 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
   }
 
   void _getEstablishments() async {
+    if (!isLoading) {
+      setState(() => isLoading = true);
+    }
     if (mounted) {
       final EstablecimientoResponse? response =
           await ApiService.getEstablishments(
-              arsID: context.read<PlanModel>().selectedPlan!.idAseguradoraNavigation.idAseguradora,
+              arsID: context
+                  .read<PlanModel>()
+                  .selectedPlan!
+                  .idAseguradoraNavigation
+                  .idAseguradora,
               keyword: _establishmentsController.text,
               type: establishmentType,
               pageIndex: _establishmentsPaginationController.nextPageKey ??
@@ -61,6 +71,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
         }
       }
     }
+    setState(() => isLoading = false);
   }
 
   @override
@@ -71,43 +82,49 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
         title: locale.affiliated_centers,
       ),
       body: SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: SearchBarWithFilter(
-                    searchController: _establishmentsController,
-                    hintText: locale.type_here,
-                    onChanged: (String? val) => _getEstablishments(),
-                    filterDialog: EstablishmentFilterDialog(
-                      typeValue: establishmentType,
-                      onTypeChanged: (String? newVal) =>
-                          setState(() => establishmentType = newVal),
-                      onButtonPressed: () async {
-                        _establishmentsPaginationController.refresh();
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Expanded(
-                    child: PagedListView.separated(
-                  pagingController: _establishmentsPaginationController,
-                  builderDelegate: PagedChildBuilderDelegate<Establecimiento>(
-                      itemBuilder: (context, item, index) => EstablishmentCard(
-                            establecimiento: item,
-                          ),
-                      noItemsFoundIndicatorBuilder: (context) =>
-                          Center(child: Text(locale.no_results_shown))),
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                ))
-              ],
-            )),
+        child: isLoading
+            ? const DataLoadingIndicator()
+            : _establishmentsPaginationController.itemList!.isNotEmpty
+                ? PageLayout(context, locale)
+                : Center(child: Text(locale.no_results_shown)),
       ),
     );
+  }
+
+  Widget PageLayout(BuildContext context, AppLocalizations locale) {
+    return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: SearchBarWithFilter(
+                searchController: _establishmentsController,
+                hintText: locale.type_here,
+                onChanged: (String? val) => _getEstablishments(),
+                filterDialog: EstablishmentFilterDialog(
+                  typeValue: establishmentType,
+                  onTypeChanged: (String? newVal) =>
+                      setState(() => establishmentType = newVal),
+                  onButtonPressed: () async {
+                    _establishmentsPaginationController.refresh();
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            Expanded(
+                child: PagedListView.separated(
+              pagingController: _establishmentsPaginationController,
+              builderDelegate: PagedChildBuilderDelegate<Establecimiento>(
+                itemBuilder: (context, item, index) => EstablishmentCard(
+                  establecimiento: item,
+                ),
+              ),
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
+            ))
+          ],
+        ));
   }
 }
