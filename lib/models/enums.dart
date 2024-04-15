@@ -1,4 +1,4 @@
- enum MessageType { WARNING, INFO, ERROR, SUCCESS }
+enum MessageType { WARNING, INFO, ERROR, SUCCESS }
 
 class Constants {
   static const List<String> productCategories = [
@@ -31,12 +31,32 @@ class Constants {
   ];
 
   static Map<String, String> productTypeIcons = {
-  'ANALITICA': "assets/icons/analitic.svg",
-  'CONSULTA': "assets/icons/appointment.svg",
-  'MEDICAMENTO': "assets/icons/pill.svg",
-  'PROCEDIMIENTO': "assets/icons/procedure.svg"
+    'ANALITICA': "assets/icons/analitic.svg",
+    'CONSULTA': "assets/icons/appointment.svg",
+    'MEDICAMENTO': "assets/icons/pill.svg",
+    'PROCEDIMIENTO': "assets/icons/procedure.svg"
   };
+
+  static const List<String> excludedWords = [
+    "el",
+    "la",
+    "los",
+    "las",
+    "un",
+    "una",
+    "unos",
+    "unas",
+    "de",
+    "del",
+    "al",
+    "por",
+    "para",
+    "con",
+    "sin",
+    "entre",
+    "y",
+    "o"
+  ];
 }
 
-
-enum itemsViewMode {LIST, GRID}
+enum itemsViewMode { LIST, GRID }
