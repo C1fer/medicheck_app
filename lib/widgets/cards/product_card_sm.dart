@@ -44,8 +44,8 @@ class ProductCardSmall extends StatelessWidget {
               children: [
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 12),
-                  width: 36,
-                  height: 36,
+                  width: 40,
+                  height: 40,
                   child: SvgPicture.asset(
                     'assets/icons/pill.svg',
                     fit: BoxFit.fitHeight,
@@ -54,7 +54,7 @@ class ProductCardSmall extends StatelessWidget {
                 Expanded(
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(
-                      product.nombre.toProperCase(),
+                      product.nombre.toProperCaseData(),
                       maxLines: 2,
                       style: AppStyles.coverageCardHeadingTextStyle
                           .copyWith(fontSize: 14.0),
@@ -64,7 +64,7 @@ class ProductCardSmall extends StatelessWidget {
                       height: 4.0,
                     ),
                     Text(
-                      product.idTipoProductoNavigation!.nombre.toProperCase(),
+                      product.idTipoProductoNavigation!.nombre.toProperCaseData(),
                       style: AppStyles.subSmallTextStyle.copyWith(fontSize: 12.0),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -73,26 +73,15 @@ class ProductCardSmall extends StatelessWidget {
               ],
             ),
           ),
-          /*Expanded( flex: 3, child:  Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 4.0, vertical: 4.0),
-            child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
-          ),)*/
           Expanded(
             flex: 3,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 4.0, vertical: 4.0),
-                    child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
-                  ),
-                )
-              ],
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 4.0, vertical: 4.0),
+                child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
+              ),
             ),
           ),
         ],
