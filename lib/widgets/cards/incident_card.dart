@@ -48,20 +48,25 @@ class IncidentCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center ,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      incident.establecimientoNavigation.nombre!,
-                      style: AppStyles.coverageCardCategoryTextStyle,
-                    ),
-                    SizedBox(width: 6,),
-                    Text(
-                      incident.productoNavigation.nombre,
-                      style: AppStyles.coverageCardCategoryTextStyle,
-                    ),
-                  ],
-                ),
+               Expanded(
+                 flex: 7,
+                 child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        incident.establecimientoNavigation.nombre,
+                        style: AppStyles.coverageCardCategoryTextStyle,
+                      ),
+                      SizedBox(height: 4,),
+                      Text(
+                        incident.productoNavigation.nombre,
+                        style: AppStyles.coverageCardCategoryTextStyle,
+                      ),
+                    ],
+                  ),
+               ),
+                SizedBox(width: 10,),
                 FeatureCard(msg: incident.estado.toProperCase(), color: setStatusCardColor(),)
               ],
             ),

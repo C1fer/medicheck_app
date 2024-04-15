@@ -76,101 +76,15 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
             style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
           )),
           const SizedBox(height: 16.0),
-          Text(locale.establishment,
-              style: AppStyles.headingTextStyle
-                  .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 4),
-          TypeAheadField<Establecimiento>(
-              controller: _establishmentController,
-              builder: (context, controller, focusNode) => TextFormField(
-                  controller: controller,
-                  focusNode: focusNode,
-                  decoration: AppDecorations.formTextFieldDecoration
-                      .copyWith(hintText: locale.type_here),
-                  validator: (value) => validateEmptyInput(value, context)),
-              emptyBuilder: (context) => Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    locale.no_results_shown,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  )),
-              itemBuilder: (context, establishment) => ListTile(
-                    title: Text(establishment.nombre),
-                    subtitle: Text(
-                      establishment.categoria!,
-                      style: AppStyles.subSmallTextStyle,
-                    ),
-                  ),
-              onSelected: (Establecimiento establishment) {
-                setState(() {
-                  selectedEstablishment = establishment;
-                  _establishmentController.text = establishment.nombre;
-                });
-              },
-              suggestionsCallback: (keyword) async {
-                EstablecimientoResponse? responseData;
-                if (keyword != "") {
-                  responseData = await ApiService.getEstablishments(arsID:currenPlan.idAseguradoraNavigation.idAseguradora, keyword: keyword);
-                }
-                return responseData?.data ?? [];
-              }),
+          EstablishmentField(context, locale, currenPlan),
           const SizedBox(
             height: 20,
           ),
-          Text(locale.product,
-              style: AppStyles.headingTextStyle
-                  .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 4),
-          TypeAheadField<Producto>(
-              controller: _productController,
-              builder: (context, controller, focusNode) => TextFormField(
-                    controller: controller,
-                    focusNode: focusNode,
-                    decoration: AppDecorations.formTextFieldDecoration
-                        .copyWith(hintText: locale.type_here),
-                    validator: (value) => validateEmptyInput(value, context),
-                  ),
-              emptyBuilder: (context) => Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    locale.no_results_shown,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  )),
-              itemBuilder: (context, product) => ListTile(
-                    title: Text(product.nombre),
-                  ),
-              onSelected: (Producto product) {
-                setState(() {
-                  selectedProduct = product;
-                  _productController.text = product.nombre;
-                });
-              },
-              suggestionsCallback: (keyword) async {
-                ProductoResponse? responseData;
-                if (keyword != '') {
-                  responseData = await ApiService.getProductsAdvanced(planID: currenPlan.idPlan, name: keyword);
-                }
-                return responseData?.data ?? [];
-              }),
+          ProductField(context, locale, currenPlan),
           const SizedBox(
             height: 20,
           ),
-          Text(
-            locale.description,
-            style: AppStyles.headingTextStyle
-                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 4),
-          CustomInputField(
-            controller: _descriptionController,
-            inputFormatters: [LengthLimitingTextInputFormatter(255)],
-            validator: (String? val) => validateEmptyInput(val, context),
-            hintText: locale.type_here,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-            maxLines: null,
-          ),
+          DescriptionField(context, locale),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
@@ -181,4 +95,118 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
       ),
     );
   }
+
+  Widget EstablishmentField(BuildContext context, AppLocalizations locale, Plan currentPlan) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(locale.establishment,
+            style: AppStyles.headingTextStyle
+                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
+        TypeAheadField<Establecimiento>(
+            controller: _establishmentController,
+            builder: (context, controller, focusNode) => TextFormField(
+                controller: controller,
+                focusNode: focusNode,
+                decoration: AppDecorations.formTextFieldDecoration
+                    .copyWith(hintText: locale.type_here),
+                validator: (value) => validateAutoComplete(value, selectedEstablishment?.nombre, _establishmentController, context)),
+            emptyBuilder: (context) => Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  locale.no_results_shown,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium,
+                )),
+            itemBuilder: (context, establishment) => ListTile(
+              title: Text(establishment.nombre),
+              subtitle: Text(
+                establishment.categoria!,
+                style: AppStyles.subSmallTextStyle,
+              ),
+            ),
+            onSelected: (Establecimiento establishment) {
+              setState(() {
+                selectedEstablishment = establishment;
+                _establishmentController.text = establishment.nombre;
+              });
+            },
+            suggestionsCallback: (keyword) async {
+              EstablecimientoResponse? responseData;
+              if (keyword != "") {
+                responseData = await ApiService.getEstablishments(arsID:currentPlan.idAseguradoraNavigation.idAseguradora, keyword: keyword);
+              }
+              return responseData?.data ?? [];
+            }),
+      ],
+    );
+  }
+
+  Widget ProductField(BuildContext context, AppLocalizations locale, Plan currenPlan){
+    return  Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(locale.product,
+            style: AppStyles.headingTextStyle
+                .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 4),
+        TypeAheadField<Producto>(
+            controller: _productController,
+            builder: (context, controller, focusNode) => TextFormField(
+              controller: controller,
+              focusNode: focusNode,
+              decoration: AppDecorations.formTextFieldDecoration
+                  .copyWith(hintText: locale.type_here),
+              validator: (value) => validateAutoComplete(value, selectedProduct?.nombre, _productController, context)
+            ),
+            emptyBuilder: (context) => Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  locale.no_results_shown,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium,
+                )),
+            itemBuilder: (context, product) => ListTile(
+              title: Text(product.nombre),
+            ),
+            onSelected: (Producto product) {
+              setState(() {
+                selectedProduct = product;
+                _productController.text = product.nombre;
+              });
+            },
+            suggestionsCallback: (keyword) async {
+              ProductoResponse? responseData;
+              if (keyword != '') {
+                responseData = await ApiService.getProductsAdvanced(planID: currenPlan.idPlan, name: keyword);
+              }
+              return responseData?.data ?? [];
+            }),
+      ],
+    );
+  }
+
+  Widget DescriptionField(BuildContext context, AppLocalizations locale){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          locale.description,
+          style: AppStyles.headingTextStyle
+              .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 4),
+        CustomInputField(
+          controller: _descriptionController,
+          inputFormatters: [LengthLimitingTextInputFormatter(255)],
+          validator: (String? val) => validateEmptyInput(val, context),
+          hintText: locale.type_here,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          maxLines: null,
+        ),
+      ],
+    );
+  }
+
 }

@@ -8,6 +8,7 @@ import 'package:medicheck/models/responses/incidente_response.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/cards/incident_card.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
+import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/new_incident_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
@@ -26,13 +27,15 @@ class IncidentReports extends StatefulWidget {
 
 class _IncidentReportsState extends State<IncidentReports> {
   String incidentStatus = 'ABIERTO';
+  bool isLoading = true;
+
   final PagingController<int, Incidente> _incidentsPaginationController =
       PagingController(firstPageKey: 1);
 
   @override
   void initState() {
-    _incidentsPaginationController
-        .addPageRequestListener((pageKey) => _getReports());
+    _incidentsPaginationController.addPageRequestListener((pageKey) => _getReports());
+    _getReports();
     super.initState();
   }
 
@@ -43,6 +46,7 @@ class _IncidentReportsState extends State<IncidentReports> {
   }
 
   Future<void> _getReports() async {
+    setState(() => isLoading = true);
     if (mounted) {
       try {
         final int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
@@ -59,11 +63,13 @@ class _IncidentReportsState extends State<IncidentReports> {
           } else {
             _incidentsPaginationController.appendLastPage(response.data);
           }
+          setState(() => isLoading = false);
         }
       } catch (except) {
         _incidentsPaginationController.error = except;
       }
     }
+    setState(() => isLoading = false);
   }
 
   Future<void> onStatusDropdownChanged(String? newVal) async {
@@ -87,69 +93,81 @@ class _IncidentReportsState extends State<IncidentReports> {
       appBar: CustomAppBar(
         title: locale.incident_reports,
       ),
-      body: SafeArea(
-        child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+      body: SafeArea(child: PageLayout(context, locale)),
+    );
+  }
+
+  Widget PageLayout(BuildContext context, AppLocalizations locale) {
+    return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: CustomDropdownButton(
-                        optionsBorderRadius: 24.0,
-                        value: incidentStatus,
-                        onChanged: (String? val) =>
-                            onStatusDropdownChanged(val),
-                        entries: Constants.incidentStatuses
-                            .map((element
-                            ) => DropdownMenuItem(
-                                  value: element,
-                                  child: Text(element.contains("")
-                                      ? element
-                                          .replaceAll("_", " ")
-                                          .toProperCase()
-                                      : element.toProperCase()),
-                                ))
-                            .toList(),
-                        isExpanded: true,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
                 Expanded(
-                    child: PagedListView.separated(
-                  pagingController: _incidentsPaginationController,
-                  builderDelegate: PagedChildBuilderDelegate<Incidente>(
-                    itemBuilder: (context, item, index) => IncidentCard(
-                      incident: item,
-                      onTap: () {},
-                    ),
-                    noItemsFoundIndicatorBuilder: (context) =>
-                        Center(child: Text(locale.no_results_shown)),
-                  ),
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                )),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: FloatingActionButton(
-                    onPressed: onPressedNewIncidentButton,
-                    backgroundColor: AppColors.jadeGreen,
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 30,
-                    ),
+                    flex: 2,
+                    child: Text(
+                      locale.incident_status,
+                      style: AppStyles.settingTextStyle.copyWith(fontSize: 16),
+                    )),
+                Expanded(
+                  flex: 3,
+                  child: CustomDropdownButton(
+                    optionsBorderRadius: 24.0,
+                    value: incidentStatus,
+                    onChanged: (String? val) => onStatusDropdownChanged(val),
+                    entries: Constants.incidentStatuses
+                        .map((element) => DropdownMenuItem(
+                              value: element,
+                              child: Text(element.contains("")
+                                  ? element.replaceAll("_", " ").toProperCase()
+                                  : element.toProperCase()),
+                            ))
+                        .toList(),
+                    isExpanded: true,
                   ),
                 ),
               ],
-            )),
-      ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            if (isLoading) const DataLoadingIndicator(),
+
+            if (!isLoading)
+              _incidentsPaginationController.itemList != null
+                  ? Expanded(child: IncidentsList(context, locale))
+                  : Expanded(
+                      child: Center(child: Text(locale.no_results_shown))),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: FloatingActionButton(
+                onPressed: onPressedNewIncidentButton,
+                backgroundColor: AppColors.jadeGreen,
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget IncidentsList(BuildContext context, AppLocalizations locale) {
+    return PagedListView.separated(
+      pagingController: _incidentsPaginationController,
+      builderDelegate: PagedChildBuilderDelegate<Incidente>(
+          itemBuilder: (context, item, index) => IncidentCard(
+                incident: item,
+                onTap: () {},
+              ),
+          noItemsFoundIndicatorBuilder: (context) =>
+              Center(child: Text(locale.no_results_shown))),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
     );
   }
 }

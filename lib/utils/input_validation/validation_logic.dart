@@ -63,3 +63,11 @@ String? validateEmptyInput(String? input, BuildContext context){
   }
   return null;
 }
+
+String? validateAutoComplete(String? input, String? ref, TextEditingController controller, BuildContext context){
+  if (input == '' || input == null || input != ref){
+    controller.clear();
+    return AppLocalizations.of(context).invalid_input;
+  }
+  return null;
+}
