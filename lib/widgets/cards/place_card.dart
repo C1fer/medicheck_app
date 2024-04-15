@@ -19,12 +19,10 @@ class PlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final distance = AppLocalizations.of(context).distance_from_place(place.distance.toStringAsFixed(2));
     return GestureDetector(
       onTap: () => MapsLauncher.launchCoordinates(
           place.establecimiento.latitud, place.establecimiento.longitud),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -32,59 +30,40 @@ class PlaceCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-                width: 150,
-                height: 125,
-                child: placePhotoURL != null
-                    ? CachedNetworkImage(
-                        imageUrl: placePhotoURL!,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(
-                          color: AppColors.jadeGreen,
-                        ),
-                      )
-                    : SvgPicture.asset('assets/icons/hospital-colored.svg')),
-            const SizedBox(
-              width: 30.0,
-            ),
-            Expanded(
+            PlaceIllust(context),
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 8.0, bottom: 10, left: 20.0, right: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    place.establecimiento.nombre.toProperCaseData(),
-                    style: AppStyles.sectionTextStyle,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(flex: 3, child: PlaceName()),
+                      if (place.rating != null)
+                        Expanded(child: PlaceRatingBar(context))
+                    ],
                   ),
-                  Text(
-                      place.establecimiento.categoria!
-                          .replaceUnderScores()
-                          .toProperCase(),
-                      style: AppStyles.subSmallTextStyle),
+                  PlaceType(),
                   const SizedBox(
-                    height: 4,
-                  ),
-                  if (place.rating != null) PlaceRatingBar(context),
-                  const SizedBox(
-                    height: 4,
+                    height: 8,
                   ),
                   if (place.establecimiento.telefono != null)
                     PlacePhoneNumbers(),
                   const SizedBox(
-                    height: 4,
+                    height: 8,
                   ),
                   if (place.establecimiento.direccion != null) PlaceLocation(),
                   const SizedBox(
-                    height: 6,
+                    height: 10,
                   ),
-                  Text(
-                    distance,
-                    style: AppStyles.subSmallTextStyle
-                        .copyWith(fontWeight: FontWeight.w600),
-                  )
+                  PlaceDistance(context)
                 ],
               ),
             )
@@ -94,8 +73,65 @@ class PlaceCard extends StatelessWidget {
     );
   }
 
+  Widget PlaceDistance(BuildContext context){
+    final distance = AppLocalizations.of(context)
+        .distance_from_place(place.distance.toStringAsFixed(2));
+    return Row(
+      children: [
+        Icon(Icons.directions_rounded, color: AppColors.darkGray, size: 14,),
+        SizedBox(width: 4,),
+        Text(
+          distance,
+          style: AppStyles.subSmallTextStyle
+              .copyWith(fontWeight: FontWeight.w600),
+        ),
+      ],
+    );
+  }
+
+  Widget PlaceIllust(BuildContext context) {
+    return placePhotoURL != null
+        ? PlacePhoto(context, placePhotoURL!)
+        : SvgPicture.asset('assets/icons/hospital-colored.svg');
+  }
+
+  Widget PlacePhoto(BuildContext context, String imageURL) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: CachedNetworkImage(
+        fit: BoxFit.cover,
+        imageUrl: imageURL,
+        imageBuilder: (context, imageProvider) => Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(80),
+          decoration: BoxDecoration(
+              image: DecorationImage(image: imageProvider, fit:  BoxFit.cover),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10,), topRight: Radius.circular(10)),
+              color: Colors.black),
+        ),
+        placeholder: (context, url) => const CircularProgressIndicator(
+          color: AppColors.jadeGreen,
+        ),
+      ),
+    );
+  }
+
+  Widget PlaceName() {
+    return Text(
+      place.establecimiento.nombre.toProperCaseData(),
+      style: AppStyles.sectionTextStyle,
+    );
+  }
+
+  Widget PlaceType() {
+    return Text(
+        place.establecimiento.categoria!.replaceUnderScores().toProperCase(),
+        style: AppStyles.subSmallTextStyle);
+  }
+
   Widget PlacePhoneNumbers() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: place.establecimiento.telefono!
             .split(", ")
             .map((String phoneNo) => Row(

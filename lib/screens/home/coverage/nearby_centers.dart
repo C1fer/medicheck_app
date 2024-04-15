@@ -81,15 +81,17 @@ class _NearbyCentersState extends State<NearbyCenters> {
                         itemBuilder: (context, idx) => PlaceCard(
                               place: snapshot.data![idx],
                               placePhotoURL: PlacesApiService.getPlacePhotoUri(
-                                  snapshot.data![idx], 100, 100)),
+                                  snapshot.data![idx], 600, 600)),
                         separatorBuilder: (context, idx) => const SizedBox(
                               height: 10,
                             ),
                         itemCount: snapshot.data!.length);
                   }
                 }
-                return Center(
-                    child: DataLoadingIndicator());
+                return Expanded(
+                  child: const Center(
+                      child: DataLoadingIndicator()),
+                );
               },
             ),
           ),
