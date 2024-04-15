@@ -6,75 +6,33 @@ import '../models/google_place.dart';
 class PlacesApiService {
   static const apiKey = "AIzaSyBF4HkTwIaYTIXubPpfRc2v7vKOMRgs3pw ";
   static const baseUrl = "https://places.googleapis.com/v1";
-  static const nearbySearchEndPoint = "/places:searchNearby";
+  static const placesEndpoint = "/places";
   static const mediaEndpoint = "/:placeUri/media";
   static const defaultTimeout = Duration(seconds: 5);
 
-  static Future<List<GooglePlace>> nearbySearch(
-      double lat, double lon, String langCode,
-      {double? areaRadius, int? maxResultCount, String? rankPreference, List<String>? placeTypes}) async {
-    // Fields requested in header
-    List<String> returnFields = [
-      'places.nationalPhoneNumber',
-      'places.internationalPhoneNumber',
-      'places.formattedAddress',
-      'places.displayName',
-      'places.primaryTypeDisplayName',
-      'places.currentOpeningHours',
-      'places.primaryType',
-      'places.shortFormattedAddress',
-      'places.photos',
-      'places.websiteUri',
-      'places.location',
-      'places.id'
-    ];
 
-    List<String> primaryTypes = [
-      "dental_clinic",
-      "dentist",
-      "doctor",
-      "drugstore",
-      "hospital",
-      "medical_lab",
-      "pharmacy",
-      "physiotherapist"
-    ];
+  static Future<Map<String,dynamic>?> getPlaceById(String placeID) async{
+    List<String> returnFields = ["photos","rating"];
 
-    Map<String, dynamic> locationRestriction = {
-      "circle": {
-        "center": {"latitude": lat, "longitude": lon},
-        "radius": areaRadius ?? 500
-      }
+    Map<String, String> queryParams = {
+      "key": apiKey,
+      "languageCode": "es",
+      "fields": returnFields.join(",")
     };
 
-    Map<String, dynamic> requestBody = {
-      "includedTypes": primaryTypes.toList(),
-      "maxResultCount": maxResultCount ?? 10,
-      "languageCode": langCode,
-      "rankPreference": rankPreference ?? "DISTANCE",
-      "locationRestriction": locationRestriction
-    };
-
-    Map<String, String> requestHeaders = {
-      "Content-Type": "application/json",
-      "X-Goog-Api-Key": apiKey,
-      "X-Goog-FieldMask": returnFields.join(",")
-    };
-
-    final url = Uri.parse(baseUrl + nearbySearchEndPoint);
+    final url = Uri.parse("$baseUrl$placesEndpoint/$placeID").replace(queryParameters: queryParams);
     try {
       var response = await http
-          .post(url, body: json.encode(requestBody), headers: requestHeaders)
+          .get(url, headers: {"Content-Type": "application/json"})
           .timeout(defaultTimeout);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        final List<dynamic> places = responseData["places"];
-        return places.map((e) => GooglePlace.fromJson(e)).toList();
+        return responseData;
       }
     } catch (except) {
-      print("Error fetching nearby places: $except");
+      print("Error fetching place: $except");
     }
-    return <GooglePlace>[];
+    return null;
   }
 
   static String? getPlacePhotoUri(

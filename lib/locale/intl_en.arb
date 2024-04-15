@@ -109,5 +109,15 @@
   "pdss": "Basic Health Plan",
   "all_products": "All Products",
   "plan_modality" : "Modality",
-  "product_coverages": "Product Coverages"
+  "product_coverages": "Product Coverages",
+
+  "distance_from_place": "{distance} km away",
+  "@distance_from_place": {
+    "placeholders": {
+      "distance" : {
+        "type": "String",
+        "example": "3.4"
+      }
+    }
+  }
 }

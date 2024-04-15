@@ -5,6 +5,9 @@ class Establecimiento {
   String? direccion;
   String? telefono;
   String? correo;
+  double latitud;
+  double longitud;
+  String googlePlaceID;
   DateTime fechaRegistro;
 
   Establecimiento({
@@ -14,6 +17,9 @@ class Establecimiento {
     required this.direccion,
     required this.telefono,
     required this.correo,
+    required this.latitud,
+    required this.longitud,
+    required this.googlePlaceID,
     required this.fechaRegistro,
   });
 
@@ -24,6 +30,9 @@ class Establecimiento {
     direccion: json["direccion"],
     telefono: json["telefono"],
     correo: json["correo"],
+    latitud: json["latitud"],
+    longitud: json["longitud"],
+    googlePlaceID: json["googlePlaceId"],
     fechaRegistro: DateTime.parse(json["fechaRegistro"]),
   );
 }

@@ -110,5 +110,15 @@
   "pdss": "Plan Básico de Salud",
   "all_products": "All Products",
   "plan_modality" : "Regimen",
-  "product_coverages": "Coberturas del producto"
+  "product_coverages": "Coberturas del producto",
+
+  "distance_from_place": "A {distance} km de distancia",
+  "@distance_from_place": {
+    "placeholders": {
+      "distance" : {
+        "type": "String",
+        "example": "3.4"
+      }
+    }
+  }
 }

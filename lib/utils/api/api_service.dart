@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:medicheck/models/establecimiento.dart';
 import 'dart:convert';
 
 import 'api_constants.dart';
@@ -675,4 +676,44 @@ class ApiService {
     }
     return null;
   }
+
+  static Future<List<dynamic>> getNearbyEstablishments(
+      double lat, double lon, {int? planID,
+        int? pageIndex,
+        int? pageSize,
+        String? orderField,
+        String? orderDirection}) async {
+    Map<String, dynamic> queryParams = filterQueryParameters({
+      'idPlan': planID,
+      'latitud': lat,
+      'longitud': lon,
+      'pageIndex': pageIndex,
+      'pageSize': pageSize,
+      'orderField': orderField,
+      'orderDirection': orderDirection,
+    });
+
+    var url =
+    Uri.parse(ApiConstants.baseUrl + ApiConstants.establishmentsEndpoint)
+        .replace(queryParameters: queryParams);
+
+    final Map<String, String>? requestHeaders = await getAuthHeaders();
+    if (requestHeaders != null) {
+      try {
+        var response = await http
+            .get(url, headers: requestHeaders)
+            .timeout(defaultTimeout);
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body) as List;
+          return responseData;
+        }
+      } catch (except) {
+        print("Error fetching nearby establishments: $except");
+      }
+    }
+    return [];
+  }
+
+
+
 }

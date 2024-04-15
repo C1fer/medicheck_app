@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:medicheck/models/establecimiento.dart';
 import 'package:medicheck/models/notifiers/localeNotifier.dart';
 import 'package:medicheck/styles/app_colors.dart';
+import 'package:medicheck/utils/api/api_service.dart';
 import 'package:medicheck/widgets/cards/place_card.dart';
+import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
 import 'package:provider/provider.dart';
 import '../../../models/google_place.dart';
 import '../../../widgets/misc/custom_appbar.dart';
@@ -23,20 +26,33 @@ class NearbyCenters extends StatefulWidget {
 class _NearbyCentersState extends State<NearbyCenters> {
   @override
   void initState() {
-    _fetchData();
     super.initState();
   }
 
-  Future<List<GooglePlace>> _fetchData() async {
+  Future<List<GooglePlace>> _getNearbyPlaces() async {
     try {
       Position location = await GeolocationService.getCurrentPosition();
-      String localeLangCode = context.read<LocaleModel>().locale.languageCode;
-      final places = await PlacesApiService.nearbySearch(
-        18.4880088, -69.9650699, localeLangCode);
-      return places;
+      final response = await ApiService.getNearbyEstablishments(location.latitude, location.longitude);
+
+      if (response.isNotEmpty) {
+        List<GooglePlace> nearbyPlaces = [];
+        for (Map<String, dynamic> json in response){
+            final establishment = Establecimiento.fromJson(json["establecimiento"]);
+            final placeResponse = await PlacesApiService.getPlaceById(establishment.googlePlaceID);
+            if (placeResponse != null){
+              // Create new Google Place from Places Detail response
+              final photoUri = placeResponse["photos"] != null ? placeResponse["photos"][0]["name"] : null;
+              final String rating = placeResponse["rating"].toString();
+              GooglePlace place = GooglePlace(establishment, photoUri, double.parse(rating), json["distancia"]);
+              nearbyPlaces.add(place);
+            }
+        }
+        return nearbyPlaces;
+      }
     } catch (ex) {
-      return Future.error("Error fetching places");
+     print("Error fetching places: $ex");
     }
+    return Future.error("");
   }
 
   @override
@@ -50,7 +66,7 @@ class _NearbyCentersState extends State<NearbyCenters> {
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: FutureBuilder(
-              future: _fetchData(),
+              future: _getNearbyPlaces(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasError) {
@@ -65,22 +81,15 @@ class _NearbyCentersState extends State<NearbyCenters> {
                         itemBuilder: (context, idx) => PlaceCard(
                               place: snapshot.data![idx],
                               placePhotoURL: PlacesApiService.getPlacePhotoUri(
-                                  snapshot.data![idx], 100, 100),
-                              onTap: () => MapsLauncher.launchCoordinates(
-                                  snapshot.data![idx].lat,
-                                  snapshot.data![idx].lon),
-                            ),
+                                  snapshot.data![idx], 100, 100)),
                         separatorBuilder: (context, idx) => const SizedBox(
                               height: 10,
                             ),
                         itemCount: snapshot.data!.length);
                   }
                 }
-                return const Expanded(
-                    child: Center(
-                        child: CircularProgressIndicator(
-                  color: AppColors.jadeGreen,
-                )));
+                return Center(
+                    child: DataLoadingIndicator());
               },
             ),
           ),
