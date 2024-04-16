@@ -64,12 +64,11 @@ class _ProductSearchState extends State<ProductSearch> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     return Scaffold(
-      appBar: CustomAppBar(title: locale.search_screen_title),
+      appBar: CustomAppBar(title: locale.search_screen_title, canGoBack: false,),
       body: SafeArea(
         child: Padding(
           padding:

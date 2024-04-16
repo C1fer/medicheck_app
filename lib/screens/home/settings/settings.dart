@@ -39,6 +39,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: CustomAppBar(
         title: locale.profile_info_heading,
+        canGoBack: false,
+        centerTitle: false,
       ),
       body: SafeArea(
         child: Padding(

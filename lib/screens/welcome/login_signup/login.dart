@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/models/enums.dart';
+import 'package:medicheck/screens/main_page.dart';
 import 'package:provider/provider.dart';
 import '../../../models/notifiers/plan_notifier.dart';
 import '../../../models/notifiers/user_info_notifier.dart';
@@ -75,7 +76,7 @@ class _LoginState extends State<Login> {
                 if (Provider.of<UserInfoModel>(context, listen: false)
                         .currentUser !=
                     null) context.read<PlanModel>().plans.clear();
-                Navigator.pushReplacementNamed(context, Home.id);
+                Navigator.pushReplacementNamed(context, MainPage.id);
               }
             }
           } else {

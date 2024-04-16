@@ -4,8 +4,10 @@ import '../../styles/app_styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  bool canGoBack;
+  bool centerTitle;
 
-  const CustomAppBar({super.key, required this.title});
+  CustomAppBar({super.key, required this.title, this.canGoBack = true, this.centerTitle = true});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +18,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: Colors.white,
       elevation: 0.0,
-      centerTitle: true,
-      leading: GestureDetector(
+      centerTitle: centerTitle,
+      leading:  canGoBack ? GestureDetector(
         child: Padding(
           padding: const EdgeInsets.all(14.0),
           child: SvgPicture.asset(
@@ -25,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         onTap: () => Navigator.pop(context),
-      ),
+      ) : null,
     );
   }
 

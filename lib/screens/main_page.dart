@@ -12,7 +12,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final List<Widget> _pages = [Home(), ProductSearch(), SettingsPage()];
+  final List<Widget> _pages = [const Home(), const ProductSearch(), const SettingsPage()];
   int _currentIdx = 0;
 
   Future<void> onTabSelected(int selectedIndex) async {

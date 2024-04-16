@@ -40,8 +40,7 @@ class _HomeState extends State<Home> {
   void initState() {
     // Define listeners for plan and recently viewed coverage
     Provider.of<PlanModel>(context, listen: false).addListener(_fetchData);
-    Provider.of<ViewedCoverageModel>(context, listen: false)
-        .addListener(_fetchData);
+    Provider.of<ViewedCoverageModel>(context, listen: false).addListener(_fetchData);
 
     _fetchData();
     super.initState();

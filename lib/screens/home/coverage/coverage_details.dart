@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:medicheck/models/misc/mock_data.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/screens/home/coverage/nearby_centers.dart';
 import 'package:medicheck/utils/location_service.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
+import 'package:medicheck/widgets/misc/skeletons/widget_skeleton_list.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
+import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -37,6 +40,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
   CoberturaResponse? productCoverages;
   late Producto product;
 
+  Future<CoberturaResponse>? coverages;
+
   void _saveProduct(Producto product) async {
     final userProvider = context.read<UserInfoModel>();
     final savedProductProvider = context.read<SavedProductModel>();
@@ -48,6 +53,10 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       if (response) {
         savedProductProvider.deleteSavedProduct(product);
       } else {
+        // Error saving product
+        final String errorMsg = context.read<AppLocalizations>().server_error;
+        showSnackBar(
+            context, errorMsg, MessageType.ERROR); // Show snackbar error
         setState(() => isSaved = !isSaved!); // Revert saved icon as fallback
       }
     } else {
@@ -57,6 +66,10 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       if (response) {
         savedProductProvider.addSavedProduct(product);
       } else {
+        // Error saving product
+        final String errorMsg = context.read<AppLocalizations>().server_error;
+        showSnackBar(
+            context, errorMsg, MessageType.ERROR); // Show snackbar error
         setState(() => isSaved = !isSaved!); // Revert saved icon as fallback
       }
     }
@@ -79,32 +92,33 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
     }
   }
 
-  Future<void> _getProductCoverages(int productID) async {
+  Future<bool> _getProductCoverages(int productID) async {
     int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
     CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
         selectedPlanID,
         productID: productID,
         pageSize: 1000);
-    if (response != null) {
+    if (response != null && response!.data.isNotEmpty) {
       setState(() => productCoverages = response);
+      return true;
     }
+    return Future.error("");
   }
 
   void _fetchData(int productID) {
-    _getProductCoverages(productID);
+    //_getProductCoverages(productID);
     _isProductSaved(productID);
   }
 
-  Future<void> onNearbyCentersPressed() async{
+  Future<void> onNearbyCentersPressed() async {
     bool locationEnabled = await Geolocator.isLocationServiceEnabled();
-    if(locationEnabled) {
+    if (locationEnabled) {
       Navigator.pushNamed(context, NearbyCenters.id);
-    }
-    else{
+    } else {
+      //TODO MESSAGE
       await Geolocator.openLocationSettings();
     }
   }
-
 
   @override
   void initState() {
@@ -144,11 +158,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                       height: 14.0,
                     ),
                     const SizedBox(height: 10.0),
-                    productCoverages != null &&
-                            productCoverages!.data.isNotEmpty
-                        ? ProductCoverages(context, locale)
-                        : const Expanded(
-                            child: Center(child: DataLoadingIndicator()))
+                    ProductCoverages(context, locale)
                   ],
                 ),
               ),
@@ -231,22 +241,35 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                 locale.product_coverages,
                 style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
               ),
-              GestureDetector(
-                child: Text(
-                  locale.view_all,
-                  style: AppStyles.actionTextStyle
-                      .copyWith(fontWeight: FontWeight.w600),
-                ),
-              )
+              if (productCoverages != null && productCoverages!.data.length > 8)
+                GestureDetector(
+                  child: Text(
+                    locale.view_all,
+                    style: AppStyles.actionTextStyle
+                        .copyWith(fontWeight: FontWeight.w600),
+                  ),
+                )
             ],
           ),
           const SizedBox(height: 8),
-          Expanded(
-            child: CoveragesListView(
-              context,
-              productCoverages!.data,
-            ),
-          ),
+          FutureBuilder(
+              future: _getProductCoverages(product.idProducto),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    return Expanded(
+                        child:
+                            CoveragesListView(context, productCoverages!.data));
+                  }
+                  if (snapshot.hasError) {
+                    return Expanded(
+                        child: Center(
+                      child: Text(locale.no_results_shown),
+                    ));
+                  }
+                }
+                return Placeholder();
+              }),
         ],
       ),
     );
@@ -263,4 +286,13 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       shrinkWrap: true,
     );
   }
+
+  /*Widget CardSkeletonListView() {
+    return ListView.separated(
+        itemBuilder: (context, _) => const WidgetSkeletonizer(
+              widget: CoverageCard(coverage: MockData.coverage),
+            ),
+        separatorBuilder: (context, _) => const SizedBox(height: 10),
+        itemCount: 8);
+  }*/
 }

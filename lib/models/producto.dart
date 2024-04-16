@@ -9,7 +9,6 @@ class Producto {
   String fechaRegistro;
   String? CUPS;
   bool isPDSS;
-  int idTipo;
   TipoProducto? idTipoProductoNavigation;
 
   Producto(
@@ -18,7 +17,6 @@ class Producto {
       required this.fechaRegistro,
       required this.CUPS,
       required this.isPDSS,
-      required this.idTipo,
       required this.idTipoProductoNavigation});
 
   factory Producto.fromJson(Map<String, dynamic> json) => Producto(
@@ -27,7 +25,6 @@ class Producto {
       fechaRegistro: json["fechaRegistro"],
       CUPS: json["cups"],
       isPDSS: json["isPdss"],
-      idTipo: json["idTipo"],
       idTipoProductoNavigation: json["idTipoNavigation"] != null
           ? TipoProducto.fromJson(json["idTipoNavigation"])
           : null

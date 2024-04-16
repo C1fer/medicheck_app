@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/extensions/string_apis.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../models/establecimiento.dart';
 import '../../styles/app_styles.dart';
 import '../../styles/app_colors.dart';
-
 
 class EstablishmentCard extends StatelessWidget {
   const EstablishmentCard({super.key, required this.establecimiento});
@@ -25,10 +25,13 @@ class EstablishmentCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
-              width: 72,
-              height: 72,
-              child: SvgPicture.asset('assets/icons/hospital-colored.svg')),
+          Skeleton.replace(
+            child: EstablishmentIcon(),
+            replacement: Bone.square(
+              size: 72,
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
           const SizedBox(
             width: 30.0,
           ),
@@ -48,56 +51,69 @@ class EstablishmentCard extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                if (establecimiento.telefono != null)
-                    Column(
-                        children: establecimiento.telefono!
-                            .split(", ")
-                            .map((String phoneNo) => Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.phone,
-                                      size: 14.0,
-                                      color: AppColors.jadeGreen,
-                                    ),
-                                    const SizedBox(
-                                      width: 4,
-                                    ),
-                                    Text(
-                                      phoneNo,
-                                      style: AppStyles.subSmallTextStyle
-                                          .copyWith(color: AppColors.jadeGreen),
-                                    ),
-                                  ],
-                                ))
-                            .toList()),
+                if (establecimiento.telefono != null) EstablishmentPhoneNo(),
                 const SizedBox(
                   height: 4,
                 ),
-                if (establecimiento.direccion != null)
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          size: 14.0,
-                          color: AppColors.jadeGreen,
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Expanded(
-                          child: Text(
-                            establecimiento.direccion!.toProperCaseData(),
-                            style: AppStyles.subSmallTextStyle
-                                .copyWith(color: AppColors.jadeGreen),
-                          ),
-                        )
-                      ],
-                    ),
+                if (establecimiento.direccion != null) EstablishmentLocation(),
               ],
             ),
           )
         ],
       ),
     );
+  }
+
+  Widget EstablishmentIcon() {
+    return SizedBox(
+        width: 72,
+        height: 72,
+        child: SvgPicture.asset('assets/icons/hospital-colored.svg'));
+  }
+
+  Widget EstablishmentLocation() {
+    return Row(
+      children: [
+        const Icon(
+          Icons.location_on,
+          size: 14.0,
+          color: AppColors.jadeGreen,
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        Expanded(
+          child: Text(
+            establecimiento.direccion!.toProperCaseData(),
+            style: AppStyles.subSmallTextStyle
+                .copyWith(color: AppColors.jadeGreen),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget EstablishmentPhoneNo() {
+    return Column(
+        children: establecimiento.telefono!
+            .split(", ")
+            .map((String phoneNo) => Row(
+                  children: [
+                    const Icon(
+                      Icons.phone,
+                      size: 14.0,
+                      color: AppColors.jadeGreen,
+                    ),
+                    const SizedBox(
+                      width: 4,
+                    ),
+                    Text(
+                      phoneNo,
+                      style: AppStyles.subSmallTextStyle
+                          .copyWith(color: AppColors.jadeGreen),
+                    ),
+                  ],
+                ))
+            .toList());
   }
 }
