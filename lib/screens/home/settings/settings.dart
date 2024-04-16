@@ -28,13 +28,12 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   void userLogOut() async {
-    await showCustomDialog(context, LogOutDialog());
+    await showCustomDialog(context, const LogOutDialog());
   }
 
   @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
-    List<Plan> userPlans = context.read<PlanModel>().plans;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -51,13 +50,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                if (userPlans.length > 1)
-                  Column(children: [
-                    PlanSelect(locale),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                  ]),
+                Consumer<PlanModel>(
+                    builder: (context, planModel, _) =>
+                        planModel.plans.length > 1
+                            ? Container(
+                                margin: const EdgeInsets.only(bottom: 20),
+                                child: PlanSelect(locale, planModel))
+                            : const SizedBox.shrink()),
                 LangSelect(locale),
                 const SizedBox(
                   height: 20,
@@ -92,29 +91,24 @@ class _SettingsPageState extends State<SettingsPage> {
           Consumer<PlanModel>(
               builder: (context, planModel, _) => Row(
                     children: [
-                      // Expanded(
-                      //   child: _InfoSection(
-                      //       userModel.currentUser!.tipoDocumento == "NSS"
-                      //           ? locale.ssn_abbrv
-                      //           : locale.national_id_card_abbrv,
-                      //       userModel.currentUser!.noDocumento!),
-                      // ),
-                      // SizedBox(width: 10,),
                       Expanded(
                         child: _InfoSection(
                             locale.insurer,
                             planModel
                                 .selectedPlan!.idAseguradoraNavigation!.nombre),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: _InfoSection(
                             locale.plan, planModel.selectedPlan!.descripcion),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: _InfoSection(
-                            locale.plan_modality, planModel.selectedPlan!.idRegimenNavigation.descripcion.toSentenceCase()),
+                            locale.plan_modality,
+                            planModel
+                                .selectedPlan!.idRegimenNavigation.descripcion
+                                .toSentenceCase()),
                       ),
                     ],
                   ))
@@ -123,35 +117,28 @@ class _SettingsPageState extends State<SettingsPage> {
     ));
   }
 
-  Widget PlanSelect(AppLocalizations locale) {
+  Widget PlanSelect(AppLocalizations locale, PlanModel planProvider) {
     return SettingCard(
         content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              locale.plan,
-              style: AppStyles.settingTextStyle,
-            ),
-            Consumer<PlanModel>(
-                builder: (context, planModel, _) => planModel.plans.length > 1
-                    ? DropdownButton(
-                    borderRadius: BorderRadius.circular(24.0),
-                    value: planModel.selectedPlanID.toString(),
-                    onChanged: (String? newPlanID) =>
-                        planModel.updateSelectedPlan(newPlanID!),
-                    items: planModel.plans
-                        .map((Plan plan) => DropdownMenuItem(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          locale.plan,
+          style: AppStyles.settingTextStyle,
+        ),
+        DropdownButton(
+            borderRadius: BorderRadius.circular(24.0),
+            value: planProvider.selectedPlanID.toString(),
+            onChanged: (String? newPlanID) =>
+                planProvider.updateSelectedPlan(newPlanID!),
+            items: planProvider.plans
+                .map((Plan plan) => DropdownMenuItem(
                       value: plan.idPlan.toString(),
                       child: Text(plan.descripcion),
                     ))
-                        .toList())
-                    : Text(
-                  planModel.selectedPlan!.descripcion,
-                  style: AppStyles.settingTextStyle
-                      .copyWith(fontWeight: FontWeight.w500),
-                ))
-          ],
-        ));
+                .toList())
+      ],
+    ));
   }
 
   Widget LangSelect(AppLocalizations locale) {
@@ -159,7 +146,8 @@ class _SettingsPageState extends State<SettingsPage> {
       content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(locale.change_lang.toProperCase(), style: AppStyles.settingTextStyle),
+          Text(locale.change_lang.toProperCase(),
+              style: AppStyles.settingTextStyle),
           Consumer<LocaleModel>(
             builder: (context, localeModel, child) => DropdownButton(
               borderRadius: BorderRadius.circular(24.0),
