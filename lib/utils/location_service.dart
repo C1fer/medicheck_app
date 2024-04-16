@@ -6,7 +6,7 @@ class GeolocationService {
 
     bool isLocationEnabled = await Geolocator.isLocationServiceEnabled();
 
-    if (isLocationEnabled) {
+    if (!isLocationEnabled) {
       permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission(); // request permissions if denied
@@ -23,6 +23,8 @@ class GeolocationService {
       // Return current position when service is  enabled and permission is granted
       return await Geolocator.getCurrentPosition();
     }
+
     return Future.error('Location services are disabled.');
   }
+
 }

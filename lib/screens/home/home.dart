@@ -165,10 +165,10 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 24.0,
                 ),
-                CTABanner(),
-                const SizedBox(
-                  height: 35.0,
-                ),
+                // CTABanner(),
+                // const SizedBox(
+                //   height: 35.0,
+                // ),
                 if (recentlyViewedProducts != null &&
                     recentlyViewedProducts!.data.isNotEmpty)
                   Column(

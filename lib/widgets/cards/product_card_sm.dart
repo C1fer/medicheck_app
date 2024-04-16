@@ -34,57 +34,77 @@ class ProductCardSmall extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onTap ?? onSelected(context),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 9,
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  width: 40,
-                  height: 40,
-                  child: SvgPicture.asset(
-                    'assets/icons/pill.svg',
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-                Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(
-                      product.nombre.toProperCaseData(),
-                      maxLines: 2,
-                      style: AppStyles.coverageCardHeadingTextStyle
-                          .copyWith(fontSize: 14.0),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(
-                      height: 4.0,
-                    ),
-                    Text(
-                      product.idTipoProductoNavigation!.nombre.toProperCaseData(),
-                      style: AppStyles.subSmallTextStyle.copyWith(fontSize: 12.0),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ]),
-                ),
-              ],
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.0), // Adjust border radius as needed
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5), // Shadow color
+              spreadRadius: 0.5, // Spread radius
+              blurRadius: 1, // Blur radius
+              offset: Offset(0, 3), // Changes position of shadow
             ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 4.0, vertical: 4.0),
-                child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 9,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                    width: 40,
+                    height: 40,
+                    child: SvgPicture.asset(
+                      'assets/icons/pill.svg',
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text(
+                        product.nombre.toProperCaseData(),
+                        maxLines: 2,
+                        style: AppStyles.coverageCardHeadingTextStyle
+                            .copyWith(fontSize: 14.0),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(
+                        height: 4.0,
+                      ),
+                      Text(
+                        product.idTipoProductoNavigation!.nombre.toProperCaseData(),
+                        style: AppStyles.subSmallTextStyle.copyWith(fontSize: 12.0),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ]),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 3,
+              child: Column(
+                children: [
+                  Text("Plan"),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4.0, vertical: 4.0),
+                      child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

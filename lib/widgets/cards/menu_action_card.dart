@@ -35,9 +35,9 @@ class MenuActionCard extends StatelessWidget {
                 shadows: const [
                   BoxShadow(
                     color: Color(0x19000000),
-                    blurRadius: 70,
+                    blurRadius: 40,
                     offset: Offset(0, 17),
-                    spreadRadius: -11,
+                    spreadRadius: -1,
                   )
                 ],
               ),

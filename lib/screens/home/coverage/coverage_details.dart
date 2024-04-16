@@ -5,6 +5,7 @@ import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/screens/home/coverage/nearby_centers.dart';
 import 'package:medicheck/utils/location_service.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
+import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -41,18 +42,22 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
     final savedProductProvider = context.read<SavedProductModel>();
 
     if (isSaved!) {
+      setState(() => isSaved = !isSaved!); // Update saved icon
       final bool response = await ApiService.deleteSavedProduct(
           userProvider.currentUser!.idUsuario, product.idProducto);
       if (response) {
-        setState(() => isSaved = !isSaved!);
         savedProductProvider.deleteSavedProduct(product);
+      } else {
+        setState(() => isSaved = !isSaved!); // Revert saved icon as fallback
       }
     } else {
+      setState(() => isSaved = !isSaved!); // Update saved icon
       final bool response = await ApiService.postSavedProduct(
           userProvider.currentUser!.idUsuario, product.idProducto);
       if (response) {
-        setState(() => isSaved = !isSaved!);
         savedProductProvider.addSavedProduct(product);
+      } else {
+        setState(() => isSaved = !isSaved!); // Revert saved icon as fallback
       }
     }
   }
@@ -89,6 +94,17 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
     _getProductCoverages(productID);
     _isProductSaved(productID);
   }
+
+  Future<void> onNearbyCentersPressed() async{
+    bool locationEnabled = await Geolocator.isLocationServiceEnabled();
+    if(locationEnabled) {
+      Navigator.pushNamed(context, NearbyCenters.id);
+    }
+    else{
+      await Geolocator.openLocationSettings();
+    }
+  }
+
 
   @override
   void initState() {
@@ -131,7 +147,8 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                     productCoverages != null &&
                             productCoverages!.data.isNotEmpty
                         ? ProductCoverages(context, locale)
-                        : const Center(child: DataLoadingIndicator())
+                        : const Expanded(
+                            child: Center(child: DataLoadingIndicator()))
                   ],
                 ),
               ),
@@ -139,7 +156,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                 height: 12,
               ),
               FilledButton(
-                onPressed: () => Navigator.pushNamed(context, NearbyCenters.id),
+                onPressed: () => onNearbyCentersPressed(),
                 child: Text(locale.near_centers),
               ),
             ],
