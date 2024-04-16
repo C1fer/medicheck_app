@@ -93,7 +93,8 @@ class _LoginState extends State<SignUp> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 30),
-                  const FullLogo(
+                  const AppLogo(
+                    orientation: LogoOrientation.Vertical,
                     width: 66.37,
                     height: 66.36,
                     color: AppColors.jadeGreen,

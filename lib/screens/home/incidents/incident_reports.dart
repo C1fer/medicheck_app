@@ -9,13 +9,14 @@ import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/cards/incident_card.dart';
 import 'package:medicheck/widgets/dropdown/custom_dropdown_button.dart';
 import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
-import 'package:medicheck/widgets/popups/dialog/dialogs/new_incident_dialog.dart';
+import 'package:medicheck/screens/home/incidents/new_incident.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:provider/provider.dart';
 import '../../../../widgets/misc/custom_appbar.dart';
 import '../../../../utils/api/api_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../styles/app_colors.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class IncidentReports extends StatefulWidget {
   const IncidentReports({Key? key}) : super(key: key);
@@ -34,7 +35,8 @@ class _IncidentReportsState extends State<IncidentReports> {
 
   @override
   void initState() {
-    _incidentsPaginationController.addPageRequestListener((pageKey) => _getReports());
+    _incidentsPaginationController
+        .addPageRequestListener((pageKey) => _getReports());
     _getReports();
     super.initState();
   }
@@ -80,10 +82,14 @@ class _IncidentReportsState extends State<IncidentReports> {
   }
 
   Future<void> onPressedNewIncidentButton() async {
-    await showCustomDialog(context, NewIncidentDialog(onSubmit: () async {
-      _incidentsPaginationController.refresh();
-      Navigator.pop(context);
-    }), dismissible: true);
+    await showMaterialModalBottomSheet(
+        context: context,
+        isDismissible: false,
+        enableDrag: false,
+        builder: (context) => NewIncident(onSubmit: () async {
+              _incidentsPaginationController.refresh();
+              Navigator.pop(context);
+            }));
   }
 
   @override
@@ -135,7 +141,6 @@ class _IncidentReportsState extends State<IncidentReports> {
               height: 20,
             ),
             if (isLoading) const DataLoadingIndicator(),
-
             if (!isLoading)
               _incidentsPaginationController.itemList != null
                   ? Expanded(child: IncidentsList(context, locale))

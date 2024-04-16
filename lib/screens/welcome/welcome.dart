@@ -24,7 +24,8 @@ class _WelcomeState extends State<Welcome> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            FullLogo(
+            AppLogo(
+                orientation: LogoOrientation.Vertical,
                 color: AppColors.jadeGreen,
                 fontSize: 25.68,
                 width: 66.37,

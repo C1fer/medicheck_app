@@ -13,7 +13,7 @@ Future<void> showCustomDialog(
             backgroundColor: Colors.white,
             child: Container(
               padding: const EdgeInsets.all(32.0),
-              child: SingleChildScrollView(child: content),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [content],),
             ),
           );
     },

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:medicheck/screens/main_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,7 +60,7 @@ class _SplashState extends State<Splash> {
   void _redirectUser() async {
     final userProvider = Provider.of<UserInfoModel>(context, listen: false);
     if (userProvider.currentUser != null) {
-      Navigator.pushReplacementNamed(context, Home.id);
+      Navigator.pushReplacementNamed(context, MainPage.id);
     } else {
       // Redirect to Welcome screen if user had completed onboarding
       final localStorage = await SharedPreferences.getInstance();
@@ -89,7 +90,8 @@ class _SplashState extends State<Splash> {
       backgroundColor: AppColors.jadeGreen,
       body: SafeArea(
         child: Center(
-            child: FullLogo(
+            child: AppLogo(
+              orientation: LogoOrientation.Vertical,
           color: Colors.white,
           fontSize: 50.11,
           width: 129.54,

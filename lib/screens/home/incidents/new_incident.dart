@@ -12,24 +12,24 @@ import 'package:medicheck/utils/input_validation/validation_logic.dart';
 import 'package:medicheck/widgets/inputs/custom_form_field.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../models/cobertura.dart';
-import '../../../../models/debouncer.dart';
-import '../../../../models/plan.dart';
-import '../../../../models/responses/establecimiento_response.dart';
-import '../../../../models/notifiers/plan_notifier.dart';
-import '../../../../models/producto.dart';
-import '../../../../styles/app_styles.dart';
+import '../../../models/cobertura.dart';
+import '../../../models/debouncer.dart';
+import '../../../models/plan.dart';
+import '../../../models/responses/establecimiento_response.dart';
+import '../../../models/notifiers/plan_notifier.dart';
+import '../../../models/producto.dart';
+import '../../../styles/app_styles.dart';
 
-class NewIncidentDialog extends StatefulWidget {
-  const NewIncidentDialog({super.key, required this.onSubmit});
+class NewIncident extends StatefulWidget {
+  const NewIncident({super.key, required this.onSubmit});
 
   final Future<void> Function() onSubmit;
 
   @override
-  State<NewIncidentDialog> createState() => _NewIncidentDialogState();
+  State<NewIncident> createState() => _NewIncidentState();
 }
 
-class _NewIncidentDialogState extends State<NewIncidentDialog> {
+class _NewIncidentState extends State<NewIncident> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
   final _productController = TextEditingController();
@@ -64,46 +64,51 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     Plan currenPlan = context.read<PlanModel>().selectedPlan!;
-
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-              child: Text(
-            locale.new_incident,
-            style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
-          )),
-          const SizedBox(height: 16.0),
-          EstablishmentField(context, locale, currenPlan),
-          const SizedBox(
-            height: 20,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                  child: Text(
+                locale.new_incident,
+                style: AppStyles.headingTextStyle.copyWith(fontSize: 18.0),
+              )),
+              const SizedBox(height: 16.0),
+              EstablishmentField(context, locale, currenPlan),
+              const SizedBox(
+                height: 20,
+              ),
+              ProductField(context, locale, currenPlan),
+              const SizedBox(
+                height: 20,
+              ),
+              DescriptionField(context, locale),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                    onPressed: onSubmitPressed, child: Text(locale.send)),
+              )
+            ],
           ),
-          ProductField(context, locale, currenPlan),
-          const SizedBox(
-            height: 20,
-          ),
-          DescriptionField(context, locale),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-                onPressed: onSubmitPressed, child: Text(locale.send)),
-          )
-        ],
+        ),
       ),
     );
   }
 
-  Widget EstablishmentField(BuildContext context, AppLocalizations locale, Plan currentPlan) {
+  Widget EstablishmentField(
+      BuildContext context, AppLocalizations locale, Plan currentPlan) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(locale.establishment,
             style: AppStyles.headingTextStyle
                 .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         TypeAheadField<Establecimiento>(
             controller: _establishmentController,
             builder: (context, controller, focusNode) => TextFormField(
@@ -111,7 +116,11 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                 focusNode: focusNode,
                 decoration: AppDecorations.formTextFieldDecoration
                     .copyWith(hintText: locale.type_here),
-                validator: (value) => validateAutoComplete(value, selectedEstablishment?.nombre, _establishmentController, context)),
+                validator: (value) => validateAutoComplete(
+                    value,
+                    selectedEstablishment?.nombre,
+                    _establishmentController,
+                    context)),
             emptyBuilder: (context) => Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
@@ -120,12 +129,12 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                   style: Theme.of(context).textTheme.titleMedium,
                 )),
             itemBuilder: (context, establishment) => ListTile(
-              title: Text(establishment.nombre),
-              subtitle: Text(
-                establishment.categoria!,
-                style: AppStyles.subSmallTextStyle,
-              ),
-            ),
+                  title: Text(establishment.nombre),
+                  subtitle: Text(
+                    establishment.categoria!,
+                    style: AppStyles.subSmallTextStyle,
+                  ),
+                ),
             onSelected: (Establecimiento establishment) {
               setState(() {
                 selectedEstablishment = establishment;
@@ -135,7 +144,9 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
             suggestionsCallback: (keyword) async {
               EstablecimientoResponse? responseData;
               if (keyword != "") {
-                responseData = await ApiService.getEstablishments(arsID:currentPlan.idAseguradoraNavigation.idAseguradora, keyword: keyword);
+                responseData = await ApiService.getEstablishments(
+                    arsID: currentPlan.idAseguradoraNavigation.idAseguradora,
+                    keyword: keyword);
               }
               return responseData?.data ?? [];
             }),
@@ -143,23 +154,24 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
     );
   }
 
-  Widget ProductField(BuildContext context, AppLocalizations locale, Plan currenPlan){
-    return  Column(
+  Widget ProductField(
+      BuildContext context, AppLocalizations locale, Plan currenPlan) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(locale.product,
             style: AppStyles.headingTextStyle
                 .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         TypeAheadField<Producto>(
             controller: _productController,
             builder: (context, controller, focusNode) => TextFormField(
-              controller: controller,
-              focusNode: focusNode,
-              decoration: AppDecorations.formTextFieldDecoration
-                  .copyWith(hintText: locale.type_here),
-              validator: (value) => validateAutoComplete(value, selectedProduct?.nombre, _productController, context)
-            ),
+                controller: controller,
+                focusNode: focusNode,
+                decoration: AppDecorations.formTextFieldDecoration
+                    .copyWith(hintText: locale.type_here),
+                validator: (value) => validateAutoComplete(value,
+                    selectedProduct?.nombre, _productController, context)),
             emptyBuilder: (context) => Padding(
                 padding: const EdgeInsets.all(8),
                 child: Text(
@@ -168,8 +180,8 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
                   style: Theme.of(context).textTheme.titleMedium,
                 )),
             itemBuilder: (context, product) => ListTile(
-              title: Text(product.nombre),
-            ),
+                  title: Text(product.nombre),
+                ),
             onSelected: (Producto product) {
               setState(() {
                 selectedProduct = product;
@@ -179,7 +191,8 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
             suggestionsCallback: (keyword) async {
               ProductoResponse? responseData;
               if (keyword != '') {
-                responseData = await ApiService.getProductsAdvanced(planID: currenPlan.idPlan, name: keyword);
+                responseData = await ApiService.getProductsAdvanced(
+                    planID: currenPlan.idPlan, name: keyword);
               }
               return responseData?.data ?? [];
             }),
@@ -187,7 +200,7 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
     );
   }
 
-  Widget DescriptionField(BuildContext context, AppLocalizations locale){
+  Widget DescriptionField(BuildContext context, AppLocalizations locale) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -196,17 +209,15 @@ class _NewIncidentDialogState extends State<NewIncidentDialog> {
           style: AppStyles.headingTextStyle
               .copyWith(fontSize: 16.0, fontWeight: FontWeight.w600),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         CustomInputField(
           controller: _descriptionController,
           inputFormatters: [LengthLimitingTextInputFormatter(255)],
           validator: (String? val) => validateEmptyInput(val, context),
           hintText: locale.type_here,
           floatingLabelBehavior: FloatingLabelBehavior.never,
-          maxLines: null,
         ),
       ],
     );
   }
-
 }

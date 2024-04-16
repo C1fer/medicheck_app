@@ -104,12 +104,15 @@ class _LoginState extends State<Login> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 30),
-                  const FullLogo(
-                    width: 66.37,
-                    height: 66.36,
-                    color: AppColors.jadeGreen,
-                    fontSize: 25.68,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: const AppLogo(
+                      orientation: LogoOrientation.Vertical,
+                      width: 66.37,
+                      height: 66.36,
+                      color: AppColors.jadeGreen,
+                      fontSize: 25.68,
+                    ),
                   ),
                   const SizedBox(height: 30),
                   Row(

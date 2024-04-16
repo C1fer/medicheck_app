@@ -27,8 +27,8 @@ class ProductCardSmall extends StatelessWidget {
     if (response) {
       // Update selected coverage global state
       await context.read<ViewedCoverageModel>().set(product);
-
-    }}
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +36,12 @@ class ProductCardSmall extends StatelessWidget {
       onTap: () => onTap ?? onSelected(context),
       child: Container(
         padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
+        decoration: ShapeDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16.0), // Adjust border radius as needed
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5), // Shadow color
-              spreadRadius: 0.5, // Spread radius
-              blurRadius: 1, // Blur radius
-              offset: Offset(0, 3), // Changes position of shadow
-            ),
-          ],
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(width: 1, color: Color(0xFFE8F3F1)),
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

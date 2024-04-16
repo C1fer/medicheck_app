@@ -12,6 +12,7 @@ import 'package:medicheck/screens/home/establishments/establishments_list.dart';
 import 'package:medicheck/screens/home/incidents/incident_reports.dart';
 import 'package:medicheck/screens/home/settings/change_pw.dart';
 import 'package:medicheck/screens/home/settings/settings.dart';
+import 'package:medicheck/screens/main_page.dart';
 import 'package:medicheck/screens/welcome/pw_reset/forgot_pw.dart';
 import 'package:medicheck/screens/welcome/login_signup/login.dart';
 import 'package:medicheck/screens/welcome/pw_reset/new_pw.dart';
@@ -81,7 +82,8 @@ class MyApp extends StatelessWidget {
                   NewPasswordInput.id: (context) => const NewPasswordInput(),
                   ChangePassword.id: (context) => const ChangePassword(),
                   IncidentReports.id: (context) => const IncidentReports(),
-                  NearbyCenters.id: (context) => const NearbyCenters()
+                  NearbyCenters.id: (context) => const NearbyCenters(),
+                  MainPage.id: (context) => const MainPage(),
                 },
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
