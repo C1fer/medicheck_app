@@ -49,7 +49,10 @@ class _LoginState extends State<SignUp> {
             _phoneController.text);
 
         if (responseData!["isSuccess"] == false) {
-          showSnackBar(context, AppLocalizations.of(context).affiliate_not_found, MessageType.ERROR);
+          showSnackBar(
+              context,
+              AppLocalizations.of(context).affiliate_not_found,
+              MessageType.ERROR);
         } else {
           int? saveJWTResult =
               await JWTService.saveJWT(responseData['accessToken']);
@@ -76,6 +79,7 @@ class _LoginState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = AppLocalizations.of(context);
     return Scaffold(
       appBar: CustomAppBar(title: AppLocalizations.of(context).signup),
       body: SingleChildScrollView(
@@ -136,23 +140,25 @@ class _LoginState extends State<SignUp> {
                   ),
                   FilledButton(
                       onPressed: _isLoading ? null : () => userSignUp(),
-                      child: Text(_isLoading
-                          ? '...'
-                          : AppLocalizations.of(context).create_account_cap)),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text(locale.create_account_cap)),
                   const SizedBox(
                     height: 24.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(AppLocalizations.of(context).existing_account,
+                      Text(locale.existing_account,
                           style: AppStyles.subMediumTextStyle),
                       const SizedBox(
                         width: 5.0,
                       ),
                       GestureDetector(
                         child: Text(
-                          AppLocalizations.of(context).login_lowercase,
+                          locale.login_lowercase,
                           style: AppStyles.actionTextStyle,
                         ),
                         onTap: () =>

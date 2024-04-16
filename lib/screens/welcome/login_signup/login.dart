@@ -60,26 +60,27 @@ class _LoginState extends State<Login> {
         setState(() => _isLoading = true);
         try {
           var responseData = await ApiService.userLogin(
-              _docNoController.text,
-              _documentType,
-              _passwordController.text);
+              _docNoController.text, _documentType, _passwordController.text);
           if (responseData != null) {
             if (responseData["isSuccess"] == false) {
-              showSnackBar(context, locale.wrong_credentials, MessageType.ERROR);
+              showSnackBar(
+                  context, locale.wrong_credentials, MessageType.ERROR);
             } else {
-              int? saveJWTResult = await JWTService.saveJWT(responseData['accessToken']);
-              if (saveJWTResult == 0){
+              int? saveJWTResult =
+                  await JWTService.saveJWT(responseData['accessToken']);
+              if (saveJWTResult == 0) {
                 var userInfo = await JWTService.decodeJWT();
                 int userID = int.parse(userInfo!['IdUsuario']);
                 await _fetchUserInfo(userID);
-                if (Provider.of<UserInfoModel>(context, listen: false).currentUser != null)
-                  context.read<PlanModel>().plans.clear();
-                  Navigator.pushReplacementNamed(context, Home.id);
+                if (Provider.of<UserInfoModel>(context, listen: false)
+                        .currentUser !=
+                    null) context.read<PlanModel>().plans.clear();
+                Navigator.pushReplacementNamed(context, Home.id);
               }
             }
           } else {
             // Handle null response
-            showSnackBar(context,locale.server_error, MessageType.ERROR);
+            showSnackBar(context, locale.server_error, MessageType.ERROR);
           }
         } catch (except) {
           print("Login error: $except");
@@ -88,7 +89,6 @@ class _LoginState extends State<Login> {
         }
       }
     }
-
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -162,9 +162,11 @@ class _LoginState extends State<Login> {
                   ),
                   FilledButton(
                       onPressed: _isLoading ? null : () => userLogin(),
-                      child: Text(_isLoading
-                          ? '...'
-                          : locale.login_capitalized)),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text(locale.login_capitalized)),
                   const SizedBox(
                     height: 24.0,
                   ),
@@ -181,7 +183,8 @@ class _LoginState extends State<Login> {
                           locale.create_account_low,
                           style: AppStyles.actionTextStyle,
                         ),
-                        onTap: () => Navigator.pushReplacementNamed(context, SignUp.id),
+                        onTap: () =>
+                            Navigator.pushReplacementNamed(context, SignUp.id),
                       ),
                     ],
                   )
