@@ -145,7 +145,7 @@ class _NewIncidentState extends State<NewIncident> {
               EstablecimientoResponse? responseData;
               if (keyword != "") {
                 responseData = await ApiService.getEstablishments(
-                    arsID: currentPlan.idAseguradoraNavigation.idAseguradora,
+                    currentPlan.idAseguradoraNavigation.idAseguradora,
                     keyword: keyword);
               }
               return responseData?.data ?? [];

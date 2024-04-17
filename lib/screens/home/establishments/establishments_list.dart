@@ -52,7 +52,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
       final int arsID = context.read<PlanModel>().selectedPlan!.idAseguradoraNavigation.idAseguradora;
       final EstablecimientoResponse? response =
           await ApiService.getEstablishments(
-              arsID: arsID,
+              arsID,
               keyword: _establishmentsController.text,
               type: establishmentType,
               pageIndex: _establishmentsPaginationController.nextPageKey ??

@@ -1,8 +1,14 @@
-
 class ApiConstants{
-  static String baseUrl = "https://medicheck-api.azurewebsites.net";
-  //static String baseUrl = "http://10.0.2.2:5280";
-  //static String baseUrl = "http://localhost:5280";
+  // General methods
+  static const Duration defaultTimeout = Duration(seconds: 5);
+  static final Map<String, String> noAuthHeaders = {
+    'Content-Type': 'application/json'
+  };
+
+  //Routes
+  static String baseUrlHost = "https://medicheck-api.azurewebsites.net";
+  static String baseUrlAVD = "http://10.0.2.2:5280";
+  static String baseUrlPhysical = "http://localhost:5280";
   static String health = "/health";
   static String loginEndpoint = "/Auth/Login";
   static String signUpEndpoint = "/register";
