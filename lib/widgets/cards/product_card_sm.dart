@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/extensions/string_apis.dart';
@@ -34,72 +35,62 @@ class ProductCardSmall extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onTap ?? onSelected(context),
-      child: Container(
-        padding: const EdgeInsets.all(12.0),
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 1, color: Color(0xFFE8F3F1)),
-            borderRadius: BorderRadius.circular(12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 9,
+            child: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  width: 40,
+                  height: 40,
+                  child: SvgPicture.asset(
+                    'assets/icons/pill.svg',
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
+                Expanded(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(
+                      product.nombre.toProperCaseData(),
+                      maxLines: 2,
+                      style: AppStyles.coverageCardHeadingTextStyle
+                          .copyWith(fontSize: 14.0),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      height: 4.0,
+                    ),
+                    Text(
+                      product.idTipoProductoNavigation!.nombre.toProperCaseData(),
+                      style: AppStyles.subSmallTextStyle.copyWith(fontSize: 12.0),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ]),
+                ),
+              ],
+            ),
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 9,
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    width: 40,
-                    height: 40,
-                    child: SvgPicture.asset(
-                      'assets/icons/pill.svg',
-                      fit: BoxFit.fitHeight,
-                    ),
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                Align(alignment: Alignment.center,child: const Text("Plan")),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 4.0, vertical: 4.0),
+                    child: FeatureCard(msg: product.isPDSS ? "Básico" : "Alternativo"),
                   ),
-                  Expanded(
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Text(
-                        product.nombre.toProperCaseData(),
-                        maxLines: 2,
-                        style: AppStyles.coverageCardHeadingTextStyle
-                            .copyWith(fontSize: 14.0),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(
-                        height: 4.0,
-                      ),
-                      Text(
-                        product.idTipoProductoNavigation!.nombre.toProperCaseData(),
-                        style: AppStyles.subSmallTextStyle.copyWith(fontSize: 12.0),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ]),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                children: [
-                  Text("Plan"),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 4.0, vertical: 4.0),
-                      child: FeatureCard(msg: product.isPDSS ? "Básico" : "Complementario"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

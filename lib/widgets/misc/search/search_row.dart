@@ -18,11 +18,11 @@ class SearchBarWithFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          flex: 7,
+          flex: 5,
           child: CustomSearchBar(
               controller: searchController,
               hintText: hintText,
