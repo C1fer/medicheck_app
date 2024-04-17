@@ -600,9 +600,9 @@ class ApiService {
     bool? searchPDSSOnly;
     switch (filterCategory) {
       case "PDSS":
-        searchPDSSOnly = true;
-      case "COMP":
         searchPDSSOnly = false;
+      case "COMP":
+        searchPDSSOnly = true;
       default:
         searchPDSSOnly = null;
     }

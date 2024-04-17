@@ -107,7 +107,7 @@ class ProductCard extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
         child: FeatureCard(
-          msg: product.isPDSS ? "Básico" : "Alternativo",
+          msg: product.isPDSS ? "Básico" : "Compl.",
         ));
   }
 }

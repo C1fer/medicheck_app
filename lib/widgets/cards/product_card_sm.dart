@@ -74,20 +74,24 @@ class ProductCardSmall extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            flex: 3,
-            child: Column(
-              children: [
-                Align(alignment: Alignment.center,child: const Text("Plan")),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0),
+            child: Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 4),
+                    child: Text("Plan"),
+                  ),
+                  Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 4.0, vertical: 4.0),
-                    child: FeatureCard(msg: product.isPDSS ? "Básico" : "Alternativo"),
+                    child: FeatureCard(msg: product.isPDSS ? "Básico" : "Compl."),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

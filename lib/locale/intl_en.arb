@@ -112,6 +112,9 @@
   "all_products": "All Products",
   "plan_modality" : "Modality",
   "product_coverages": "Product Coverages",
+  "all": "All",
+  "apply": "Apply",
+  "reset": "Reset",
 
   "distance_from_place": "{distance} km away",
   "@distance_from_place": {

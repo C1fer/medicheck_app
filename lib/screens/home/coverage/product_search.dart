@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:medicheck/models/misc/mock_data.dart';
 import 'package:medicheck/models/producto.dart';
 import 'package:medicheck/models/responses/cobertura_response.dart';
 import 'package:medicheck/models/responses/producto_response.dart';
+import 'package:medicheck/models/tipo_producto.dart';
 import 'package:medicheck/widgets/cards/product_card_sm.dart';
+import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
 import 'package:medicheck/widgets/misc/search/search_row.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/product_filter_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../models/cobertura.dart';
 import '../../../models/notifiers/plan_notifier.dart';
 import '../../../widgets/misc/custom_appbar.dart';
@@ -25,7 +29,9 @@ class ProductSearch extends StatefulWidget {
 
 class _ProductSearchState extends State<ProductSearch> {
   final _productController = TextEditingController();
-  final PagingController<int, Producto> _productsPagingController = PagingController(firstPageKey: 1);
+  final PagingController<int, Producto> _productsPagingController =
+      PagingController(firstPageKey: 1);
+  List<TipoProducto> productTypes = [];
 
   String? _typeID;
   String _category = "ALL";
@@ -33,6 +39,8 @@ class _ProductSearchState extends State<ProductSearch> {
   @override
   void initState() {
     _productsPagingController.addPageRequestListener((pageKey) => searchProducts());
+    context.read<PlanModel>().addListener(() => _productsPagingController.refresh());
+    fetchTypes();
     super.initState();
   }
 
@@ -42,6 +50,12 @@ class _ProductSearchState extends State<ProductSearch> {
     _productController.dispose();
     super.dispose();
   }
+
+  Future<void> fetchTypes() async {
+    final List<TipoProducto> response = await ApiService.getProductType();
+    setState(() => productTypes = response);
+  }
+
   Future<void> searchProducts() async {
     if (mounted) {
       int planID = context.read<PlanModel>().selectedPlanID!;
@@ -50,6 +64,8 @@ class _ProductSearchState extends State<ProductSearch> {
           filterCategory: _category,
           planID: planID,
           typeID: _typeID != null ? int.parse(_typeID!) : null,
+          orderField: "nombre",
+          orderDirection: "asc",
           pageIndex: _productsPagingController.nextPageKey ??
               _productsPagingController.firstPageKey);
 
@@ -68,11 +84,14 @@ class _ProductSearchState extends State<ProductSearch> {
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     return Scaffold(
-      appBar: CustomAppBar(title: locale.search_screen_title, canGoBack: false,),
+      appBar: CustomAppBar(
+        title: locale.search_screen_title,
+        canGoBack: false,
+      ),
       body: SafeArea(
         child: Padding(
           padding:
-              const EdgeInsets.only(left: 12, right: 32, top: 12, bottom: 12),
+              const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 12),
           child: Column(
             children: [
               Padding(
@@ -83,32 +102,44 @@ class _ProductSearchState extends State<ProductSearch> {
                     onChanged: (String? val) =>
                         _productsPagingController.refresh(),
                     filterDialog: ProductFilterDialog(
+                        types: productTypes,
                         typeID: _typeID,
                         categoryValue: _category,
                         onCategoryChanged: (String? val) =>
                             setState(() => _category = val!),
                         onTypeChanged: (String? val) =>
                             setState(() => _typeID = val),
-                        onButtonPressed: () async {
-                          searchProducts();
+                        onApplyButtonPressed: () {
+                          _productsPagingController.refresh();
                           Navigator.pop(context);
+                        },
+                        onResetButtonPressed: () {
+                          setState(() {
+                            _typeID = null;
+                            _category = "ALL";
+                          });
                         })),
               ),
               const SizedBox(
                 height: 40.0,
               ),
               Expanded(
-                  child: PagedListView.separated(
-                pagingController: _productsPagingController,
-                builderDelegate: PagedChildBuilderDelegate<Producto>(
-                    itemBuilder: (context, item, index) =>
-                        ProductCardSmall(product: item),
-                    noItemsFoundIndicatorBuilder: (context) =>
-                        Center(child: Text(locale.no_results_shown))),
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 20),
-                scrollDirection: Axis.vertical,
-              )),
+                      child: PagedListView.separated(
+                    pagingController: _productsPagingController,
+                    builderDelegate: PagedChildBuilderDelegate<Producto>(
+                      itemBuilder: (context, item, index) =>
+                          ProductCardSmall(product: item),
+                      noItemsFoundIndicatorBuilder: (context) =>
+                          Center(child: Text(locale.no_results_shown)),
+                      firstPageProgressIndicatorBuilder: (context) =>
+                          const DataLoadingIndicator(),
+                      newPageProgressIndicatorBuilder: (context) =>
+                          const DataLoadingIndicator(),
+                    ),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 20),
+                    scrollDirection: Axis.vertical,
+                  )),
             ],
           ),
         ),
