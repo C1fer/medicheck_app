@@ -36,7 +36,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   // Get user search history
   Future<List<Producto>> _fetchRecentQueries() async {
     int userID = context.read<UserInfoModel>().currentUserID!;
@@ -63,41 +62,50 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
     return Scaffold(
-          body: SingleChildScrollView(
-              child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const AppLogo(
-                      width: 30,
-                      height: 30,
-                      fontSize: 26,
-                      orientation: LogoOrientation.Horizontal,
-                      color: AppColors.jadeGreen,
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    ActionsRow(locale),
-                    const SizedBox(
-                      height: 40.0,
-                    ),
-                    Consumer<ViewedCoverageModel>(builder: (context, viewed, _) =>  FutureBuilder(
-                        future: _fetchRecentQueries(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            return ViewedProducts(locale, snapshot.data);
-                          } else if (snapshot.hasError) {
-                            return const SizedBox.shrink();
-                          } else {
-                            return  Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
-                          }
-                        }),),
-                    Consumer<PlanModel>(builder: (context, plan, _) =>  FutureBuilder(
+      body: SingleChildScrollView(
+          child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const AppLogo(
+                  width: 30,
+                  height: 30,
+                  fontSize: 26,
+                  orientation: LogoOrientation.Horizontal,
+                  color: AppColors.jadeGreen,
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                ActionsRow(locale),
+                const SizedBox(
+                  height: 40.0,
+                ),
+                Consumer<ViewedCoverageModel>(
+                  builder: (context, viewed, _) => FutureBuilder(
+                      future: _fetchRecentQueries(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          return Container(
+                              margin: const EdgeInsets.only(bottom: 20),
+                              child: ViewedProducts(locale, snapshot.data));
+                        } else if (snapshot.hasError) {
+                          return const SizedBox.shrink();
+                        } else {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            child: Skeletonizer(
+                                child: NewProducts(
+                                    locale, List.filled(3, MockData.product))),
+                          );
+                        }
+                      }),
+                ),
+                Consumer<PlanModel>(
+                    builder: (context, plan, _) => FutureBuilder(
                         future: _fetchNewProducts(),
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
@@ -106,13 +114,15 @@ class _HomeState extends State<Home> {
                           } else if (snapshot.hasError) {
                             return const SizedBox.shrink();
                           } else {
-                            return Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
+                            return Skeletonizer(
+                                child: NewProducts(
+                                    locale, List.filled(3, MockData.product)));
                           }
                         })),
-                  ]),
-            ),
-          )),
-        );
+              ]),
+        ),
+      )),
+    );
   }
 
   Widget CTABanner() {
