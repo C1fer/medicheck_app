@@ -20,12 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0.0,
       centerTitle: centerTitle,
       leading:  canGoBack ? GestureDetector(
-        child: Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: SvgPicture.asset(
-              'assets/icons/arrow-left.svg',
-          ),
-        ),
+        child: const Icon(Icons.arrow_back_rounded),
         onTap: () => Navigator.pop(context),
       ) : null,
     );

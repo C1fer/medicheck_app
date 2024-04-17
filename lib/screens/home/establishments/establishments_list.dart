@@ -27,17 +27,17 @@ class EstablishmentsList extends StatefulWidget {
 class _EstablishmentsListState extends State<EstablishmentsList> {
   final _establishmentsController = TextEditingController();
   final _establishmentsPaginationController =
-      PagingController<int, Establecimiento>(firstPageKey: 1);
-
-  bool isLoading = true;
+      PagingController<int, Establecimiento>(firstPageKey: 1, invisibleItemsThreshold: 3);
 
   EstablecimientoResponse? establishments;
   String? establishmentType;
 
   @override
   void initState() {
-    _establishmentsPaginationController
-        .addPageRequestListener((pageKey) => _getEstablishments());
+    _establishmentsPaginationController.addPageRequestListener((pageKey) {
+        _getEstablishments();
+        print(_establishmentsPaginationController.itemList!.length);
+    });
     super.initState();
   }
 
@@ -48,24 +48,17 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
   }
 
   Future<bool> _getEstablishments() async {
-    if (!isLoading) {
-      setState(() => isLoading = true);
-    }
     if (mounted) {
+      final int arsID = context.read<PlanModel>().selectedPlan!.idAseguradoraNavigation.idAseguradora;
       final EstablecimientoResponse? response =
           await ApiService.getEstablishments(
-              arsID: context
-                  .read<PlanModel>()
-                  .selectedPlan!
-                  .idAseguradoraNavigation
-                  .idAseguradora,
+              arsID: arsID,
               keyword: _establishmentsController.text,
               type: establishmentType,
-              pageSize: 3,
               pageIndex: _establishmentsPaginationController.nextPageKey ??
                   _establishmentsPaginationController.firstPageKey);
 
-      if (response != null) {
+      if (response != null && response!.data.isNotEmpty) {
         if (response.hasNextPage) {
           _establishmentsPaginationController.appendPage(
               response.data, response.pageNumber + 1);
@@ -76,7 +69,6 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
       }
     }
     return Future.error("");
-    setState(() => isLoading = false);
   }
 
   @override
@@ -120,10 +112,12 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                       child: PagedListView.separated(
                     pagingController: _establishmentsPaginationController,
                     builderDelegate: PagedChildBuilderDelegate<Establecimiento>(
-                      itemBuilder: (context, item, index) => EstablishmentCard(
-                        establecimiento: item,
-                      ),
-                    ),
+                        itemBuilder: (context, item, index) =>
+                            EstablishmentCard(
+                              establecimiento: item,
+                            ),
+                        newPageProgressIndicatorBuilder: (context) =>
+                            const DataLoadingIndicator()),
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 10),
                   ));
@@ -131,13 +125,15 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                   return Expanded(
                       child: Center(child: Text(locale.no_results_shown)));
                 } else {
-                  return WidgetSkeletonList(
-                    widget: EstablishmentCard(
-                        establecimiento: MockData.establishment),
-                    separator: const SizedBox(
-                      height: 10,
+                  return Expanded(
+                    child: WidgetSkeletonList(
+                      widget: EstablishmentCard(
+                          establecimiento: MockData.establishment),
+                      separator: const SizedBox(
+                        height: 10,
+                      ),
+                      itemCount: 10,
                     ),
-                    itemCount: 10,
                   );
                 }
               })

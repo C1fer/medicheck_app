@@ -1,3 +1,5 @@
+import 'package:medicheck/models/incidente.dart';
+
 import '../aseguradora.dart';
 import '../cobertura_grupo.dart';
 import '../establecimiento.dart';
@@ -69,4 +71,16 @@ class MockData {
       longitud: 0.0,
       googlePlaceID: "",
       fechaRegistro: DateTime.parse("2024-04-10T12:34:00"));
+
+  static Incidente incident = Incidente(
+      idIncidente: 1,
+      descripcion:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ex purus, tincidunt ut laoreet non, congue cursus ligula. Curabitur dapibus lobortis leo. Praesent tempor varius scelerisque. Sed sed tellus convallis, rhoncus dui eget, facilisis velit. Aenean vel lacus consectetur, porta dolor nec, porttitor tortor. ",
+      estado: "ABIERTO",
+      fechaIncidente: null,
+      fechaRegistro: DateTime.parse("2024-04-10T12:34:00"),
+      establecimientoNavigation: establishment,
+      planNavigation: null,
+      productoNavigation: product,
+      usuarioNavigation: null);
 }

@@ -48,7 +48,6 @@ class _IncidentReportsState extends State<IncidentReports> {
   }
 
   Future<void> _getReports() async {
-    setState(() => isLoading = true);
     if (mounted) {
       try {
         final int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
@@ -65,7 +64,6 @@ class _IncidentReportsState extends State<IncidentReports> {
           } else {
             _incidentsPaginationController.appendLastPage(response.data);
           }
-          setState(() => isLoading = false);
         }
       } catch (except) {
         _incidentsPaginationController.error = except;
