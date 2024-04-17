@@ -476,9 +476,7 @@ class ApiService {
       'orderField': orderField
     });
 
-    final Uri url = await ApiUtils.getParsedUri(
-        ApiConstants.recentQueriesEndpoint,
-        queryParams: requestParams);
+    final Uri url = await ApiUtils.getParsedUri(ApiConstants.recentQueriesEndpoint, queryParams: requestParams);
     final Map<String, String>? requestHeaders = await ApiUtils.getAuthHeaders();
 
     if (requestHeaders != null) {

@@ -109,18 +109,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   return Expanded(
-                      child: PagedListView.separated(
-                    pagingController: _establishmentsPaginationController,
-                    builderDelegate: PagedChildBuilderDelegate<Establecimiento>(
-                        itemBuilder: (context, item, index) =>
-                            EstablishmentCard(
-                              establecimiento: item,
-                            ),
-                        newPageProgressIndicatorBuilder: (context) =>
-                            const DataLoadingIndicator()),
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
-                  ));
+                      child: EstablishmentsList());
                 } else if (snapshot.hasError) {
                   return Expanded(
                       child: Center(child: Text(locale.no_results_shown)));
@@ -138,5 +127,20 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                 }
               })
         ]));
+  }
+
+  Widget EstablishmentsList(){
+    return PagedListView.separated(
+      pagingController: _establishmentsPaginationController,
+      builderDelegate: PagedChildBuilderDelegate<Establecimiento>(
+          itemBuilder: (context, item, index) =>
+              EstablishmentCard(
+                establecimiento: item,
+              ),
+          newPageProgressIndicatorBuilder: (context) =>
+          const DataLoadingIndicator()),
+      separatorBuilder: (context, index) =>
+      const SizedBox(height: 10),
+    );
   }
 }

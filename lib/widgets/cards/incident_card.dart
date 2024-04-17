@@ -10,10 +10,9 @@ import '../../models/enums.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 class IncidentCard extends StatelessWidget {
-  const IncidentCard({super.key, required this.incident, required this.onTap});
+  const IncidentCard({super.key, required this.incident});
 
   final Incidente incident;
-  final void Function() onTap;
   
   Color setStatusCardColor(){
     switch(incident.estado){
@@ -30,55 +29,52 @@ class IncidentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-        decoration: ShapeDecoration(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 1, color: Color(0xFFE8F3F1)),
-            borderRadius: BorderRadius.circular(12),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(width: 1, color: Color(0xFFE8F3F1)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center ,
+            children: [
+             Expanded(
+               flex: 7,
+               child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      incident.establecimientoNavigation.nombre.toProperCaseData(),
+                      style: AppStyles.coverageCardCategoryTextStyle,
+                    ),
+                    const SizedBox(height: 4,),
+                    Text(
+                      incident.productoNavigation.nombre.toProperCaseData(),
+                      style: AppStyles.coverageCardCategoryTextStyle,
+                    ),
+                  ],
+                ),
+             ),
+              const SizedBox(width: 10,),
+              FeatureCard(msg: incident.estado.toProperCase(), color: setStatusCardColor(),)
+            ],
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center ,
-              children: [
-               Expanded(
-                 flex: 7,
-                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        incident.establecimientoNavigation.nombre,
-                        style: AppStyles.coverageCardCategoryTextStyle,
-                      ),
-                      SizedBox(height: 4,),
-                      Text(
-                        incident.productoNavigation.nombre,
-                        style: AppStyles.coverageCardCategoryTextStyle,
-                      ),
-                    ],
-                  ),
-               ),
-                SizedBox(width: 10,),
-                FeatureCard(msg: incident.estado.toProperCase(), color: setStatusCardColor(),)
-              ],
-            ),
-            SizedBox(height: 10,),
-            Text(
-              incident.descripcion,
-              style: AppStyles.coverageCardHeadingTextStyle,
-              textAlign: TextAlign.justify,
-              overflow: TextOverflow.clip,
-            ),
-          ],
-        ),
+          const SizedBox(height: 10,),
+          Text(
+            incident.descripcion,
+            style: AppStyles.coverageCardHeadingTextStyle,
+            textAlign: TextAlign.justify,
+            overflow: TextOverflow.clip,
+          ),
+        ],
       ),
     );
   }

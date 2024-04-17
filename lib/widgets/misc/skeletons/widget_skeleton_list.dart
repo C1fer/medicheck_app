@@ -11,16 +11,19 @@ class WidgetSkeletonList extends StatelessWidget {
       required this.widget,
       required this.separator,
       required this.itemCount,
-      this.scrollDirection = Axis.vertical});
+      this.scrollDirection = Axis.vertical,
+      this.ignoreContainers = true});
+
   final Widget widget;
   final Widget separator;
   final int itemCount;
-  Axis scrollDirection;
+  final Axis scrollDirection;
+  final bool ignoreContainers;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemBuilder: (context, _) => Skeletonizer(child: widget),
+      itemBuilder: (context, _) => Skeletonizer(child: widget, ignoreContainers: ignoreContainers),
       separatorBuilder: (context, _) => separator,
       itemCount: itemCount,
       scrollDirection: scrollDirection,

@@ -21,11 +21,10 @@ class ApiUtils{
   // Get uri
   static Future<Uri> getParsedUri(String endpoint, {Map<String, dynamic>? queryParams}) async{
     final String baseUrl = await setBaseUrl();
-    final uri = Uri.parse(baseUrl + endpoint);
     if (queryParams != null){
-      uri.replace(queryParameters: queryParams);
+      return Uri.parse(baseUrl + endpoint).replace(queryParameters: queryParams);
     }
-    return uri;
+    return Uri.parse(baseUrl + endpoint);
   }
 
   // Get request headers with JSON Web Token
