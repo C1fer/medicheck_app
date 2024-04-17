@@ -39,7 +39,6 @@ class _HomeState extends State<Home> {
 
   // Get user search history
   Future<List<Producto>> _fetchRecentQueries() async {
-    await Future.delayed(const Duration(seconds: 10));
     int userID = context.read<UserInfoModel>().currentUserID!;
     ProductoResponse? response =
         await ApiService.getRecentQueries(userId: userID);
@@ -50,10 +49,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<Producto>> _fetchNewProducts() async {
-    await Future.delayed(const Duration(seconds: 10));
     ProductoResponse? response = await ApiService.getProductsAdvanced(
         planID: context.read<PlanModel>().selectedPlanID!,
-        orderField: "fecha_registro",
+        orderField: "fechaRegistro",
         orderDirection: "desc");
     if (response != null && response.data.isNotEmpty) {
       return response.data;
@@ -62,84 +60,73 @@ class _HomeState extends State<Home> {
   }
 
   @override
-  void initState() {
-    // Define listeners for plan and recently viewed coverage
-    Provider.of<PlanModel>(context, listen: false)
-        .addListener(_fetchNewProducts);
-    Provider.of<ViewedCoverageModel>(context, listen: false)
-        .addListener(_fetchRecentQueries);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final locale = AppLocalizations.of(context);
-    return Consumer<UserInfoModel>(
-        builder: (context, user, child) => Scaffold(
-              body: SafeArea(
-                  child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const AppLogo(
-                          width: 30,
-                          height: 30,
-                          fontSize: 26,
-                          orientation: LogoOrientation.Horizontal,
-                          color: AppColors.jadeGreen,
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        ActionsRow(locale),
-                        const SizedBox(
-                          height: 40.0,
-                        ),
-                        FutureBuilder(
-                            future: _fetchRecentQueries(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                return ViewedProducts(locale, snapshot.data);
-                              } else if (snapshot.hasError) {
-                                return SizedBox.shrink();
-                              } else {
-                              return  Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
-                              }
-                            }),
-                        FutureBuilder(
-                            future: _fetchNewProducts(),
-                            builder:
-                                (BuildContext context, AsyncSnapshot snapshot) {
-                              if (snapshot.hasData) {
-                                return NewProducts(locale, snapshot.data);
-                              } else if (snapshot.hasError) {
-                                return SizedBox.shrink();
-                              } else {
-                                return Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
-                              }
-                            }),
-                      ]),
-                ),
-              )),
-            ));
+    return Scaffold(
+          body: SingleChildScrollView(
+              child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+              child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const AppLogo(
+                      width: 30,
+                      height: 30,
+                      fontSize: 26,
+                      orientation: LogoOrientation.Horizontal,
+                      color: AppColors.jadeGreen,
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    ActionsRow(locale),
+                    const SizedBox(
+                      height: 40.0,
+                    ),
+                    Consumer<ViewedCoverageModel>(builder: (context, viewed, _) =>  FutureBuilder(
+                        future: _fetchRecentQueries(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            return ViewedProducts(locale, snapshot.data);
+                          } else if (snapshot.hasError) {
+                            return const SizedBox.shrink();
+                          } else {
+                            return  Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
+                          }
+                        }),),
+                    Consumer<PlanModel>(builder: (context, plan, _) =>  FutureBuilder(
+                        future: _fetchNewProducts(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            return NewProducts(locale, snapshot.data);
+                          } else if (snapshot.hasError) {
+                            return const SizedBox.shrink();
+                          } else {
+                            return Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
+                          }
+                        })),
+                  ]),
+            ),
+          )),
+        );
   }
 
   Widget CTABanner() {
     //final locale = context.read<LocaleModel>();
     return Container(
-      constraints: BoxConstraints(maxHeight: 170),
+      constraints: const BoxConstraints(maxHeight: 170),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: AppColors.lightJade),
       child: Padding(
-        padding: EdgeInsets.only(left: 26, top: 20, right: 20),
+        padding: const EdgeInsets.only(left: 26, top: 20, right: 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
+            const Expanded(
               flex: 2,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -154,7 +141,7 @@ class _HomeState extends State<Home> {
                     height: 15,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 24.0),
+                    padding: EdgeInsets.only(right: 24.0),
                     child:
                         FilledButton(onPressed: null, child: Text("Leer más")),
                   )
