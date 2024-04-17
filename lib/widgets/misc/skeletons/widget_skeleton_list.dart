@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/models/cobertura.dart';
-import 'package:medicheck/widgets/cards/feature_card.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import '../../cards/coverage_card.dart';
-import '../../../models/misc/mock_data.dart';
 
 class WidgetSkeletonList extends StatelessWidget {
   WidgetSkeletonList(
@@ -23,7 +19,7 @@ class WidgetSkeletonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      itemBuilder: (context, _) => Skeletonizer(child: widget, ignoreContainers: ignoreContainers),
+      itemBuilder: (context, _) => Skeletonizer(ignoreContainers: ignoreContainers, child: widget),
       separatorBuilder: (context, _) => separator,
       itemCount: itemCount,
       scrollDirection: scrollDirection,

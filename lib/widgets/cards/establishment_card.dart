@@ -26,11 +26,11 @@ class EstablishmentCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Skeleton.replace(
-            child: EstablishmentIcon(),
             replacement: Bone.square(
               size: 72,
               borderRadius: BorderRadius.circular(15),
             ),
+            child: EstablishmentIcon(),
           ),
           const SizedBox(
             width: 30.0,

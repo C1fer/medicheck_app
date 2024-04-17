@@ -122,6 +122,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                         height: 10,
                       ),
                       itemCount: 10,
+                      ignoreContainers: false,
                     ),
                   );
                 }

@@ -129,6 +129,7 @@ class _IncidentReportsState extends State<IncidentReports> {
                           height: 10,
                         ),
                         itemCount: 5,
+                        ignoreContainers: false,
                       ),
                     );
                   }

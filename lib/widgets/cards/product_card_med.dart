@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../models/producto.dart';
 import '../../models/notifiers/recent_query_notifier.dart';
@@ -20,15 +23,15 @@ class ProductCard extends StatelessWidget {
 
   Future<void> onSelected(BuildContext context) async {
     int userId = context.read<UserInfoModel>().currentUser!.idUsuario;
-    Navigator.pushNamed(context, CoverageDetailView.id,
-        arguments: product);
+    Navigator.pushNamed(context, CoverageDetailView.id, arguments: product);
 
-    bool response = await ApiService.postRecentQuery(userId, product.idProducto);
+    bool response =
+        await ApiService.postRecentQuery(userId, product.idProducto);
     if (response) {
       // Update selected coverage global state
       await context.read<ViewedCoverageModel>().set(product);
-
-    }}
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,42 +51,63 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12),
-              width: 54,
-              height: 54,
-              child: SvgPicture.asset(
-                'assets/icons/pill.svg',
-                fit: BoxFit.fitHeight,
+            Skeleton.replace(
+              replacement: Bone.square(
+                size: 54,
+                borderRadius: BorderRadius.circular(15),
               ),
+              child: ProductIcon(),
             ),
             const SizedBox(height: 16.0),
-            Flexible(
-              child: Text(
-                product.nombre.toProperCase(),
-                style: AppStyles.coverageCardHeadingTextStyle,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+            Expanded(
+              child: ProductName(),
             ),
             const SizedBox(
               height: 4.0,
             ),
-            Text(
-              product.idTipoProductoNavigation!.nombre.toProperCase(),
-              style: AppStyles.coverageCardCategoryTextStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
-                child: FeatureCard(
-                  msg: product.isPDSS ? "Básico" : "Alternativo",
-                ))
+            ProductType(),
+            ProductPlanOrigin()
           ],
         ),
       ),
     );
+  }
+
+  Widget ProductIcon() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      width: 54,
+      height: 54,
+      child: SvgPicture.asset(
+        'assets/icons/pill.svg',
+        fit: BoxFit.fitHeight,
+      ),
+    );
+  }
+
+  Widget ProductName() {
+    return Text(
+      product.nombre.toProperCase(),
+      style: AppStyles.coverageCardHeadingTextStyle,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget ProductType() {
+    return Text(
+      product.idTipoProductoNavigation!.nombre.toProperCase(),
+      style: AppStyles.coverageCardCategoryTextStyle,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget ProductPlanOrigin() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 10.0),
+        child: FeatureCard(
+          msg: product.isPDSS ? "Básico" : "Alternativo",
+        ));
   }
 }
