@@ -24,7 +24,7 @@ class CoverageCard extends StatelessWidget {
           flex: 9,
           child: Row(
             children: [
-              Skeleton.replace(child: CoverageIcon(), replacement: Bone.circle(size: 36),),
+              Skeleton.replace(replacement: const Bone.circle(size: 36),child: CoverageIcon(),),
               const SizedBox(
                 width: 12,
               ),

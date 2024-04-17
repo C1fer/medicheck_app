@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicheck/models/misc/mock_data.dart';
 import 'package:medicheck/models/notifiers/localeNotifier.dart';
 import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
+import 'package:medicheck/models/producto.dart';
 import 'package:medicheck/models/responses/producto_response.dart';
 import 'package:medicheck/widgets/logo/app_logo_text.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../models/responses/cobertura_response.dart';
 import '../../models/notifiers/user_info_notifier.dart';
@@ -33,59 +36,39 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  ProductoResponse? recentlyAddedProducts;
-  ProductoResponse? recentlyViewedProducts;
+
+  // Get user search history
+  Future<List<Producto>> _fetchRecentQueries() async {
+    await Future.delayed(const Duration(seconds: 10));
+    int userID = context.read<UserInfoModel>().currentUserID!;
+    ProductoResponse? response =
+        await ApiService.getRecentQueries(userId: userID);
+    if (response != null && response.data.isNotEmpty) {
+      return response.data;
+    }
+    return Future.error("Error fetching recent products");
+  }
+
+  Future<List<Producto>> _fetchNewProducts() async {
+    await Future.delayed(const Duration(seconds: 10));
+    ProductoResponse? response = await ApiService.getProductsAdvanced(
+        planID: context.read<PlanModel>().selectedPlanID!,
+        orderField: "fecha_registro",
+        orderDirection: "desc");
+    if (response != null && response.data.isNotEmpty) {
+      return response.data;
+    }
+    return Future.error("Error fetching new products");
+  }
 
   @override
   void initState() {
     // Define listeners for plan and recently viewed coverage
-    Provider.of<PlanModel>(context, listen: false).addListener(_fetchData);
-    Provider.of<ViewedCoverageModel>(context, listen: false).addListener(_fetchData);
-
-    _fetchData();
+    Provider.of<PlanModel>(context, listen: false)
+        .addListener(_fetchNewProducts);
+    Provider.of<ViewedCoverageModel>(context, listen: false)
+        .addListener(_fetchRecentQueries);
     super.initState();
-  }
-
-  // Get affiliate plans
-  Future<bool> _fetchUserPlans(int userID) async {
-    final PlanResponse? response = await ApiService.getPlansbyUserID(userID);
-
-    if (response != null) {
-      final planProvider = context.read<PlanModel>();
-      await planProvider.addPlans(response.data);
-      return true;
-    }
-    return false;
-  }
-
-  // Get user search history
-  Future<void> _fetchRecentQueries(int userID) async {
-    ProductoResponse? response =
-        await ApiService.getRecentQueries(userId: userID);
-    setState(() => recentlyViewedProducts = response);
-  }
-
-  Future<void> _fetchNewProducts(int selectedPlanID) async {
-    ProductoResponse? response = await ApiService.getProductsAdvanced(
-        planID: selectedPlanID,
-        orderField: "id_producto",
-        orderDirection: "desc");
-    setState(() => recentlyAddedProducts = response);
-  }
-
-  // Fetch to be executed on initState
-  Future<void> _fetchData() async {
-    int? userID = context.read<UserInfoModel>().currentUserID;
-
-    if (userID != null) {
-      final planProvider = context.read<PlanModel>();
-      if (planProvider.plans.isEmpty) {
-        await _fetchUserPlans(userID);
-      }
-      int selectedPlanID = planProvider.selectedPlanID!;
-      await _fetchNewProducts(selectedPlanID);
-      await _fetchRecentQueries(userID);
-    }
   }
 
   @override
@@ -113,12 +96,32 @@ class _HomeState extends State<Home> {
                         ),
                         ActionsRow(locale),
                         const SizedBox(
-                          height: 24.0,
+                          height: 40.0,
                         ),
-                        if (recentlyViewedProducts != null &&
-                            recentlyViewedProducts!.data.isNotEmpty)
-                          ViewedProducts(locale),
-                        NewProducts(locale),
+                        FutureBuilder(
+                            future: _fetchRecentQueries(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                return ViewedProducts(locale, snapshot.data);
+                              } else if (snapshot.hasError) {
+                                return SizedBox.shrink();
+                              } else {
+                              return  Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
+                              }
+                            }),
+                        FutureBuilder(
+                            future: _fetchNewProducts(),
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                return NewProducts(locale, snapshot.data);
+                              } else if (snapshot.hasError) {
+                                return SizedBox.shrink();
+                              } else {
+                                return Skeletonizer(child: NewProducts(locale, List.filled(3,MockData.product)));
+                              }
+                            }),
                       ]),
                 ),
               )),
@@ -198,7 +201,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget ViewedProducts(AppLocalizations locale) {
+  Widget ViewedProducts(AppLocalizations locale, List<Producto> products) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -208,16 +211,13 @@ class _HomeState extends State<Home> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
-          child: ProductsListView(
-              products: recentlyViewedProducts?.data != null
-                  ? recentlyViewedProducts!.data
-                  : []),
+          child: ProductsListView(products: products),
         ),
       ],
     );
   }
 
-  Widget NewProducts(AppLocalizations locale) {
+  Widget NewProducts(AppLocalizations locale, List<Producto> products) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -227,10 +227,7 @@ class _HomeState extends State<Home> {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-          child: ProductsListView(
-              products: recentlyAddedProducts?.data != null
-                  ? recentlyAddedProducts!.data
-                  : []),
+          child: ProductsListView(products: products),
         ),
       ],
     );

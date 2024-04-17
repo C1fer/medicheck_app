@@ -11,6 +11,7 @@ import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../models/cobertura.dart';
 import '../../../models/extensions/string_apis.dart';
@@ -36,78 +37,80 @@ class CoverageDetailView extends StatefulWidget {
 }
 
 class _CoverageDetailViewState extends State<CoverageDetailView> {
-  bool? isSaved;
+  bool? isProductSaved;
   CoberturaResponse? productCoverages;
   late Producto product;
 
-  Future<CoberturaResponse>? coverages;
-
-  void _saveProduct(Producto product) async {
-    final userProvider = context.read<UserInfoModel>();
-    final savedProductProvider = context.read<SavedProductModel>();
-
-    if (isSaved!) {
-      setState(() => isSaved = !isSaved!); // Update saved icon
-      final bool response = await ApiService.deleteSavedProduct(
-          userProvider.currentUser!.idUsuario, product.idProducto);
-      if (response) {
-        savedProductProvider.deleteSavedProduct(product);
-      } else {
-        // Error saving product
-        final String errorMsg = context.read<AppLocalizations>().server_error;
-        showSnackBar(
-            context, errorMsg, MessageType.ERROR); // Show snackbar error
-        setState(() => isSaved = !isSaved!); // Revert saved icon as fallback
-      }
-    } else {
-      setState(() => isSaved = !isSaved!); // Update saved icon
-      final bool response = await ApiService.postSavedProduct(
-          userProvider.currentUser!.idUsuario, product.idProducto);
-      if (response) {
-        savedProductProvider.addSavedProduct(product);
-      } else {
-        // Error saving product
-        final String errorMsg = context.read<AppLocalizations>().server_error;
-        showSnackBar(
-            context, errorMsg, MessageType.ERROR); // Show snackbar error
-        setState(() => isSaved = !isSaved!); // Revert saved icon as fallback
-      }
+  void onSavedIconTap() {
+    final int userID = context.read<UserInfoModel>().currentUserID!;
+    if (isProductSaved != null) {
+      isProductSaved! ? _deleteSavedProduct(userID) : _postSavedProduct(userID);
     }
   }
 
-  Future<void> _isProductSaved(int productID) async {
+  Future<void> _postSavedProduct(int userID) async {
+    setState(() => isProductSaved = !isProductSaved!); // Update saved icon
+    final bool response =
+        await ApiService.postSavedProduct(userID, product.idProducto);
+    if (response) {
+      context.read<SavedProductModel>().deleteSavedProduct(product);
+    } else {
+      // Revert saved icon as fallback
+      setState(() => isProductSaved = !isProductSaved!);
+      // Show snackbar error
+      final String errorMsg = context.read<AppLocalizations>().server_error;
+      showSnackBar(context, errorMsg, MessageType.ERROR);
+    }
+  }
+
+  Future<void> _deleteSavedProduct(int userID) async {
+    setState(() => isProductSaved = !isProductSaved!); // Update saved icon
+    final bool response =
+        await ApiService.deleteSavedProduct(userID, product.idProducto);
+    if (response) {
+      context.read<SavedProductModel>().addSavedProduct(product);
+    } else {
+      // Revert saved icon as fallback
+      setState(() => isProductSaved = !isProductSaved!);
+      // Show snackbar error
+      final String errorMsg = context.read<AppLocalizations>().server_error;
+      showSnackBar(context, errorMsg, MessageType.ERROR);
+    }
+  }
+
+  Future<bool> _isProductSaved() async {
+    if (!mounted) return false; // Exit if not mounte
+
     final savedProductProvider = context.read<SavedProductModel>();
     List<int> savedProductIDs = savedProductProvider.savedProductIDs;
-    if (savedProductIDs.isNotEmpty) {
-      setState(() => isSaved = savedProductProvider.isProductInList(productID));
-    } else {
+
+    if (savedProductIDs.isEmpty) {
       int? userID = context.read<UserInfoModel>().currentUserID;
       final ProductoResponse? response =
           await ApiService.getSavedProducts(userID: userID!);
       if (response != null) {
         savedProductProvider.addSavedProducts(response.data);
-        setState(
-            () => isSaved = savedProductProvider.isProductInList(productID));
       }
     }
+
+    setState(() {
+      isProductSaved = savedProductProvider.isProductInList(product.idProducto);
+    });
+
+    return isProductSaved!;
   }
 
-  Future<bool> _getProductCoverages(int productID) async {
+  Future<bool> _getProductCoverages() async {
     int selectedPlanID = context.read<PlanModel>().selectedPlanID!;
     CoberturaResponse? response = await ApiService.getCoveragesAdvanced(
         selectedPlanID,
-        productID: productID,
+        productID: product.idProducto,
         pageSize: 1000);
-    if (response != null && response!.data.isNotEmpty) {
+    if (response != null && response.data.isNotEmpty) {
       setState(() => productCoverages = response);
       return true;
     }
     return Future.error("");
-  }
-
-  void _fetchData(int productID) {
-    //_getProductCoverages(productID);
-    _isProductSaved(productID);
   }
 
   Future<void> onNearbyCentersPressed() async {
@@ -123,11 +126,10 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final sentProduct =
           ModalRoute.of(context)!.settings.arguments as Producto;
       setState(() => product = sentProduct);
-      _fetchData(product.idProducto);
     });
   }
 
@@ -190,6 +192,19 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
     );
   }
 
+  Widget SaveProductIcon() {
+    return GestureDetector(
+      onTap: () => isProductSaved != null ? onSavedIconTap : null,
+      child: SizedBox(
+        height: 40,
+        width: 40,
+        child: isProductSaved != null && isProductSaved!
+            ? SvgPicture.asset('assets/icons/heart-full.svg')
+            : SvgPicture.asset('assets/icons/heart-outlined.svg'),
+      ),
+    );
+  }
+
   Widget ProductDetails(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,17 +227,15 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
             ],
           ),
         ),
-        if (isSaved != null)
-          GestureDetector(
-            onTap: () => _saveProduct(product),
-            child: SizedBox(
-              height: 40,
-              width: 40,
-              child: isSaved!
-                  ? SvgPicture.asset('assets/icons/heart-full.svg')
-                  : SvgPicture.asset('assets/icons/heart-outlined.svg'),
-            ),
-          )
+        FutureBuilder(
+            future: _isProductSaved(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return SaveProductIcon();
+              } else {
+                return const Skeletonizer.zone(child: Bone.iconButton(size: 40,));
+              }
+            })
       ],
     );
   }
@@ -253,7 +266,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
           ),
           const SizedBox(height: 8),
           FutureBuilder(
-              future: _getProductCoverages(product.idProducto),
+              future: _getProductCoverages(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData) {
@@ -268,8 +281,20 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                     ));
                   }
                 }
-                return Placeholder();
-              }),
+                return Expanded(
+                  child: WidgetSkeletonList(
+                    widget: CoverageCard(
+                      coverage: MockData.coverage,
+                    ),
+                    separator: const SizedBox(
+                      height: 10,
+                    ),
+                    itemCount: 8,
+                    ignoreContainers: false,
+                  ),
+                );
+              }
+          ),
         ],
       ),
     );
@@ -286,13 +311,4 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       shrinkWrap: true,
     );
   }
-
-  /*Widget CardSkeletonListView() {
-    return ListView.separated(
-        itemBuilder: (context, _) => const WidgetSkeletonizer(
-              widget: CoverageCard(coverage: MockData.coverage),
-            ),
-        separatorBuilder: (context, _) => const SizedBox(height: 10),
-        itemCount: 8);
-  }*/
 }

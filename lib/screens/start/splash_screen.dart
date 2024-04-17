@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import '../../models/enums.dart';
+import '../../models/notifiers/plan_notifier.dart';
+import '../../models/responses/plan_response.dart';
 import '../../screens/home/home.dart';
 import '../../screens/welcome/welcome.dart';
 import '../../widgets/popups/snackbar/show_snackbar.dart';
@@ -48,7 +50,7 @@ class _SplashState extends State<Splash> {
       try {
         var userInfo = await JWTService.decodeJWT();
         int userID = int.parse(userInfo!['IdUsuario']);
-        await _fetchUserInfo(userID);
+        await _fetchUserData(userID);
       } catch (except) {
         print("Error fetching user info: $except");
       }
@@ -77,11 +79,29 @@ class _SplashState extends State<Splash> {
   }
 
   // Fetch current user info
-  Future<void> _fetchUserInfo(int userID) async {
+  Future<bool> _fetchUserInfo(int userID) async {
     var response = await ApiService.getUserById(userID);
-    if (response != null)
-      Provider.of<UserInfoModel>(context, listen: false)
-          .setCurrentUser(response);
+    if (response != null){
+      context.read<UserInfoModel>().setCurrentUser(response);
+      return true;
+    }
+    return false;
+  }
+  // Get affiliate plans
+  Future<bool> _fetchUserPlans(int userID) async {
+    final PlanResponse? response = await ApiService.getPlansbyUserID(userID);
+    if (response != null) {
+      context.read<PlanModel>().addPlans(response.data);
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _fetchUserData(int userID) async{
+    final bool userLoggedIn = await _fetchUserInfo(userID);
+    if (userLoggedIn){
+      await _fetchUserPlans(userID);
+    }
   }
 
   @override
@@ -91,7 +111,7 @@ class _SplashState extends State<Splash> {
       body: SafeArea(
         child: Center(
             child: AppLogo(
-              orientation: LogoOrientation.Vertical,
+          orientation: LogoOrientation.Vertical,
           color: Colors.white,
           fontSize: 50.11,
           width: 129.54,
