@@ -13,4 +13,9 @@ class UserInfoModel extends ChangeNotifier{
     _currentUser = user;
     notifyListeners();
   }
+
+  Future <void> clear() async {
+    _currentUser = null;
+    notifyListeners();
+  }
 }

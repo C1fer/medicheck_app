@@ -29,4 +29,9 @@ class PlanModel extends ChangeNotifier {
     setCurrentPlan(plans.first);
     notifyListeners();
   }
+
+  Future <void> clear() async {
+    _userPlans.clear();
+    notifyListeners();
+  }
 }

@@ -12,4 +12,8 @@ class ViewedCoverageModel extends ChangeNotifier{
     recentProduct = selectedProduct;
     notifyListeners();
   }
+  Future <void> clear() async {
+    recentProduct = null;
+    notifyListeners();
+  }
 }

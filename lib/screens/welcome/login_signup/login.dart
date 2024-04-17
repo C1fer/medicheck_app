@@ -5,6 +5,7 @@ import 'package:medicheck/screens/main_page.dart';
 import 'package:provider/provider.dart';
 import '../../../models/notifiers/plan_notifier.dart';
 import '../../../models/notifiers/user_info_notifier.dart';
+import '../../../models/responses/plan_response.dart';
 import '../pw_reset/forgot_pw.dart';
 import 'sign_up.dart';
 import '../../../widgets/doctype_dropdown.dart';
@@ -43,13 +44,33 @@ class _LoginState extends State<Login> {
     _passwordController.dispose();
   }
 
-  // Fetch current user info
-  Future<void> _fetchUserInfo(int userID) async {
-    var response = await ApiService.getUserById(userID);
-    if (response != null)
-      Provider.of<UserInfoModel>(context, listen: false)
-          .setCurrentUser(response);
-  }
+    // Fetch current user info
+    Future<bool> _fetchUserInfo(int userID) async {
+      var response = await ApiService.getUserById(userID);
+      if (response != null){
+        context.read<UserInfoModel>().setCurrentUser(response);
+        return true;
+      }
+      return false;
+    }
+    // Get affiliate plans
+    Future<bool> _fetchUserPlans(int userID, PlanModel planProvider) async {
+      final PlanResponse? response = await ApiService.getPlansbyUserID(userID);
+      if (response != null) {
+        planProvider.addPlans(response.data);
+        return true;
+      }
+      return false;
+    }
+
+    Future<void> _fetchUserData(int userID) async{
+      final bool userLoggedIn = await _fetchUserInfo(userID);
+      if (userLoggedIn){
+        final planProvider = context.read<PlanModel>();
+        await _fetchUserPlans(userID, planProvider);
+      }
+    }
+
 
   @override
   Widget build(BuildContext context) {
