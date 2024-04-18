@@ -38,8 +38,8 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () async => onTap ?? onSelected(context),
       child: Container(
-        height: 173,
-        width: 128,
+        width: 130,
+        height: 175,
         padding: const EdgeInsets.all(12.0),
         decoration: ShapeDecoration(
           color: Colors.white,
@@ -48,26 +48,26 @@ class ProductCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Skeleton.replace(
-              replacement: Bone.square(
-                size: 54,
-                borderRadius: BorderRadius.circular(15),
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Skeleton.replace(
+                replacement: Bone.square(
+                  size: 54,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ProductIcon(),
               ),
-              child: ProductIcon(),
-            ),
-            const SizedBox(height: 16.0),
-            Expanded(
-              child: ProductName(),
-            ),
-            const SizedBox(
-              height: 4.0,
-            ),
-            ProductType(),
-            ProductPlanOrigin()
-          ],
+              const SizedBox(height: 16.0),
+              ProductName(),
+              const SizedBox(
+                height: 4.0,
+              ),
+              ProductType(),
+              ProductPlanOrigin()
+            ],
+          ),
         ),
       ),
     );
@@ -87,7 +87,7 @@ class ProductCard extends StatelessWidget {
 
   Widget ProductName() {
     return Text(
-      product.nombre.toProperCase(),
+      product.nombre.toProperCaseData(),
       style: AppStyles.coverageCardHeadingTextStyle,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
@@ -96,7 +96,7 @@ class ProductCard extends StatelessWidget {
 
   Widget ProductType() {
     return Text(
-      product.idTipoProductoNavigation!.nombre.toProperCase(),
+      product.idTipoProductoNavigation!.nombre.toProperCaseData(),
       style: AppStyles.coverageCardCategoryTextStyle,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
