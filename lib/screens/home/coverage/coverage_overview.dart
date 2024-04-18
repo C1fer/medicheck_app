@@ -11,6 +11,10 @@ import 'package:medicheck/screens/home/establishments/nearby_centers.dart';
 import 'package:medicheck/utils/location_service.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
 import 'package:medicheck/widgets/misc/skeletons/widget_skeleton_list.dart';
+import 'package:medicheck/widgets/popups/bottom_sheet/show_bottom_sheet.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/location/location_denied_dialog.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/location/request_location_dialog.dart';
+import 'package:medicheck/widgets/popups/dialog/dialogs/location/request_location_permissions_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -120,10 +124,19 @@ class _CoverageOverviewState extends State<CoverageOverview> {
   Future<void> onNearbyCentersPressed() async {
     bool locationEnabled = await Geolocator.isLocationServiceEnabled();
     if (locationEnabled) {
-      Navigator.pushNamed(context, NearbyCenters.id);
+        LocationPermission permission = await Geolocator.checkPermission();
+        switch (permission){
+          case LocationPermission.always || LocationPermission.whileInUse:
+            Navigator.pushNamed(context, NearbyCenters.id);
+            break;
+          case LocationPermission.denied:
+            await showRoundedBarBottomSheet(context, const RequestLocationPermissionsDialog());
+            break;
+          default:
+        }
     } else {
-      //TODO MESSAGE
-      await Geolocator.openLocationSettings();
+      // Location service disabled
+      await showRoundedBarBottomSheet(context, const RequestEnableLocationDialog());
     }
   }
 
@@ -136,10 +149,6 @@ class _CoverageOverviewState extends State<CoverageOverview> {
       setState(() => product = sentProduct);
     });
   }
-
-  // Future<bool> showLocationDisabledSheet() async{
-  //   await showMaterialModalBottomSheet(context: context, builder: () => SimpleDialog())
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +278,7 @@ class _CoverageOverviewState extends State<CoverageOverview> {
                   builder: (context, coveragesModel, _) =>
                       coveragesModel.coveragesLength > 8
                           ? GestureDetector(
-                        onTap: () {},
+                              onTap: () {},
                               child: Text(
                                 locale.view_all,
                                 style: AppStyles.actionTextStyle

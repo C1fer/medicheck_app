@@ -134,5 +134,17 @@
   "@_NAV_BAR_TABS":{},
   "home_tab": "Home",
   "search_tab": "Search",
-  "account_tab": "Account"
+  "account_tab": "Account",
+
+  "location_disabled": "Location disabled",
+  "permission_required": "Permission required",
+
+  "location_permissions_denied": "Location permissions could not be granted. Please enable them in settings",
+  "location_permissions_required": "This feature requires permissions access to your location.",
+  "location_enable_required": "This feature requires access to your location.",
+  "location_permissions_required": "This feature requires permissions access to your location.",
+
+  "enable_location_service": "Enable location",
+  "grant_location_access": "Grant location access",
+  "goto_app_settings": "Go to Settings"
 }

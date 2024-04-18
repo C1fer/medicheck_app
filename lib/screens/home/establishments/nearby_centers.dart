@@ -10,9 +10,12 @@ import 'package:medicheck/widgets/cards/place_card.dart';
 import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
 import 'package:provider/provider.dart';
 import '../../../models/google_place.dart';
+import '../../../models/misc/mock_data.dart';
+import '../../../models/notifiers/plan_notifier.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/location_service.dart';
 import '../../../utils/maps_service.dart';
+import '../../../widgets/misc/skeletons/widget_skeleton_list.dart';
 
 class NearbyCenters extends StatefulWidget {
   const NearbyCenters({super.key});
@@ -31,8 +34,9 @@ class _NearbyCentersState extends State<NearbyCenters> {
 
   Future<List<GooglePlace>> _getNearbyPlaces() async {
     try {
-      Position location = await GeolocationService.getCurrentPosition();
-      final response = await ApiService.getNearbyEstablishments(location.latitude, location.longitude);
+      Position location = await Geolocator.getCurrentPosition();
+      final planID = context.read<PlanModel>().selectedPlanID!;
+      final response = await ApiService.getNearbyEstablishments(location.latitude, location.longitude, planID: planID, pageSize: 10);
 
       if (response.isNotEmpty) {
         List<GooglePlace> nearbyPlaces = [];
@@ -43,7 +47,7 @@ class _NearbyCentersState extends State<NearbyCenters> {
               // Create new Google Place from Places Detail response
               final photoUri = placeResponse["photos"] != null ? placeResponse["photos"][0]["name"] : null;
               final String rating = placeResponse["rating"].toString();
-              GooglePlace place = GooglePlace(establishment, photoUri, double.parse(rating), json["distancia"]);
+              GooglePlace place = GooglePlace(establecimiento: establishment, photoUri: photoUri, rating: double.parse(rating), distance: json["distancia"]);
               nearbyPlaces.add(place);
             }
         }
@@ -89,8 +93,14 @@ class _NearbyCentersState extends State<NearbyCenters> {
                   }
                 }
                 return Expanded(
-                  child: const Center(
-                      child: DataLoadingIndicator()),
+                  child: WidgetSkeletonList(
+                    widget: PlaceCard(place: MockData.place,),
+                    separator: const SizedBox(
+                      height: 10,
+                    ),
+                    itemCount: 10,
+                    ignoreContainers: false,
+                  ),
                 );
               },
             ),

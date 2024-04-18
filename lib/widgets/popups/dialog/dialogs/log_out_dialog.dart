@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
@@ -19,7 +20,7 @@ class LogOutDialog extends StatelessWidget {
     final locale = AppLocalizations.of(context);
     return BasicDialog(
       title: locale.log_out_confirmation,
-      iconPath: 'assets/icons/logout.svg',
+      icon: Icons.logout_rounded,
       actions: [
         FilledButton(
             onPressed: () async {

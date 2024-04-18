@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/misc/mock_data.dart';
@@ -66,7 +65,8 @@ class _HomeState extends State<Home> {
       body: SingleChildScrollView(
           child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+          padding:
+              const EdgeInsets.only(left: 24, top: 12, right: 24, bottom: 24),
           child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,6 +82,10 @@ class _HomeState extends State<Home> {
                   height: 40,
                 ),
                 ActionsRow(locale),
+                const SizedBox(
+                  height: 40,
+                ),
+                CTABanner(),
                 const SizedBox(
                   height: 40.0,
                 ),
@@ -127,48 +131,41 @@ class _HomeState extends State<Home> {
   }
 
   Widget CTABanner() {
-    //final locale = context.read<LocaleModel>();
     return Container(
-      constraints: const BoxConstraints(maxHeight: 170),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: AppColors.lightJade),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 26, top: 20, right: 20),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        constraints: const BoxConstraints(minWidth: double.infinity),
+        decoration: BoxDecoration(
+            // image: const DecorationImage(
+            //     image: AssetImage("assets/images/banner3.png"),
+            //     fit: BoxFit.cover,
+            //     opacity: 0.35),
+            borderRadius: BorderRadius.circular(10),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0XFF015354), Color(0xff43afac)], )),
+        padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20, right: 20),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Expanded(
-              flex: 2,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    "Apoderate de tu salud con MediCheck",
-                    style: AppStyles.sectionTextStyle,
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 24.0),
-                    child:
-                        FilledButton(onPressed: null, child: Text("Leer más")),
-                  )
-                ],
+            AppLogo(
+                color: Colors.white,
+                fontSize: 18,
+                width: 28,
+                height: 28,
+                orientation: LogoOrientation.Horizontal),
+            SizedBox(height: 16),
+            Text(
+              softWrap: true,
+              "Coberturas al alcance de\ntus manos.",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                fontFamily: 'Montserrat',
               ),
             ),
-            Expanded(
-              child: SvgPicture.asset(
-                'assets/icons/question-circle.svg',
-                color: Colors.black.withOpacity(0.15),
-              ),
-            )
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   Widget ActionsRow(AppLocalizations locale) {
@@ -208,7 +205,7 @@ class _HomeState extends State<Home> {
           style: AppStyles.sectionTextStyle,
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
+          padding: const EdgeInsets.only(top: 10, bottom: 15),
           child: ProductsListView(products: products),
         ),
       ],
@@ -224,7 +221,7 @@ class _HomeState extends State<Home> {
           style: AppStyles.sectionTextStyle,
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
           child: ProductsListView(products: products),
         ),
       ],

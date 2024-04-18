@@ -1,3 +1,4 @@
+import 'package:medicheck/models/google_place.dart';
 import 'package:medicheck/models/incidente.dart';
 
 import '../aseguradora.dart';
@@ -83,4 +84,6 @@ class MockData {
       planNavigation: null,
       productoNavigation: product,
       usuarioNavigation: null);
+
+  static GooglePlace place = GooglePlace(establecimiento: establishment, photoUri: null, rating: 5.0, distance: 100);
 }

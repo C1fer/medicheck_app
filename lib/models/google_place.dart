@@ -6,6 +6,6 @@ class GooglePlace {
   double? rating;
   double distance;
 
-  GooglePlace(this.establecimiento, this.photoUri, this.rating, this.distance);
+  GooglePlace({required this.establecimiento, this.photoUri, this.rating,  required this.distance});
 
 }

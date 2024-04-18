@@ -3,6 +3,7 @@ import 'package:medicheck/screens/home/products/product_search.dart';
 import 'package:medicheck/screens/home/home.dart';
 import 'package:medicheck/screens/home/settings/settings.dart';
 import 'package:medicheck/styles/app_colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -31,13 +32,14 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget NavBar() {
+    final locale = AppLocalizations.of(context);
     return BottomNavigationBar(
       useLegacyColorScheme: false,
       elevation: 15,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
+      items:  <BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: const Icon(Icons.home), label: locale.home_tab),
+        BottomNavigationBarItem(icon: const Icon(Icons.search), label: locale.search_tab),
+        BottomNavigationBarItem(icon: const Icon(Icons.person), label: locale.account_tab),
       ],
       onTap: (idx) => onTabSelected(idx),
       selectedItemColor: AppColors.jadeGreen,

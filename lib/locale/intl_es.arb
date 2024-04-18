@@ -136,5 +136,17 @@
   "@_NAV_BAR_TABS":{},
   "home_tab": "Inicio",
   "search_tab": "Buscar",
-  "account_tab": "Perfil"
+  "account_tab": "Perfil",
+
+  "location_disabled": "Ubicación deshabilitada",
+  "permission_required": "Permiso requerido",
+
+  "location_permissions_denied": "Los permisos de ubicación se encuentran deshabilitados. Por favor, habilitalos en los ajustes de la aplicación.",
+  "location_enabled_required": "Esta funcionalidad requiere acceso a tu ubicación",
+  "location_permissions_required": "Esta funcionalidad requiere permisos para acceder a tu ubicación",
+
+  "enable_location_service": "Habilitar ubicación",
+  "grant_location_access": "Conceder acceso a ubicación",
+  "goto_app_settings": "Ir a Ajustes"
+
 }

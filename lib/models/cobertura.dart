@@ -35,7 +35,6 @@ class Cobertura {
   });
 
   factory Cobertura.fromJson(Map<String, dynamic> json) {
-    print('POOF: ${json["idCobertura"]}');
     return Cobertura(
       idCobertura: json["idCobertura"],
       porcentaje: json["porcentaje"],

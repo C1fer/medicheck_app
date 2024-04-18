@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/utils/input_validation/validation_logic.dart';
@@ -44,6 +45,7 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
           await showCustomDialog(
               context,
               BasicDialog(
+                icon: Icons.check_rounded,
                 title: locale.success,
                 body: locale.pw_reset_success,
               ));

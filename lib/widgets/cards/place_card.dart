@@ -5,6 +5,7 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:medicheck/widgets/cards/feature_card.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../models/google_place.dart';
 import '../../styles/app_styles.dart';
 import '../../styles/app_colors.dart';
@@ -90,9 +91,9 @@ class PlaceCard extends StatelessWidget {
   }
 
   Widget PlaceIllust(BuildContext context) {
-    return placePhotoURL != null
+    return Skeleton.replace(replacement: Bone.square(borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),child: placePhotoURL != null
         ? PlacePhoto(context, placePhotoURL!)
-        : SvgPicture.asset('assets/icons/hospital-colored.svg');
+        : SvgPicture.asset('assets/icons/hospital-colored.svg'),);
   }
 
   Widget PlacePhoto(BuildContext context, String imageURL) {
@@ -106,8 +107,7 @@ class PlaceCard extends StatelessWidget {
           padding: const EdgeInsets.all(80),
           decoration: BoxDecoration(
               image: DecorationImage(image: imageProvider, fit:  BoxFit.cover),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(10,), topRight: Radius.circular(10)),
-              color: Colors.black),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10,), topRight: Radius.circular(10)),),
         ),
         placeholder: (context, url) => const CircularProgressIndicator(
           color: AppColors.jadeGreen,

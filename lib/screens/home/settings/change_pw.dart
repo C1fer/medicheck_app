@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/utils/api/api_service.dart';
@@ -39,6 +40,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         await showCustomDialog(
             context,
             BasicDialog(
+              icon: Icons.check_rounded,
               title: locale.success,
               body: locale.pw_reset_success,
             ));

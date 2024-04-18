@@ -666,8 +666,8 @@ class ApiService {
             .get(url, headers: requestHeaders)
             .timeout(ApiConstants.defaultTimeout);
         if (response.statusCode == 200) {
-          final responseData = json.decode(response.body) as List;
-          return responseData;
+          final responseData = json.decode(response.body);
+          return responseData["data"] as List;
         }
       } catch (except) {
         print("Error fetching nearby establishments: $except");
