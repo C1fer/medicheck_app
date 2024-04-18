@@ -85,8 +85,8 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 40.0,
                 ),
-                Consumer<ViewedCoverageModel>(
-                  builder: (context, viewed, _) => FutureBuilder(
+                Consumer2<ViewedCoverageModel, PlanModel>(
+                  builder: (context, viewed, plan, _) => FutureBuilder(
                       future: _fetchRecentQueries(),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (snapshot.hasData) {

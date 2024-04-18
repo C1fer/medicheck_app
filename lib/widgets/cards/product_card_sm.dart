@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/notifiers/plan_notifier.dart';
 import '../../models/producto.dart';
 import '../../models/notifiers/recent_query_notifier.dart';
 import '../../models/notifiers/user_info_notifier.dart';
@@ -21,10 +22,10 @@ class ProductCardSmall extends StatelessWidget {
 
   Future<void> onSelected(BuildContext context) async {
     int userId = context.read<UserInfoModel>().currentUser!.idUsuario;
-    Navigator.pushNamed(context, CoverageDetailView.id,
-        arguments: product);
+    int planId = context.read<PlanModel>().selectedPlanID!;
 
-    bool response = await ApiService.postRecentQuery(userId, product.idProducto);
+    Navigator.pushNamed(context, CoverageDetailView.id, arguments: product);
+    bool response = await ApiService.postRecentQuery(userId, product.idProducto, planId);
     if (response) {
       // Update selected coverage global state
       await context.read<ViewedCoverageModel>().set(product);

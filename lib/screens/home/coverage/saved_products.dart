@@ -6,6 +6,7 @@ import 'package:medicheck/models/responses/producto_response.dart';
 import 'package:medicheck/widgets/cards/product_card_med.dart';
 import 'package:medicheck/widgets/misc/skeletons/widget_skeleton_grid.dart';
 import 'package:provider/provider.dart';
+import '../../../models/notifiers/plan_notifier.dart';
 import '../../../models/producto.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../utils/api/api_service.dart';

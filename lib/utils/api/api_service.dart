@@ -496,9 +496,9 @@ class ApiService {
     return null;
   }
 
-  static Future<bool> postRecentQuery(int userId, int productId) async {
+  static Future<bool> postRecentQuery(int userId, int productId, int planID) async {
     Map<String, dynamic> requestParams = ApiUtils.filterQueryParameters(
-        {'idUsuario': userId, 'idProducto': productId});
+        {'idUsuario': userId, 'idProducto': productId, 'idPlan': planID});
 
     final Uri url = await ApiUtils.getParsedUri(
         ApiConstants.recentQueriesEndpoint,

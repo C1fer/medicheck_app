@@ -6,6 +6,7 @@ import 'package:medicheck/models/extensions/string_apis.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../models/notifiers/plan_notifier.dart';
 import '../../models/producto.dart';
 import '../../models/notifiers/recent_query_notifier.dart';
 import '../../models/notifiers/user_info_notifier.dart';
@@ -23,10 +24,11 @@ class ProductCard extends StatelessWidget {
 
   Future<void> onSelected(BuildContext context) async {
     int userId = context.read<UserInfoModel>().currentUser!.idUsuario;
+    int planId = context.read<PlanModel>().selectedPlanID!;
     Navigator.pushNamed(context, CoverageDetailView.id, arguments: product);
 
     bool response =
-        await ApiService.postRecentQuery(userId, product.idProducto);
+        await ApiService.postRecentQuery(userId, product.idProducto, planId);
     if (response) {
       // Update selected coverage global state
       await context.read<ViewedCoverageModel>().set(product);
