@@ -64,7 +64,7 @@ class IncidentCard extends StatelessWidget {
                 ),
              ),
               const SizedBox(width: 10,),
-              FeatureCard(msg: incident.estado.toProperCase(), color: setStatusCardColor(),)
+              FeatureCard(msg: incident.estado.replaceUnderScores().toProperCase(), color: setStatusCardColor(),)
             ],
           ),
           const SizedBox(height: 10,),

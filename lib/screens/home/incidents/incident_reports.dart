@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:medicheck/models/enums.dart';
@@ -31,7 +33,6 @@ class IncidentReports extends StatefulWidget {
 
 class _IncidentReportsState extends State<IncidentReports> {
   String incidentStatus = 'ABIERTO';
-  bool isLoading = true;
 
   final PagingController<int, Incidente> _incidentsPaginationController =
       PagingController(firstPageKey: 1);
@@ -100,7 +101,9 @@ class _IncidentReportsState extends State<IncidentReports> {
       appBar: CustomAppBar(
         title: locale.incident_reports,
       ),
+      floatingActionButton: NewIncidentButton(),
       body: SafeArea(child: PageLayout(context, locale)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -135,7 +138,6 @@ class _IncidentReportsState extends State<IncidentReports> {
                     );
                   }
                 }),
-            NewIncidentButton()
           ],
         ));
   }
@@ -160,9 +162,7 @@ class _IncidentReportsState extends State<IncidentReports> {
             entries: Constants.incidentStatuses
                 .map((element) => DropdownMenuItem(
                       value: element,
-                      child: Text(element.contains("")
-                          ? element.replaceAll("_", " ").toProperCase()
-                          : element.toProperCase()),
+                      child: Text(element.replaceUnderScores().toProperCase()),
                     ))
                 .toList(),
             isExpanded: true,
@@ -186,16 +186,13 @@ class _IncidentReportsState extends State<IncidentReports> {
   }
 
   Widget NewIncidentButton(){
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: FloatingActionButton(
-        onPressed: onPressedNewIncidentButton,
-        backgroundColor: AppColors.jadeGreen,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30,
-        ),
+    return FloatingActionButton(
+      onPressed: onPressedNewIncidentButton,
+      backgroundColor: AppColors.jadeGreen,
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 30,
       ),
     );
   }

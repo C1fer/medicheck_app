@@ -13,7 +13,7 @@ class CustomDropdownButton extends StatefulWidget {
       this.isExpanded = false,
       this.underlined = false,
       this.decoration,
-      this.optionsBorderRadius});
+      this.optionsBorderRadius = 24.0});
 
   String? value;
   final ValueChanged<String?> onChanged;
@@ -23,7 +23,7 @@ class CustomDropdownButton extends StatefulWidget {
   final bool isExpanded;
   final bool underlined;
   final Decoration? decoration;
-  final double? optionsBorderRadius;
+  double optionsBorderRadius;
 
   @override
   State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
@@ -61,7 +61,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         },
         style: const TextStyle(fontSize: 16.0, color: Colors.black),
         underline: widget.underlined ? null : const SizedBox() ,
-        borderRadius: widget.optionsBorderRadius != null ? BorderRadius.circular(widget.optionsBorderRadius!) : null,
+        borderRadius: BorderRadius.circular(widget.optionsBorderRadius),
       ),
     );
   }
