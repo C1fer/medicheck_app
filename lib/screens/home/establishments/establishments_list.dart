@@ -59,6 +59,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
           await ApiService.getEstablishments(arsID,
               keyword: _establishmentsController.text,
               type: establishmentType,
+              pageSize: 4,
               pageIndex: _establishmentsPaginationController.nextPageKey ??
                   _establishmentsPaginationController.firstPageKey);
 
