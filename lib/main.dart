@@ -6,6 +6,7 @@ import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
+import 'package:medicheck/screens/home/coverage/coverage_overview.dart';
 import 'package:medicheck/screens/home/products/product_search.dart';
 import 'package:medicheck/screens/home/establishments/nearby_centers.dart';
 import 'package:medicheck/screens/home/products/saved_products.dart';
@@ -76,8 +77,8 @@ class MyApp extends StatelessWidget {
                   EstablishmentsList.id: (context) =>
                       const EstablishmentsList(),
                   ProductSearch.id: (context) => const ProductSearch(),
-                  CoverageDetailView.id: (context) =>
-                      const CoverageDetailView(),
+                  CoverageOverview.id: (context) =>
+                      const CoverageOverview(),
                   SavedProducts.id: (context) => const SavedProducts(),
                   SettingsPage.id: (context) => const SettingsPage(),
                   ResetTokenInput.id: (context) => const ResetTokenInput(),
@@ -86,6 +87,7 @@ class MyApp extends StatelessWidget {
                   IncidentReports.id: (context) => const IncidentReports(),
                   NearbyCenters.id: (context) => const NearbyCenters(),
                   MainPage.id: (context) => const MainPage(),
+                  CoverageDetails.id: (context) => const CoverageDetails(),
                 },
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

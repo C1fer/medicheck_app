@@ -8,7 +8,7 @@ import '../../models/notifiers/plan_notifier.dart';
 import '../../models/producto.dart';
 import '../../models/notifiers/recent_query_notifier.dart';
 import '../../models/notifiers/user_info_notifier.dart';
-import '../../screens/home/coverage/coverage_details.dart';
+import '../../screens/home/coverage/coverage_overview.dart';
 import '../../styles/app_styles.dart';
 import '../../utils/api/api_service.dart';
 import '../../models/enums.dart';
@@ -24,7 +24,7 @@ class ProductCardSmall extends StatelessWidget {
     int userId = context.read<UserInfoModel>().currentUser!.idUsuario;
     int planId = context.read<PlanModel>().selectedPlanID!;
 
-    Navigator.pushNamed(context, CoverageDetailView.id, arguments: product);
+    Navigator.pushNamed(context, CoverageOverview.id, arguments: product);
     bool response = await ApiService.postRecentQuery(userId, product.idProducto, planId);
     if (response) {
       // Update selected coverage global state
