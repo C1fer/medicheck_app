@@ -4,6 +4,7 @@ import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/screens/welcome/pw_reset/reset_token.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/email_field.dart';
+import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/misc/custom_appbar.dart';
@@ -84,8 +85,9 @@ class _ForgotPWState extends State<ForgotPW> {
                       onPressed: _isLoading
                           ? null
                           : () => sendResetToken(_emailController.text),
-                      child:
-                          Text(_isLoading ? '...' : locale.send_reset_pw_code)),
+                      child: _isLoading ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      ) : Text(locale.send_reset_pw_code)),
                 ],
               ),
             ),

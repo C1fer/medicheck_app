@@ -25,6 +25,8 @@ class ChangePassword extends StatefulWidget {
 }
 
 class _ChangePasswordState extends State<ChangePassword> {
+  bool isLoading = false;
+
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _currentPWController = TextEditingController();
@@ -56,9 +58,11 @@ class _ChangePasswordState extends State<ChangePassword> {
   void onChangePwdButtonPresed() {
     bool isFormValid = _formKey.currentState?.validate() ?? false;
     if (isFormValid) {
+      setState(() => isLoading = true);
       int userID = context.read<UserInfoModel>().currentUser!.idUsuario;
       setNewPassword(userID, _currentPWController.text, _newPWController.text);
     }
+    setState(() => isLoading = false);
   }
 
   @override
@@ -109,7 +113,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                   const SizedBox(height: 40.0),
                   FilledButton(
                       onPressed: () => onChangePwdButtonPresed(),
-                      child: Text(locale.change_pwd))
+                      child: isLoading ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  ): Text(locale.change_pwd))
                 ],
               ),
             ),

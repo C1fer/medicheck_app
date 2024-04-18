@@ -37,6 +37,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   // Get user search history
   Future<List<Producto>> _fetchRecentQueries() async {
+    Future.delayed(Duration(seconds: 5));
     int userID = context.read<UserInfoModel>().currentUserID!;
     int planID = context.read<PlanModel>().selectedPlanID!;
     ProductoResponse? response =
@@ -48,6 +49,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<Producto>> _fetchNewProducts() async {
+    Future.delayed(Duration(seconds: 5));
     ProductoResponse? response = await ApiService.getProductsAdvanced(
         planID: context.read<PlanModel>().selectedPlanID!,
         orderField: "fechaRegistro",

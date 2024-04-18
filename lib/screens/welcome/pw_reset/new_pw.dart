@@ -5,6 +5,7 @@ import 'package:medicheck/models/enums.dart';
 import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/utils/input_validation/validation_logic.dart';
 import 'package:medicheck/widgets/inputs/pwd_field.dart';
+import 'package:medicheck/widgets/misc/data_loading_indicator.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:medicheck/widgets/popups/dialog/dialogs/basic_dialog.dart';
 import '../../../utils/api/api_service.dart';
@@ -109,7 +110,9 @@ class _NewPasswordInputState extends State<NewPasswordInput> {
                   ),
                   FilledButton(
                       onPressed: () => onButtonPresed(),
-                      child: Text(_isLoading ? '...' : locale.new_pw)),
+                      child: _isLoading ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      ) : Text(locale.new_pw)),
                 ],
               ),
             ),

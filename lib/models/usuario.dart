@@ -3,8 +3,6 @@ import 'dart:ffi';
 
 Usuario usuarioFromJson(String str) => Usuario.fromJson(json.decode(str));
 
-String usuarioToJson(Usuario data) => json.encode(data.toJson());
-
 class Usuario {
   int idUsuario;
   String? rol;
@@ -13,7 +11,7 @@ class Usuario {
   String? correo;
   String? telefono;
   bool habilitado;
-  DateTime fechaNacimiento;
+  DateTime? fechaNacimiento;
   DateTime fechaRegistro;
   String? clave;
   String? noDocumento;
@@ -47,7 +45,7 @@ class Usuario {
     correo: json["correo"],
     telefono: json["telefono"],
     habilitado: json["habilitado"],
-    fechaNacimiento: DateTime.parse(json["fechaNacimiento"]),
+    fechaNacimiento: json["fechaNacimiento"] != null ? DateTime.parse(json["fechaNacimiento"]) : null,
     fechaRegistro: DateTime.parse(json["fechaRegistro"]),
     clave: json["clave"],
     noDocumento: json["noDocumento"],
@@ -55,21 +53,4 @@ class Usuario {
     productosGuardados: List<dynamic>.from(json["productosGuardados"].map((x) => x)),
     usuarioPlans: List<dynamic>.from(json["usuarioPlans"].map((x) => x)),
   );
-
-  Map<String, dynamic> toJson() => {
-    "idUsuario": idUsuario,
-    "rol": rol,
-    "nombre": nombre,
-    "apellidos": apellidos,
-    "correo": correo,
-    "telefono": telefono,
-    "habilitado": habilitado,
-    "fechaNacimiento": fechaNacimiento.toIso8601String(),
-    "fechaRegistro": fechaRegistro.toIso8601String(),
-    "clave": clave,
-    "noDocumento": noDocumento,
-    "tipoDocumento": tipoDocumento,
-    "productosGuardados": List<dynamic>.from(productosGuardados.map((x) => x)),
-    "usuarioPlans": List<dynamic>.from(usuarioPlans.map((x) => x)),
-  };
 }

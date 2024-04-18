@@ -6,6 +6,7 @@ import 'package:medicheck/styles/app_styles.dart';
 import 'package:medicheck/widgets/inputs/token_field.dart';
 import '../../../utils/api/api_service.dart';
 import '../../../widgets/misc/custom_appbar.dart';
+import '../../../widgets/misc/data_loading_indicator.dart';
 import '../../../widgets/popups/snackbar/show_snackbar.dart';
 
 class ResetTokenInput extends StatefulWidget {
@@ -109,7 +110,9 @@ class _ResetTokenInputState extends State<ResetTokenInput> {
                           ? null
                           : () => validateResetToken(
                               _resetTokenController.text, email),
-                      child: Text(_isLoading ? '...' : locale.verify)),
+                      child: _isLoading ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      ) : Text(locale.verify)),
                   const SizedBox(
                     height: 25.0,
                   ),

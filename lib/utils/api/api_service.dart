@@ -62,11 +62,11 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>?> userSignup(String docNumber,
-      String docType, String pwd, String email, String phoneNo) async {
+      String docType, String pwd, String email, String? phoneNo) async {
     // Define API Endpoint
     final Uri url = await ApiUtils.getParsedUri(ApiConstants.signUpEndpoint);
     //Map body arguments
-    Map<String, String> signUpCredentials = {
+    Map<String, dynamic> signUpCredentials = {
       'noDocumento': docNumber,
       'tipoDocumento': docType,
       'clave': pwd,
@@ -256,7 +256,7 @@ class ApiService {
   }
 
   static Future<bool> sendResetToken(String email) async {
-    final Uri url = await ApiUtils.getParsedUri(ApiConstants.sendTokenEndpoint,
+    final Uri url = await ApiUtils.getParsedUri(ApiConstants.sendResetTokenEndpoint,
         queryParams: {
           'emailAddress': email,
         });
@@ -279,7 +279,7 @@ class ApiService {
     };
 
     final Uri url = await ApiUtils.getParsedUri(
-        ApiConstants.validateTokenEndpoint,
+        ApiConstants.validateResetTokenEndpoint,
         queryParams: requestParams);
 
     try {
@@ -674,5 +674,43 @@ class ApiService {
       }
     }
     return [];
+  }
+
+  static Future<bool> sendConfirmationToken(String email) async {
+    final Uri url = await ApiUtils.getParsedUri(ApiConstants.sendConfirmTokenEndpoint,
+        queryParams: {
+          'emailAddress': email,
+        });
+
+    try {
+      var response = await http
+          .get(url, headers: ApiConstants.noAuthHeaders)
+          .timeout(ApiConstants.defaultTimeout);
+      if (response.statusCode == 202) return true;
+    } catch (except) {
+      print('Error generating token $except');
+    }
+    return false;
+  }
+
+  static Future<bool> validateConfirmationToken(String token, String emailAddr) async {
+    Map<String, String> requestParams = {
+      'token': token,
+      'emailAdress': emailAddr
+    };
+
+    final Uri url = await ApiUtils.getParsedUri(
+        ApiConstants.validateConfirmTokenEndpoint,
+        queryParams: requestParams);
+
+    try {
+      var response = await http
+          .get(url, headers: ApiConstants.noAuthHeaders)
+          .timeout(ApiConstants.defaultTimeout);
+      if (response.statusCode == 200) return true;
+    } catch (except) {
+      print('Error validating token $except');
+    }
+    return false;
   }
 }

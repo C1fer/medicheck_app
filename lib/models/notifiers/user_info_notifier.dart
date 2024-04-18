@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../plan.dart';
 import '../usuario.dart';
 
 class UserInfoModel extends ChangeNotifier{

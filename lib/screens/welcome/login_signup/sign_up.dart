@@ -9,6 +9,10 @@ import 'package:medicheck/widgets/doctype_dropdown.dart';
 import 'package:medicheck/widgets/inputs/email_field.dart';
 import 'package:medicheck/widgets/inputs/id_field.dart';
 import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
+import 'package:provider/provider.dart';
+import '../../../models/notifiers/plan_notifier.dart';
+import '../../../models/notifiers/user_info_notifier.dart';
+import '../../../models/responses/plan_response.dart';
 import '../../../utils/jwt_service.dart';
 import '../../../widgets/inputs/phone_field.dart';
 import '../../../widgets/logo/full_logo.dart';
@@ -16,6 +20,7 @@ import '../../../styles/app_colors.dart';
 import '../../../widgets/misc/custom_appbar.dart';
 import '../../../widgets/inputs/pwd_field.dart';
 import '../../home/home.dart';
+import '../../main_page.dart';
 import '../welcome.dart';
 
 class SignUp extends StatefulWidget {
@@ -36,6 +41,34 @@ class _LoginState extends State<SignUp> {
   final _passwordController = TextEditingController();
   String _documentType = 'CEDULA';
 
+
+  // Fetch current user info
+  Future<bool> _fetchUserInfo(int userID) async {
+    var response = await ApiService.getUserById(userID);
+    if (response != null){
+      context.read<UserInfoModel>().setCurrentUser(response);
+      return true;
+    }
+    return false;
+  }
+  // Get affiliate plans
+  Future<bool> _fetchUserPlans(int userID, PlanModel planProvider) async {
+    final PlanResponse? response = await ApiService.getPlansbyUserID(userID);
+    if (response != null) {
+      planProvider.addPlans(response.data);
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _fetchUserData(int userID) async{
+    final bool userLoggedIn = await _fetchUserInfo(userID);
+    if (userLoggedIn){
+      final planProvider = context.read<PlanModel>();
+      await _fetchUserPlans(userID, planProvider);
+    }
+  }
+
   void userSignUp() async {
     bool isFormValid = _formKey.currentState?.validate() ?? false;
     if (isFormValid) {
@@ -54,11 +87,16 @@ class _LoginState extends State<SignUp> {
               AppLocalizations.of(context).affiliate_not_found,
               MessageType.ERROR);
         } else {
-          int? saveJWTResult =
-              await JWTService.saveJWT(responseData['accessToken']);
-          saveJWTResult == 0
-              ? Navigator.pushReplacementNamed(context, Home.id)
-              : null;
+          int? saveJWTResult = await JWTService.saveJWT(responseData['accessToken']);
+          if (saveJWTResult == 0){
+            var userInfo = await JWTService.decodeJWT();
+            int userID = int.parse(userInfo!['IdUsuario']);
+            await _fetchUserInfo(userID);
+            if (Provider.of<UserInfoModel>(context, listen: false)
+                .currentUser !=
+                null) context.read<PlanModel>().plans.clear();
+            Navigator.pushReplacementNamed(context, MainPage.id);
+          }
         }
       } catch (except) {
         print("Sign up error: $except");

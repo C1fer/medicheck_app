@@ -48,64 +48,61 @@ class CoverageOverview extends StatefulWidget {
 class _CoverageOverviewState extends State<CoverageOverview> {
   bool? isProductSaved;
   late Producto product;
+  late Future<bool> isProductSavedFuture;
 
-  void onSavedIconTap() {
+  void onSavedIconTap(BuildContext context) {
     final int userID = context.read<UserInfoModel>().currentUserID!;
     if (isProductSaved != null) {
-      isProductSaved! ? _deleteSavedProduct(userID) : _postSavedProduct(userID);
+      if (isProductSaved!) {
+        _deleteSavedProduct(context, userID);
+      } else {
+        _postSavedProduct(context, userID);
+
+      }
     }
   }
 
-  Future<void> _postSavedProduct(int userID) async {
-    setState(() => isProductSaved = !isProductSaved!); // Update saved icon
-    final bool response =
-        await ApiService.postSavedProduct(userID, product.idProducto);
+  Future<void> _postSavedProduct(BuildContext context, int userID) async {
+    setState(() => isProductSaved = true); // Update saved icon
+    final bool response = await ApiService.postSavedProduct(userID, product.idProducto);
     if (response) {
       context.read<SavedProductModel>().deleteSavedProduct(product);
     } else {
       // Revert saved icon as fallback
       setState(() => isProductSaved = !isProductSaved!);
       // Show snackbar error
-      final String errorMsg = context.read<AppLocalizations>().server_error;
+      final String errorMsg = "Server Error";
       showSnackBar(context, errorMsg, MessageType.ERROR);
     }
   }
 
-  Future<void> _deleteSavedProduct(int userID) async {
-    setState(() => isProductSaved = !isProductSaved!); // Update saved icon
-    final bool response =
-        await ApiService.deleteSavedProduct(userID, product.idProducto);
+  Future<void> _deleteSavedProduct(BuildContext context, int userID) async {
+    setState(() => isProductSaved = false); // Update saved icon
+    final bool response = await ApiService.deleteSavedProduct(userID, product.idProducto);
     if (response) {
       context.read<SavedProductModel>().addSavedProduct(product);
     } else {
-      // Revert saved icon as fallback
-      setState(() => isProductSaved = !isProductSaved!);
+      setState(() => isProductSaved = !isProductSaved!);   // Revert saved icon as fallback
       // Show snackbar error
-      final String errorMsg = context.read<AppLocalizations>().server_error;
+      final String errorMsg = "Server Error";
       showSnackBar(context, errorMsg, MessageType.ERROR);
     }
   }
 
   Future<bool> _isProductSaved() async {
-    if (!mounted) return false; // Exit if not mounte
-
     final savedProductProvider = context.read<SavedProductModel>();
     List<int> savedProductIDs = savedProductProvider.savedProductIDs;
 
     if (savedProductIDs.isEmpty) {
       int? userID = context.read<UserInfoModel>().currentUserID;
-      final ProductoResponse? response =
-          await ApiService.getSavedProducts(userID: userID!);
+      final ProductoResponse? response = await ApiService.getSavedProducts(userID: userID!);
       if (response != null) {
         savedProductProvider.addSavedProducts(response.data);
       }
     }
-
-    setState(() {
-      isProductSaved = savedProductProvider.isProductInList(product.idProducto);
-    });
-
-    return isProductSaved!;
+    final _isSaved = savedProductProvider.isProductInList(product.idProducto);
+    setState(() => isProductSaved = _isSaved);
+    return _isSaved;
   }
 
   Future<bool> _getProductCoverages() async {
@@ -124,19 +121,21 @@ class _CoverageOverviewState extends State<CoverageOverview> {
   Future<void> onNearbyCentersPressed() async {
     bool locationEnabled = await Geolocator.isLocationServiceEnabled();
     if (locationEnabled) {
-        LocationPermission permission = await Geolocator.checkPermission();
-        switch (permission){
-          case LocationPermission.always || LocationPermission.whileInUse:
-            Navigator.pushNamed(context, NearbyCenters.id);
-            break;
-          case LocationPermission.denied:
-            await showRoundedBarBottomSheet(context, const RequestLocationPermissionsDialog());
-            break;
-          default:
-        }
+      LocationPermission permission = await Geolocator.checkPermission();
+      switch (permission) {
+        case LocationPermission.always || LocationPermission.whileInUse:
+          Navigator.pushNamed(context, NearbyCenters.id);
+          break;
+        case LocationPermission.denied:
+          await showRoundedBarBottomSheet(
+              context, const RequestLocationPermissionsDialog());
+          break;
+        default:
+      }
     } else {
       // Location service disabled
-      await showRoundedBarBottomSheet(context, const RequestEnableLocationDialog());
+      await showRoundedBarBottomSheet(
+          context, const RequestEnableLocationDialog());
     }
   }
 
@@ -209,13 +208,13 @@ class _CoverageOverviewState extends State<CoverageOverview> {
     );
   }
 
-  Widget SaveProductIcon() {
+  Widget SaveProductIcon(BuildContext context) {
     return GestureDetector(
-      onTap: () => isProductSaved != null ? onSavedIconTap : null,
+      onTap: () => onSavedIconTap(context),
       child: SizedBox(
         height: 40,
         width: 40,
-        child: isProductSaved != null && isProductSaved!
+        child: isProductSaved!
             ? SvgPicture.asset('assets/icons/heart-full.svg')
             : SvgPicture.asset('assets/icons/heart-outlined.svg'),
       ),
@@ -248,12 +247,9 @@ class _CoverageOverviewState extends State<CoverageOverview> {
             future: _isProductSaved(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                return SaveProductIcon();
+                return SaveProductIcon(context);
               } else {
-                return const Skeletonizer.zone(
-                    child: Bone.iconButton(
-                  size: 40,
-                ));
+                return const Skeletonizer.zone(child: Bone.iconButton(size: 40,));
               }
             })
       ],
@@ -274,18 +270,6 @@ class _CoverageOverviewState extends State<CoverageOverview> {
                 locale.product_coverages,
                 style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
               ),
-              Consumer<ProductCoveragesModel>(
-                  builder: (context, coveragesModel, _) =>
-                      coveragesModel.coveragesLength > 8
-                          ? GestureDetector(
-                              onTap: () {},
-                              child: Text(
-                                locale.view_all,
-                                style: AppStyles.actionTextStyle
-                                    .copyWith(fontWeight: FontWeight.w600),
-                              ),
-                            )
-                          : const SizedBox.shrink())
             ],
           ),
           const SizedBox(height: 8),

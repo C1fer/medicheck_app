@@ -12,7 +12,7 @@ class ApiUtils{
     final bool isPhysicalDevice = deviceInfo.isPhysicalDevice;
     if (kDebugMode){
       // Point to local api
-     return isPhysicalDevice ? ApiConstants.baseUrlHost : ApiConstants.baseUrlAVD ;
+     return isPhysicalDevice ? ApiConstants.baseUrlPhysical : ApiConstants.baseUrlAVD ;
     }
     return ApiConstants.baseUrlHost; // Point to hosted api
 

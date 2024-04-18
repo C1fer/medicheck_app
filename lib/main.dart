@@ -4,6 +4,7 @@ import 'package:medicheck/models/notifiers/plan_notifier.dart';
 import 'package:medicheck/models/notifiers/product_coverage_notifier.dart';
 import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
+import 'package:medicheck/models/notifiers/sign_up_info_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
 import 'package:medicheck/screens/home/coverage/coverage_overview.dart';
@@ -39,7 +40,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => SavedProductModel()),
         ChangeNotifierProvider(create: (context) => PlanModel()),
         ChangeNotifierProvider(create: (context) => ViewedCoverageModel()),
-        ChangeNotifierProvider(create: (context) => ProductCoveragesModel())
+        ChangeNotifierProvider(create: (context) => ProductCoveragesModel()),
+        ChangeNotifierProvider(create: (context) => SignUpModel())
       ],
       child: MyApp(),
     ),

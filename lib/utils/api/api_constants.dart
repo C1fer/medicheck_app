@@ -23,8 +23,8 @@ class ApiConstants{
   static String productEndpoint = "/producto";
   static String savedProductsUserEndpoint = "/productosguardados/usuario";
   static String savedProductsEndpoint = "/productosguardados";
-  static String sendTokenEndpoint = "/otp-send-email";
-  static String validateTokenEndpoint = "/otp-validate";
+  static String sendResetTokenEndpoint = "/otp-send-email";
+  static String validateResetTokenEndpoint = "/otp-validate";
   static String resetPasswordEndpoint = "/otp-reset-password";
   static String incidentsReportEndpoint = "/reportesincidentes/";
   static String changePasswordEndpoint = "/usuarios/cambiarclave";
@@ -33,4 +33,6 @@ class ApiConstants{
   static String coverageGroupsEndpoint = "/grupos";
   static String coverageSubGroupsEndpoint = "/subgrupos";
   static String productSearchEndpoint = "/productos/busquedaavanzada";
+  static String sendConfirmTokenEndpoint = "/otp-send-email";
+  static String validateConfirmTokenEndpoint = "/otp-validate";
 }
