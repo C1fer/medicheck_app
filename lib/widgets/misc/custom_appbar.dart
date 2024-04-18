@@ -6,8 +6,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   bool canGoBack;
   bool centerTitle;
+  Widget? leading;
 
-  CustomAppBar({super.key, required this.title, this.canGoBack = true, this.centerTitle = true});
+  CustomAppBar({super.key, required this.title, this.canGoBack = true, this.centerTitle = true, this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0.0,
       centerTitle: centerTitle,
       leading:  canGoBack ? GestureDetector(
-        child: const Icon(Icons.arrow_back_rounded),
+        child: leading ?? const Icon(Icons.arrow_back_rounded),
         onTap: () => Navigator.pop(context),
       ) : null,
     );

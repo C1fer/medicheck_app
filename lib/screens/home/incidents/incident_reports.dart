@@ -86,6 +86,7 @@ class _IncidentReportsState extends State<IncidentReports> {
         context: context,
         isDismissible: false,
         enableDrag: false,
+        expand: true,
         builder: (context) => NewIncident(onSubmit: () async {
               _incidentsPaginationController.refresh();
               Navigator.pop(context);

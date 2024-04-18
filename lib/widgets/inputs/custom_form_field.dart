@@ -18,7 +18,11 @@ class CustomInputField extends StatefulWidget {
       this.obscureText = false,
       this.suffixIcon,
       this.maxLines = 1,
-      this.floatingLabelBehavior})
+      this.floatingLabelBehavior,
+      this.onTap,
+      this.readOnly = false,
+      this.expands = false,
+      this.minLines})
       : super(key: key);
 
   final TextEditingController controller;
@@ -33,8 +37,12 @@ class CustomInputField extends StatefulWidget {
   final FloatingLabelBehavior? floatingLabelBehavior;
 
   final int? maxLines;
+  final int? minLines;
   final InputDecoration? decoration;
   bool obscureText;
+  final void Function()? onTap;
+  bool readOnly;
+  bool expands;
 
   @override
   State<CustomInputField> createState() => _CustomInputFieldState();
@@ -43,37 +51,43 @@ class CustomInputField extends StatefulWidget {
 class _CustomInputFieldState extends State<CustomInputField> {
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: widget.maxLines,
-      obscureText: widget.obscureText,
-      maxLength: widget.maxLength,
-      keyboardType: widget.keyboardType ?? TextInputType.text,
-      autovalidateMode: widget.autoValidateMode,
-      controller: widget.controller,
-      inputFormatters: widget.inputFormatters,
-      validator: widget.validator,
-      decoration: widget.decoration ??
-          AppDecorations.formTextFieldDecoration.copyWith(
-              floatingLabelBehavior:
-                  widget.floatingLabelBehavior ?? FloatingLabelBehavior.auto,
-              hintText: widget.hintText,
-              prefixIcon: widget.prefixIcon != null
-                  ? Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: widget.prefixIcon,
-                    )
-                  : null,
-              prefixIconColor: MaterialStateColor.resolveWith((states) =>
-                  states.contains(MaterialState.focused)
-                      ? AppColors.jadeGreen
-                      : Colors.grey),
-              suffixIcon: widget.suffixIcon != null
-                  ? Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: widget.suffixIcon,
-                    )
-                  : null,
-              labelText: widget.hintText),
+    return GestureDetector(
+      onTap: () => widget.onTap,
+      child: TextFormField(
+        expands: widget.expands,
+        maxLines: widget.maxLines,
+        minLines: widget.minLines,
+        obscureText: widget.obscureText,
+        maxLength: widget.maxLength,
+        keyboardType: widget.keyboardType ?? TextInputType.text,
+        autovalidateMode: widget.autoValidateMode,
+        controller: widget.controller,
+        inputFormatters: widget.inputFormatters,
+        validator: widget.validator,
+        readOnly: false,
+        decoration: widget.decoration ??
+            AppDecorations.formTextFieldDecoration.copyWith(
+                floatingLabelBehavior:
+                    widget.floatingLabelBehavior ?? FloatingLabelBehavior.auto,
+                hintText: widget.hintText,
+                prefixIcon: widget.prefixIcon != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: widget.prefixIcon,
+                      )
+                    : null,
+                prefixIconColor: MaterialStateColor.resolveWith((states) =>
+                    states.contains(MaterialState.focused)
+                        ? AppColors.jadeGreen
+                        : Colors.grey),
+                suffixIcon: widget.suffixIcon != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: widget.suffixIcon,
+                      )
+                    : null,
+                labelText: widget.hintText),
+      ),
     );
   }
 }

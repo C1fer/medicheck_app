@@ -31,7 +31,7 @@ class Incidente {
           idIncidente: json["idIncidente"],
           descripcion: json["descripcion"],
           estado: json["estado"],
-          fechaIncidente: json["fechaIncidente"],
+          fechaIncidente: json["fechaIncidente"] != null ? DateTime.parse(json["fechaIncidente"]) : null,
           fechaRegistro: DateTime.parse(json["fechaRegistro"]),
           establecimientoNavigation: Establecimiento.fromJson(json["idEstablecimientoNavigation"]),
           planNavigation: null,

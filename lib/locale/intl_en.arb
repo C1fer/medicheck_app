@@ -107,7 +107,7 @@
   "incident": "Incident",
   "incident_status": "Incident status",
   "new_incident": "New Incident",
-  "send": "Send",
+  "send": "Submit",
   "pdss": "Basic Health Plan",
   "all_products": "All Products",
   "plan_modality" : "Modality",
@@ -124,5 +124,9 @@
         "example": "3.4"
       }
     }
-  }
+  },
+  "date_picker_placeholder": "04/08/2024",
+  "product_placeholder": "Vitamin C",
+  "establishment_placeholder": "Pharma Labs",
+  "incident_date": "Incident date"
 }

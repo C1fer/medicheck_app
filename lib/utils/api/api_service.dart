@@ -436,7 +436,7 @@ class ApiService {
   }
 
   static Future<bool> postNewIncidentReport(int userID, int planID,
-      int establishmentID, int productID, String description) async {
+      int establishmentID, int productID, String description, String date) async {
     final Uri url =
         await ApiUtils.getParsedUri(ApiConstants.incidentsReportEndpoint);
 
@@ -447,7 +447,8 @@ class ApiService {
       "descripcion": description,
       "idEstablecimiento": establishmentID,
       "idProducto": productID,
-      "estado": "ABIERTO"
+      "estado": "ABIERTO",
+      "fechaIncidente": date
     };
 
     final Map<String, String>? requestHeaders = await ApiUtils.getAuthHeaders();

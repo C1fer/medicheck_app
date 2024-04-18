@@ -1,7 +1,7 @@
 class Establecimiento {
   int idEstablecimiento;
   String nombre;
-  String? categoria;
+  String categoria;
   String? direccion;
   String? telefono;
   String? correo;
