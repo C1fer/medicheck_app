@@ -39,8 +39,9 @@ class _HomeState extends State<Home> {
   // Get user search history
   Future<List<Producto>> _fetchRecentQueries() async {
     int userID = context.read<UserInfoModel>().currentUserID!;
+    int planID = context.read<PlanModel>().selectedPlanID!;
     ProductoResponse? response =
-        await ApiService.getRecentQueries(userId: userID);
+        await ApiService.getRecentQueries(userId: userID, planId: planID);
     if (response != null && response.data.isNotEmpty) {
       return response.data;
     }

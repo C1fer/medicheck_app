@@ -182,9 +182,9 @@ class ApiService {
   }
 
   static Future<ProductoResponse?> getSavedProducts(
-      {int? userID, int? pageIndex, int? pageSize}) async {
+      {int? userID, int? productID, int? pageIndex, int? pageSize}) async {
     final Map<String, dynamic> requestParams = ApiUtils.filterQueryParameters(
-        {"idUsuario": userID, "pageIndex": pageIndex, "pageSize": pageSize});
+        {"idUsuario": userID, "idProducto": productID, "pageIndex": pageIndex, "pageSize": pageSize});
 
     final Uri url = await ApiUtils.getParsedUri(
         ApiConstants.savedProductsEndpoint,
@@ -472,6 +472,7 @@ class ApiService {
       {int? userId, int? planId, int? pageIndex, String? orderField}) async {
     Map<String, dynamic> requestParams = ApiUtils.filterQueryParameters({
       'idUsuario': userId,
+      'idPlan': planId,
       'pageIndex': pageIndex,
       'orderField': orderField
     });
