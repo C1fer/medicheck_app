@@ -5,12 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:medicheck/models/misc/mock_data.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
-import 'package:medicheck/screens/home/coverage/nearby_centers.dart';
+import 'package:medicheck/models/notifiers/product_coverage_notifier.dart';
+import 'package:medicheck/screens/home/establishments/nearby_centers.dart';
 import 'package:medicheck/utils/location_service.dart';
 import 'package:medicheck/widgets/cards/coverage_card.dart';
 import 'package:medicheck/widgets/misc/skeletons/widget_skeleton_list.dart';
 import 'package:medicheck/widgets/popups/dialog/show_custom_dialog.dart';
 import 'package:medicheck/widgets/popups/snackbar/show_snackbar.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -40,7 +42,6 @@ class CoverageDetailView extends StatefulWidget {
 
 class _CoverageDetailViewState extends State<CoverageDetailView> {
   bool? isProductSaved;
-  CoberturaResponse? productCoverages;
   late Producto product;
 
   void onSavedIconTap() {
@@ -109,7 +110,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
         productID: product.idProducto,
         pageSize: 1000);
     if (response != null && response.data.isNotEmpty) {
-      setState(() => productCoverages = response);
+      context.read<ProductCoveragesModel>().replaceAll(response.data);
       return true;
     }
     return Future.error("");
@@ -134,6 +135,10 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
       setState(() => product = sentProduct);
     });
   }
+
+  // Future<bool> showLocationDisabledSheet() async{
+  //   await showMaterialModalBottomSheet(context: context, builder: () => SimpleDialog())
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +240,10 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
               if (snapshot.hasData) {
                 return SaveProductIcon();
               } else {
-                return const Skeletonizer.zone(child: Bone.iconButton(size: 40,));
+                return const Skeletonizer.zone(
+                    child: Bone.iconButton(
+                  size: 40,
+                ));
               }
             })
       ],
@@ -256,32 +264,34 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                 locale.product_coverages,
                 style: AppStyles.sectionTextStyle.copyWith(fontSize: 20),
               ),
-              if (productCoverages != null && productCoverages!.data.length > 8)
-                GestureDetector(
-                  child: Text(
-                    locale.view_all,
-                    style: AppStyles.actionTextStyle
-                        .copyWith(fontWeight: FontWeight.w600),
-                  ),
-                )
+              Consumer<ProductCoveragesModel>(
+                  builder: (context, coveragesModel, _) =>
+                      coveragesModel.coveragesLength > 8
+                          ? GestureDetector(
+                              child: Text(
+                                locale.view_all,
+                                style: AppStyles.actionTextStyle
+                                    .copyWith(fontWeight: FontWeight.w600),
+                              ),
+                            )
+                          : const SizedBox.shrink())
             ],
           ),
           const SizedBox(height: 8),
           FutureBuilder(
               future: _getProductCoverages(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasData) {
-                    return Expanded(
-                        child:
-                            CoveragesListView(context, productCoverages!.data));
-                  }
-                  if (snapshot.hasError) {
-                    return Expanded(
-                        child: Center(
-                      child: Text(locale.no_results_shown),
-                    ));
-                  }
+                if (snapshot.hasData) {
+                  return Consumer<ProductCoveragesModel>(
+                      builder: (context, coveragesModel, _) => Expanded(
+                          child: CoveragesListView(
+                              context, coveragesModel.coverages)));
+                }
+                if (snapshot.hasError) {
+                  return Expanded(
+                      child: Center(
+                    child: Text(locale.no_results_shown),
+                  ));
                 }
                 return Expanded(
                   child: WidgetSkeletonList(
@@ -295,8 +305,7 @@ class _CoverageDetailViewState extends State<CoverageDetailView> {
                     ignoreContainers: false,
                   ),
                 );
-              }
-          ),
+              }),
         ],
       ),
     );

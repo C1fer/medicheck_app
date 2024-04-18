@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medicheck/screens/home/coverage/product_search.dart';
+import 'package:medicheck/screens/home/products/product_search.dart';
 import 'package:medicheck/screens/home/home.dart';
 import 'package:medicheck/screens/home/settings/settings.dart';
 import 'package:medicheck/styles/app_colors.dart';

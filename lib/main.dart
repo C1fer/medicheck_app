@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:medicheck/models/notifiers/plan_notifier.dart';
+import 'package:medicheck/models/notifiers/product_coverage_notifier.dart';
 import 'package:medicheck/models/notifiers/recent_query_notifier.dart';
 import 'package:medicheck/models/notifiers/saved_products_notifier.dart';
 import 'package:medicheck/models/notifiers/user_info_notifier.dart';
 import 'package:medicheck/screens/home/coverage/coverage_details.dart';
-import 'package:medicheck/screens/home/coverage/product_search.dart';
-import 'package:medicheck/screens/home/coverage/nearby_centers.dart';
-import 'package:medicheck/screens/home/coverage/saved_products.dart';
+import 'package:medicheck/screens/home/products/product_search.dart';
+import 'package:medicheck/screens/home/establishments/nearby_centers.dart';
+import 'package:medicheck/screens/home/products/saved_products.dart';
 import 'package:medicheck/screens/home/establishments/establishments_list.dart';
 import 'package:medicheck/screens/home/incidents/incident_reports.dart';
 import 'package:medicheck/screens/home/settings/change_pw.dart';
@@ -36,7 +37,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => UserInfoModel()),
         ChangeNotifierProvider(create: (context) => SavedProductModel()),
         ChangeNotifierProvider(create: (context) => PlanModel()),
-        ChangeNotifierProvider(create: (context) => ViewedCoverageModel())
+        ChangeNotifierProvider(create: (context) => ViewedCoverageModel()),
+        ChangeNotifierProvider(create: (context) => ProductCoveragesModel())
       ],
       child: MyApp(),
     ),
