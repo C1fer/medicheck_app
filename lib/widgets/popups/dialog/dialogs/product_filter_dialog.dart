@@ -47,6 +47,7 @@ class _ProductFilterDialogState extends State<ProductFilterDialog> {
     final planModel = context.read<PlanModel>();
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Header(locale),

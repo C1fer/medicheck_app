@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide showModalBottomSheet;
 import '../../../styles/app_colors.dart';
 import '../../popups/dialog/show_custom_dialog.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class FilterButton extends StatefulWidget {
   const FilterButton({super.key, required this.dialogContent});
@@ -16,7 +17,7 @@ class _FilterButtonState extends State<FilterButton> {
     return GestureDetector(
       onTap: () => showCustomDialog(context, widget.dialogContent, dismissible: true),
       child: const Icon(
-        Icons.filter_list_outlined,
+        Icons.tune,
         color: AppColors.lightGray,
       ),
     );

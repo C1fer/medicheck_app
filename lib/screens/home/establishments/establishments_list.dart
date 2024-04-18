@@ -27,7 +27,8 @@ class EstablishmentsList extends StatefulWidget {
 class _EstablishmentsListState extends State<EstablishmentsList> {
   final _establishmentsController = TextEditingController();
   final _establishmentsPaginationController =
-      PagingController<int, Establecimiento>(firstPageKey: 1, invisibleItemsThreshold: 3);
+      PagingController<int, Establecimiento>(
+          firstPageKey: 1, invisibleItemsThreshold: 3);
 
   EstablecimientoResponse? establishments;
   String? establishmentType;
@@ -35,8 +36,8 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
   @override
   void initState() {
     _establishmentsPaginationController.addPageRequestListener((pageKey) {
-        _getEstablishments();
-        print(_establishmentsPaginationController.itemList!.length);
+      _getEstablishments();
+      print(_establishmentsPaginationController.itemList!.length);
     });
     super.initState();
   }
@@ -49,10 +50,13 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
 
   Future<bool> _getEstablishments() async {
     if (mounted) {
-      final int arsID = context.read<PlanModel>().selectedPlan!.idAseguradoraNavigation.idAseguradora;
+      final int arsID = context
+          .read<PlanModel>()
+          .selectedPlan!
+          .idAseguradoraNavigation
+          .idAseguradora;
       final EstablecimientoResponse? response =
-          await ApiService.getEstablishments(
-              arsID,
+          await ApiService.getEstablishments(arsID,
               keyword: _establishmentsController.text,
               type: establishmentType,
               pageIndex: _establishmentsPaginationController.nextPageKey ??
@@ -96,10 +100,12 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
                 typeValue: establishmentType,
                 onTypeChanged: (String? newVal) =>
                     setState(() => establishmentType = newVal),
-                onButtonPressed: () async {
+                onApplyButtonPressed: () async {
                   _establishmentsPaginationController.refresh();
                   Navigator.pop(context);
                 },
+                onResetButtonPressed: () =>
+                    setState(() => establishmentType = null),
               ),
             ),
           ),
@@ -108,8 +114,7 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
               future: _getEstablishments(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  return Expanded(
-                      child: EstablishmentsList());
+                  return Expanded(child: EstablishmentsList());
                 } else if (snapshot.hasError) {
                   return Expanded(
                       child: Center(child: Text(locale.no_results_shown)));
@@ -130,18 +135,16 @@ class _EstablishmentsListState extends State<EstablishmentsList> {
         ]));
   }
 
-  Widget EstablishmentsList(){
+  Widget EstablishmentsList() {
     return PagedListView.separated(
       pagingController: _establishmentsPaginationController,
       builderDelegate: PagedChildBuilderDelegate<Establecimiento>(
-          itemBuilder: (context, item, index) =>
-              EstablishmentCard(
+          itemBuilder: (context, item, index) => EstablishmentCard(
                 establecimiento: item,
               ),
           newPageProgressIndicatorBuilder: (context) =>
-          const DataLoadingIndicator()),
-      separatorBuilder: (context, index) =>
-      const SizedBox(height: 10),
+              const DataLoadingIndicator()),
+      separatorBuilder: (context, index) => const SizedBox(height: 10),
     );
   }
 }

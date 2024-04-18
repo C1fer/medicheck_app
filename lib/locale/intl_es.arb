@@ -130,5 +130,6 @@
   "date_picker_placeholder": "04/08/2024",
   "product_placeholder": "Vitamina C",
   "establishment_placeholder": "Pharma Labs",
-  "incident_date": "Fecha del incidente"
+  "incident_date": "Fecha del incidente",
+  "establishment_type": "Tipo de establecimiento"
 }
