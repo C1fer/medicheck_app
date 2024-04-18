@@ -129,5 +129,10 @@
   "product_placeholder": "Vitamin C",
   "establishment_placeholder": "Pharma Labs",
   "incident_date": "Incident date",
-  "establishment_type": "Establishment type"
+  "establishment_type": "Establishment type",
+
+  "@_NAV_BAR_TABS":{},
+  "home_tab": "Home",
+  "search_tab": "Search",
+  "account_tab": "Account"
 }

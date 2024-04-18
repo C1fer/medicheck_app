@@ -32,6 +32,8 @@ class _MainPageState extends State<MainPage> {
 
   Widget NavBar() {
     return BottomNavigationBar(
+      useLegacyColorScheme: false,
+      elevation: 15,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
         BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
